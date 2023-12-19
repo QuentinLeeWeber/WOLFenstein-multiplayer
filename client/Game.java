@@ -7,7 +7,7 @@ import javax.swing.SwingWorker;
 
 class Game extends JPanel{
 	
-	public JPanel(){
+	public Game(){
 		
 	}
 	
