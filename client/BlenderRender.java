@@ -1,10 +1,12 @@
 import java.awt.*;
 
-BlenderRender {
-	Graphics g;
-	
-	public BlenderRender(Graphics _g)
-	{
-		g = _g;	
-	}
+class BlenderRender {
+  
+  public BlenderRender(){
+   
+  }
+  
+  public void draw(Graphics g){
+    
+  }
 }
