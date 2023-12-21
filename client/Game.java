@@ -59,7 +59,6 @@ class Game extends JPanel{
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
     protected void paintComponent(Graphics g){
-    g.drawLine(0, 0, 100, 100);
     renderer.draw(g);
     //System.out.println("repaint");
     //System.out.println(pressedKey);
