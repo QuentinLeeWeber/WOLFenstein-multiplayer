@@ -1,5 +1,4 @@
 import java.awt.*;
-import javax.*;
 import java.util.ArrayList;
 
 class BlenderRender {
@@ -10,9 +9,9 @@ class BlenderRender {
   }
   
   public void draw(Graphics g){
-  for(Wall wall : level.walls){
-    g.drawLine(wall.a[0], wall.a[1], wall.b[0], wall.b[1]);
-  }
+    for(Wall wall : level.walls){
+      g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
+    }
   }
   
   public void setLevel(Level _level) {

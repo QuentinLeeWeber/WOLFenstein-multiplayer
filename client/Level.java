@@ -1,4 +1,3 @@
-import javax.*;
 import java.util.ArrayList;
 
 class Level {
