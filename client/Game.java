@@ -11,6 +11,12 @@ class Game extends JPanel{
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
   private JFrame frame = new JFrame();
+  private MyMouseMotionListener MML = new MyMouseMotionListener();
+	private MyMouseListener ML = new MyMouseListener();
+  
+  //Mausposition
+  public static int mouseX = 0;
+  public static int mouseY = 0;
   
   public static void main(String[] args){
     game = new Game();
@@ -20,6 +26,8 @@ class Game extends JPanel{
   // kann eigentlich ignoriert werden
   private void start(){
     System.out.println("start...");
+    this.addMouseMotionListener(MML);
+		this.addMouseListener(ML);
     frame.add(this);
     frame.setSize(1000, 1000);
     frame.setTitle("WOLFenstein");
@@ -35,6 +43,11 @@ class Game extends JPanel{
   
   public static Game getGame(){
     return game; 
+  }
+  
+  //wird aufgerufen wenn ein linksklick passiert
+  public void leftClick(){
+    
   }
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedrückt wird, diese wird dann als char übegeben
@@ -58,7 +71,5 @@ class Game extends JPanel{
     protected void paintComponent(Graphics g){
     g.drawLine(0, 0, 100, 100);
     renderer.draw(g);
-    //System.out.println("repaint");
-    //System.out.println(pressedKey);
   }
 }
