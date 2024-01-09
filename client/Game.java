@@ -5,6 +5,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.*;
+import java.util.ArrayList;
 
 class Game extends JPanel{
   public Game(){}
@@ -12,7 +13,8 @@ class Game extends JPanel{
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
   private JFrame frame = new JFrame();
-  private Level level = new Level1();
+  private Level level = new Level();
+  private ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
   
   public static void main(String[] args){
     game = new Game();
@@ -30,7 +32,11 @@ class Game extends JPanel{
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
-  renderer.setLevel(level);
+    
+    Graphikobjekt player = new Graphikobjekt(100, 100);
+    graphikobjekte.add(player);
+    renderer.setLevel(level);
+    renderer.graphikobjekte = graphikobjekte;
     while(true){
       frame.repaint();  
     }
