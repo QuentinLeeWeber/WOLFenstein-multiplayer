@@ -18,6 +18,8 @@ class Game extends JPanel{
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   
+  private Player player = new Player(500, 500);
+  
   public int mouseX;
   public int mouseY;
   
@@ -40,13 +42,12 @@ class Game extends JPanel{
     
     Player player = new Player(100, 100);
     graphikobjekte.add(player);
-    renderer.level = level1;
+    renderer.level = level;
     renderer.graphikobjekte = graphikobjekte;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    renderer.setLevel(level);
     while(true){
       frame.repaint();  
     }
@@ -65,7 +66,13 @@ class Game extends JPanel{
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedrückt wird, diese wird dann als char übegeben
   public void keyPressed(char c){
-    
+    if (c == 'w') {
+       player.move(10);
+    } else if (c == 'e') {
+       player.turn(90);
+    } else if (c == 'q') {
+       player.turn(-90);
+    }
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedrückt wurde, diese wird dann als char übegeben
@@ -91,9 +98,9 @@ class Game extends JPanel{
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
-    protected void paintComponent(Graphics g){
+  protected void paintComponent(Graphics g){
     if(gameRunning){
-      renderer.draw(g); 
+      renderer.draw(g, player); 
     }
     UI.update(g, mouseX, mouseY);
   }

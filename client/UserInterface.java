@@ -18,6 +18,6 @@ class UserInterface {
   }
   
   public void mouseClicked(){
-    
+    Game.getGame().startGame();
   }
 }
