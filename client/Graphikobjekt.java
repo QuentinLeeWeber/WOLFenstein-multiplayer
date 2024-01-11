@@ -5,4 +5,9 @@ abstract class Graphikobjekt  {
       public String texture;
       
       public abstract void update();
+  
+      public Graphikobjekt(int _x, int _y) {
+             x = _x;
+             y = _y; 
+      }
 }
