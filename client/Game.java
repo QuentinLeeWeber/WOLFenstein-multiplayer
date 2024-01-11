@@ -13,7 +13,6 @@ class Game extends JPanel{
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
   private JFrame frame = new JFrame();
-  private Level level = new Level();
   private ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
   
   public static void main(String[] args){
@@ -33,9 +32,10 @@ class Game extends JPanel{
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
     
-    Graphikobjekt player = new Graphikobjekt(100, 100);
+    Player player = new Player(100, 100);
     graphikobjekte.add(player);
-    renderer.setLevel(level);
+    Level1 level1 = new Level1();
+    renderer.level = level1;
     renderer.graphikobjekte = graphikobjekte;
     while(true){
       frame.repaint();  

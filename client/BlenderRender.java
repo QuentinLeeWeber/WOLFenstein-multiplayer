@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 class BlenderRender {
-  Level level;
+  public Level level;
   public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
   
   public BlenderRender(){
@@ -10,15 +10,12 @@ class BlenderRender {
   }
   
   public void draw(Graphics g){
+    
     for(Wall wall : level.walls){
       g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
     }
-    for (Graphikobjekt g : Graphikobjekte) {
-         g.drawOval(g.x, g.y, 5, 5);
+    for (Graphikobjekt gr : graphikobjekte) {
+         gr.drawOval(g.x, g.y, 5, 5);
     }
-  }
-  
-  public void setLevel(Level _level) {
-    level = _level;
   }
 }
