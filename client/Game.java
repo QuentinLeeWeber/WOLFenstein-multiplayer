@@ -13,7 +13,6 @@ class Game extends JPanel{
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
   private JFrame frame = new JFrame();
-  private ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
@@ -40,10 +39,7 @@ class Game extends JPanel{
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);  
     
-    Player player = new Player(100, 100);
-    graphikobjekte.add(player);
     renderer.level = level;
-    renderer.graphikobjekte = graphikobjekte;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
@@ -71,7 +67,7 @@ class Game extends JPanel{
     } else if (c == 'e') {
        player.turn(90);
     } else if (c == 'q') {
-       player.turn(-90);
+      player.turn(-90);
     }
   }
   
