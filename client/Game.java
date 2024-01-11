@@ -18,7 +18,7 @@ class Game extends JPanel{
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   
-  private Player player = new Player();
+  private Player player = new Player(500, 500);
   
   public int mouseX;
   public int mouseY;
@@ -42,13 +42,12 @@ class Game extends JPanel{
     
     Player player = new Player(100, 100);
     graphikobjekte.add(player);
-    renderer.level = level1;
+    renderer.level = level;
     renderer.graphikobjekte = graphikobjekte;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    renderer.setLevel(level);
     while(true){
       frame.repaint();  
     }
