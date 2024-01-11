@@ -1,12 +1,11 @@
 import java.awt.*;
 
 class Player extends Kreatur{
-      public Player() {
-             this.x = 500;
-             this.y = 500;
-      }
   
-      @Override
+  public Player(int x, int y) {
+    super(x, y);
+  }
+
     public void update() {
       }
     public void wurdeGetroffen() {

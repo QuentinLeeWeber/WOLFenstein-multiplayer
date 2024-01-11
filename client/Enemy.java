@@ -1,6 +1,9 @@
 class Enemy extends Kreatur {
-      public void Update() {
-      }
-    public void wurdeGetroffen() {
+  
+  public Kreatur(int x, int y) {
+    super(x, y);
+  }
+  
+      public void update() {
       }   
 }
