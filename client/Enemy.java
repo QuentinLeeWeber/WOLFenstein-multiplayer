@@ -5,7 +5,5 @@ class Enemy extends Kreatur {
   }
   
       public void update() {
-      }
-    public void wurdeGetroffen() {
       }   
 }
