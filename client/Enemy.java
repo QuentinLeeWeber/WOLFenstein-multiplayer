@@ -1,6 +1,6 @@
 class Enemy extends Kreatur {
   
-  public Kreatur(int x, int y) {
+  public Enemy(int x, int y) {
     super(x, y);
   }
   
