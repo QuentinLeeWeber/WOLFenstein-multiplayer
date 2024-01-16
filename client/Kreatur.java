@@ -1,3 +1,4 @@
+import java.lang.Math;
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
@@ -24,7 +25,7 @@ abstract class Kreatur extends Graphikobjekt {
 
     public void move(float speed) {
         switch (direction) {
-            case 0:
+            /*case 0:
                 y -= speed;
                 break;
             case 90:
@@ -35,9 +36,19 @@ abstract class Kreatur extends Graphikobjekt {
                 break;
             case 270:
                 x -= speed;
-                break;
+                break;*/
             default:
-
+                x += calcXSteps(speed);
+                y += calcYSteps(speed);
+                break;
         }
+    }
+  
+  private int calcYSteps(float speed) {
+    return (int) (-Math.cos(Math.toRadians(direction))*speed);
+  }
+  
+  private int calcXSteps(float speed) {
+      return (int) (Math.sin(Math.toRadians(direction))*speed);
     }
 }
