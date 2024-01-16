@@ -16,6 +16,8 @@ class Game extends JPanel{
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   
+  private Player player = new Player(400, 300);
+  
   public int mouseX;
   public int mouseY;
   
@@ -36,11 +38,11 @@ class Game extends JPanel{
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
+    renderer.level = level;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    renderer.setLevel(level);
     while(true){
       frame.repaint();  
     }
@@ -59,7 +61,13 @@ class Game extends JPanel{
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void keyPressed(char c){
-    
+    if (c == 'w') {
+      player.move(10);
+    } else if (c == 'e') {
+      player.turn(90);
+    } else if (c == 'q') {
+      player.turn(-90);
+    }
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
@@ -87,7 +95,7 @@ class Game extends JPanel{
   @Override
     protected void paintComponent(Graphics g){
     if(gameRunning){
-      renderer.draw(g); 
+      renderer.draw(g, player); 
     }
     UI.update(g, mouseX, mouseY);
   }
