@@ -24,24 +24,8 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(float speed) {
-        switch (direction) {
-            /*case 0:
-                y -= speed;
-                break;
-            case 90:
-                x += speed;
-                break;
-            case 180:
-                y += speed;
-                break;
-            case 270:
-                x -= speed;
-                break;*/
-            default:
-                x += calcXSteps(speed);
-                y += calcYSteps(speed);
-                break;
-        }
+        x += calcXSteps(speed);
+        y += calcYSteps(speed);
     }
   
   private int calcYSteps(float speed) {
