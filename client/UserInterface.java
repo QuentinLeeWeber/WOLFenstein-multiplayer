@@ -14,11 +14,9 @@ class UserInterface {
   }
   
   public void update(Graphics g, int _mouseX, int _mouseY){
-    mouseX = _mouseX;
-    mouseY = _mouseY - 32;
-    if(Game.getGame().getRunning() == false) {
-      g.setColor(new Color(0, 0, 0));
-      g.fillRect(0, 0, 800, 600);
+    if(!Game.getGame().getRunning()) {
+      mouseX = _mouseX;
+      mouseY = _mouseY - 32;
       g.setColor(new Color(255, 0, 0));
       g.fillRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
       g.setFont(new Font("TimesRoman", Font.PLAIN, 50));
@@ -34,7 +32,7 @@ class UserInterface {
   public void mouseClicked(){
     Game game = Game.getGame();
     if(mouseX >= losButtonX && mouseX <= losButtonX + losButtonWidth && mouseY >= losButtonY
-            && mouseY <= losButtonY + losButtonHeight && game.getRunning() == false) {
+            && mouseY <= losButtonY + losButtonHeight && !game.getRunning()) {
       System.out.println("Los Button clicked!");
       game.startGame();
     }
