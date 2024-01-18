@@ -7,11 +7,6 @@ public class MyKeyEventDispatcher implements KeyEventDispatcher {
     }
 
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_PRESSED) {
-            Game.getGame().keyPressed(e.getKeyChar());
-            return false;
-        }
-
         if (e.getID() == KeyEvent.KEY_RELEASED) {
             Game.getGame().keyReleased(e.getKeyChar());
             return false;
