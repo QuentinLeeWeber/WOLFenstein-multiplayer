@@ -1,14 +1,12 @@
+import javax.swing.*;
 import java.awt.*;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-//import javax.*;
 
 class Game extends JPanel{
   public Game(){}
-  
+
+  public static final int stepWidth = 10;
+  public static final int turnAngle = 10;
+
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
   private JFrame frame = new JFrame();
@@ -57,20 +55,20 @@ class Game extends JPanel{
   public void leftClick(){
     System.out.println(mouseX + "  " +  mouseY);
     UI.mouseClicked();  
-  }
-
-  public void mouseMoved() {
-    UI.mouseMoved();
-  }
+  } 
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void keyPressed(char c){
     if (c == 'w') {
-      player.move(10);
+      player.move(stepWidth);
     } else if (c == 'e') {
-      player.turn(90);
+      player.turn(turnAngle);
     } else if (c == 'q') {
-      player.turn(-90);
+      player.turn(-turnAngle);
+    } else if (c == 'p') {
+      if (gameRunning) {
+        game.stopGame();
+      }
     }
   }
   
@@ -82,6 +80,10 @@ class Game extends JPanel{
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
   public void keyReleased(char c){
     
+  }
+  
+  public void mouseMoved() {
+    UI.mouseMoved();
   }
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
@@ -97,15 +99,14 @@ class Game extends JPanel{
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
-  protected void paintComponent(Graphics g) {
+  protected void paintComponent(Graphics g){
+    g.setColor(new Color(0, 0, 0));
+    g.fillRect(0, 0, 800, 600);
+    
     if(gameRunning){
-      renderer.draw(g, player); 
+      renderer.draw(g, player);
     }
     UI.update(g, mouseX, mouseY);
-  }
-  
-  public void example(){
-    //System.out.println("example");
   }
 
   public boolean getRunning() {
