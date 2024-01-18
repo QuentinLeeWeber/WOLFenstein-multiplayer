@@ -15,8 +15,6 @@ class UserInterface {
   
   public void update(Graphics g, int _mouseX, int _mouseY){
     if(!Game.getGame().getRunning()) {
-      g.setColor(new Color(0, 0, 0));
-      g.fillRect(0, 0, 800, 600);
       g.setColor(buttonColor);
       g.fillRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
       g.setColor(red);
