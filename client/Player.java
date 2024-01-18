@@ -3,7 +3,9 @@ import java.awt.*;
 class Player extends Kreatur {
 
     public Player(int x, int y) {
+
         super(x, y);
+        super.boundingBox = new BoundingBox(x, y, x + 5, y + 5);
     }
 
     public void update() {
