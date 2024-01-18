@@ -4,7 +4,8 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 30;
+  private int fps = 1232;
+  private double frameTime;
 
   public static final int stepWidth = 5;
   public static final int turnAngle = 5;
@@ -49,21 +50,21 @@ class Game extends JPanel{
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
     double timeToNextFrame = 0;
-    double lastTime = System.nanoTime();
+    double lastTime = 0;
     double time = 0;
     double lastRenderedTime = 0;
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
         double renderedTime = System.nanoTime();
-        handleKeys();
+        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
-        timeToNextFrame += (1000000000 / (float) fps);
+        timeToNextFrame = (1000000000 / (float) fps);
         lastRenderedTime = renderedTime;
       }
       time = System.nanoTime();
-      double frametime = -(lastTime - time);
-      timeToNextFrame -= frametime;
+      timeToNextFrame -= -(lastTime - time);
     }
   }
   
@@ -146,6 +147,7 @@ class Game extends JPanel{
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
   protected void paintComponent(Graphics g){
+    handleKeys();
     if(gameRunning){
       renderer.draw(g, player);
     } else {
@@ -153,6 +155,9 @@ class Game extends JPanel{
       g.fillRect(0, 0, 800, 600);  
     } 
     UI.update(g, mouseX, mouseY);
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
+    g.setColor(new Color(0, 255, 0));
+    g.drawString(Float.toString((float) ((int) (frameTime * 10)) /10) + "ms", 723, 13);
   }
 
   public boolean getRunning() {
