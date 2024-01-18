@@ -2,12 +2,12 @@ import java.awt.*;
 
 class UserInterface {
   
-  private int mouseX;
-  private int mouseY;
+  private int mouseX = 0;
+  private int mouseY = 0;
   private int losButtonWidth = 150;
   private int losButtonHeight = 60;
-  private int losButtonX = 400 - losButtonWidth/2;
-  private int losButtonY = 300 - losButtonHeight/2;
+  private int losButtonX = 315;
+  private int losButtonY = 270;
   
   UserInterface(){
     //game = game.getGame();
@@ -15,13 +15,19 @@ class UserInterface {
   
   public void update(Graphics g, int _mouseX, int _mouseY){
     mouseX = _mouseX;
-    mouseY = _mouseY;
+    mouseY = _mouseY - 32;
     if(Game.getGame().getRunning() == false) {
+      g.setColor(new Color(0, 0, 0));
+      g.fillRect(0, 0, 800, 600);
       g.setColor(new Color(255, 0, 0));
       g.fillRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
+      g.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+      g.drawString("WOLFenstein 3D", 200, 100);
       g.setColor(new Color(0, 0, 0));
+      g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+      g.drawString("LOS", losButtonX + losButtonWidth / 2 - 18, losButtonY + losButtonHeight / 2 + 8);
+      g.setColor(new Color(66, 62, 62));
       g.drawRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
-      g.drawString("LOS", losButtonX + losButtonWidth / 2, losButtonY + losButtonHeight / 2);
     }
   }
   
