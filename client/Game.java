@@ -76,7 +76,15 @@ class Game extends JPanel{
   public void leftClick(){
     System.out.println(mouseX + "  " +  mouseY);
     UI.mouseClicked();  
-  } 
+  }
+
+  public void mousePressed() {
+    UI.mousePressed();
+  }
+
+  public void mouseReleased() {
+    UI.mouseReleased();
+  }
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
