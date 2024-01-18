@@ -3,6 +3,8 @@ import java.awt.*;
 
 class Game extends JPanel{
   public Game(){}
+  
+  private int fps = 30;
 
   public static final int stepWidth = 10;
   public static final int turnAngle = 10;
@@ -41,8 +43,24 @@ class Game extends JPanel{
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    while(true){
-      frame.repaint();  
+    double timeToNextFrame = 0;
+    double lastTime = System.nanoTime();
+    double time = 0;
+    double lastRenderedTime = 0;
+    while (true) {
+      lastTime = time;
+      if (timeToNextFrame <= 0) {
+        double renderedTime = System.nanoTime();
+        System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        frame.repaint();
+        timeToNextFrame += (1000000000 / (float) fps);
+        //System.out.println(lastTime + "   " + System.nanoTime());
+        //System.out.println("frameTime:  " + -(lastTime - System.nanoTime()));
+        lastRenderedTime = renderedTime;
+      }
+      time = System.nanoTime();
+      double frametime = -(lastTime - time);
+      timeToNextFrame -= frametime;
     }
   }
   
@@ -100,12 +118,12 @@ class Game extends JPanel{
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
   protected void paintComponent(Graphics g){
-    g.setColor(new Color(0, 0, 0));
-    g.fillRect(0, 0, 800, 600);
-    
     if(gameRunning){
       renderer.draw(g, player);
-    }
+    } else {
+      g.setColor(new Color(0, 0, 0));
+      g.fillRect(0, 0, 800, 600);  
+    } 
     UI.update(g, mouseX, mouseY);
   }
 
