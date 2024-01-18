@@ -14,7 +14,7 @@ class UserInterface {
   private Color textColor = grey;
   
   public void update(Graphics g, int _mouseX, int _mouseY){
-    if(Game.getGame().getRunning() == false) {
+    if(!Game.getGame().getRunning()) {
       g.setColor(new Color(0, 0, 0));
       g.fillRect(0, 0, 800, 600);
       g.setColor(buttonColor);
@@ -42,7 +42,7 @@ class UserInterface {
   public void mouseMoved() {
     Game game = Game.getGame();
     if(mouseX >= losButtonX && mouseX <= losButtonX + losButtonWidth && mouseY >= losButtonY
-            && mouseY <= losButtonY + losButtonHeight && game.getRunning() == false) {
+            && mouseY <= losButtonY + losButtonHeight && !game.getRunning()) {
       buttonColor = grey;
       textColor = red;
     } else {
