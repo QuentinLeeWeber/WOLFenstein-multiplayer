@@ -51,7 +51,7 @@ class Game extends JPanel{
       lastTime = time;
       if (timeToNextFrame <= 0) {
         double renderedTime = System.nanoTime();
-        System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
         frame.repaint();
         timeToNextFrame += (1000000000 / (float) fps);
         //System.out.println(lastTime + "   " + System.nanoTime());
@@ -73,7 +73,15 @@ class Game extends JPanel{
   public void leftClick(){
     System.out.println(mouseX + "  " +  mouseY);
     UI.mouseClicked();  
-  } 
+  }
+
+  public void mousePressed() {
+    UI.mousePressed();
+  }
+
+  public void mouseReleased() {
+    UI.mouseReleased();
+  }
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void keyPressed(char c){
