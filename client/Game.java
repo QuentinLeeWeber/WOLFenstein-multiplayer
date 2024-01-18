@@ -50,17 +50,22 @@ class Game extends JPanel{
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
+        double actualRenderTime = System.nanoTime();
+        double lastActualRenderTime = 0;
         double renderedTime = System.nanoTime();
-        System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms  " + timeToNextFrame);
+        lastActualRenderTime = actualRenderTime;
         frame.repaint();
-        timeToNextFrame += (1000000000 / (float) fps);
-        //System.out.println(lastTime + "   " + System.nanoTime());
-        //System.out.println("frameTime:  " + -(lastTime - System.nanoTime()));
+        actualRenderTime = System.nanoTime();
+        timeToNextFrame += (1000000000 / (float) fps) - (actualRenderTime - lastActualRenderTime);
         lastRenderedTime = renderedTime;
       }
       time = System.nanoTime();
-      double frametime = -(lastTime - time);
-      timeToNextFrame -= frametime;
+      /*if(timeToNextFrame >= (1000000000 / (float) fps)){
+        System.out.println("Game is running slow --> frameskip");
+        timeToNextFrame = 0;
+      }*/
+      timeToNextFrame -= -(lastTime - time);
     }
   }
   
