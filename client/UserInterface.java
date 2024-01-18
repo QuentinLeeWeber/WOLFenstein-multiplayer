@@ -15,7 +15,7 @@ class UserInterface {
   
   public void update(Graphics g, int _mouseX, int _mouseY){
     mouseX = _mouseX;
-    mouseY = _mouseY;
+    mouseY = _mouseY - 32;
     if(Game.getGame().getRunning() == false) {
       g.setColor(new Color(0, 0, 0));
       g.fillRect(0, 0, 800, 600);
