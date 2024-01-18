@@ -4,7 +4,8 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 30;
+  private int fps = 1232;
+  private double frameTime;
 
   public static final int stepWidth = 10;
   public static final int turnAngle = 10;
@@ -44,27 +45,20 @@ class Game extends JPanel{
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
     double timeToNextFrame = 0;
-    double lastTime = System.nanoTime();
+    double lastTime = 0;
     double time = 0;
     double lastRenderedTime = 0;
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
-        double actualRenderTime = System.nanoTime();
-        double lastActualRenderTime = 0;
         double renderedTime = System.nanoTime();
-        System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms  " + timeToNextFrame);
-        lastActualRenderTime = actualRenderTime;
+        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
-        actualRenderTime = System.nanoTime();
-        timeToNextFrame += (1000000000 / (float) fps) - (actualRenderTime - lastActualRenderTime);
+        timeToNextFrame = (1000000000 / (float) fps);
         lastRenderedTime = renderedTime;
       }
       time = System.nanoTime();
-      /*if(timeToNextFrame >= (1000000000 / (float) fps)){
-        System.out.println("Game is running slow --> frameskip");
-        timeToNextFrame = 0;
-      }*/
       timeToNextFrame -= -(lastTime - time);
     }
   }
@@ -130,6 +124,9 @@ class Game extends JPanel{
       g.fillRect(0, 0, 800, 600);  
     } 
     UI.update(g, mouseX, mouseY);
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
+    g.setColor(new Color(0, 255, 0));
+    g.drawString(Float.toString((float) ((int) (frameTime * 10)) /10) + "ms", 723, 13);
   }
 
   public boolean getRunning() {
