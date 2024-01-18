@@ -82,6 +82,10 @@ class Game extends JPanel{
     
   }
   
+  public void mouseMoved() {
+    UI.mouseMoved();
+  }
+  
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
     gameRunning = true; 

@@ -13,5 +13,6 @@ public class MyMouseMotionListener implements MouseMotionListener {
         //NWT.mouseDragged(e.getX(), e.getY());
         Game.getGame().mouseY = e.getY();
         Game.getGame().mouseX = e.getX();
+        Game.getGame().mouseMoved();
     }
 }
