@@ -4,14 +4,14 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 1232;
+  private final int fps = 60;
   private double frameTime;
 
   public static final int stepWidth = 5;
   public static final int turnAngle = 5;
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender();
+  private BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -45,10 +45,12 @@ class Game extends JPanel{
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
     renderer.level = level;
+    renderer.player = player;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
+    frame.setResizable(false);
     double timeToNextFrame = 0;
     double lastTime = 0;
     double time = 0;
@@ -140,7 +142,11 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void stopGame(){
-     gameRunning = false;
+    gameRunning = false;
+  }
+
+  public Player getPlayer(){
+    return player;
   }
   
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
@@ -149,7 +155,7 @@ class Game extends JPanel{
   protected void paintComponent(Graphics g){
     handleKeys();
     if(gameRunning){
-      renderer.draw(g, player);
+      renderer.draw(g);
     } else {
       g.setColor(new Color(0, 0, 0));
       g.fillRect(0, 0, 800, 600);  
