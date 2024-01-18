@@ -6,8 +6,8 @@ class Game extends JPanel{
   
   private int fps = 30;
 
-  public static final int stepWidth = 10;
-  public static final int turnAngle = 10;
+  public static final int stepWidth = 5;
+  public static final int turnAngle = 5;
 
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
@@ -15,7 +15,12 @@ class Game extends JPanel{
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
-  
+
+  private boolean wPressed = false;
+  private boolean qPressed = false;
+  private boolean ePressed = false;
+  private boolean pPressed = false;
+
   private Player player = new Player(400, 300);
   
   public int mouseX;
@@ -51,11 +56,9 @@ class Game extends JPanel{
       lastTime = time;
       if (timeToNextFrame <= 0) {
         double renderedTime = System.nanoTime();
-        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+        handleKeys();
         frame.repaint();
         timeToNextFrame += (1000000000 / (float) fps);
-        //System.out.println(lastTime + "   " + System.nanoTime());
-        //System.out.println("frameTime:  " + -(lastTime - System.nanoTime()));
         lastRenderedTime = renderedTime;
       }
       time = System.nanoTime();
@@ -84,28 +87,45 @@ class Game extends JPanel{
   }
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
-  public void keyPressed(char c){
-    if (c == 'w') {
+  public void handleKeys(){
+    if (wPressed) {
       player.move(stepWidth);
-    } else if (c == 'e') {
+    }
+    if (ePressed) {
       player.turn(turnAngle);
-    } else if (c == 'q') {
+    }
+    if (qPressed) {
       player.turn(-turnAngle);
-    } else if (c == 'p') {
-      if (gameRunning) {
-        game.stopGame();
-      }
+    }
+    if (pPressed && gameRunning) {
+      game.stopGame();
     }
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
   public void keyTyped(char c){
-    
+    if (c == 'w') {
+      wPressed = true;
+    } else if (c == 'e') {
+      ePressed = true;
+    } else if (c == 'q') {
+      qPressed = true;
+    } else if (c == 'p') {
+      pPressed = true;
+    }
   }
   
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
   public void keyReleased(char c){
-    
+    if (c == 'w') {
+      wPressed = false;
+    } else if (c == 'e') {
+      ePressed = false;
+    } else if (c == 'q') {
+      qPressed = false;
+    } else if (c == 'p') {
+      pPressed = false;
+    }
   }
   
   public void mouseMoved() {
