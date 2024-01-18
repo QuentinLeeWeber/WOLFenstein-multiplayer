@@ -95,7 +95,7 @@ class Game extends JPanel{
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
-    protected void paintComponent(Graphics g){
+  protected void paintComponent(Graphics g){
     g.setColor(new Color(0, 0, 0));
     g.fillRect(0, 0, 800, 600);
     
