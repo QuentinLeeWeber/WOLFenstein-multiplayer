@@ -4,7 +4,7 @@ abstract class Level {
     public ArrayList<Wall> walls = new ArrayList<Wall>();
     public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
 
-    public void createWall(float[] a, float[] b) {
+    public void createWall(int[] a, int[] b) {
         Wall wall = new Wall(a, b);
         walls.add(wall);
     }

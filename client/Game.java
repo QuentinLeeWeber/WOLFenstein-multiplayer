@@ -51,7 +51,7 @@ class Game extends JPanel{
             lastTime = time;
             if (timeToNextFrame <= 0) {
                 double renderedTime = System.nanoTime();
-                System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
+                //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
                 checkCollision();
                 frame.repaint();
                 timeToNextFrame += (1000000000 / (float) fps);
@@ -78,7 +78,16 @@ class Game extends JPanel{
 
     void checkCollision() {
         for (Graphikobjekt g : level.graphikobjekte) {
-            System.out.println(BoundingBox.isColliding(player.boundingBox, g.boundingBox));
+            System.out.println(g);
+            if (g.boundingBox != null) {
+                System.out.println(BoundingBox.isColliding(player.boundingBox, g.boundingBox));
+            }
+        }
+        for (Wall wall : level.walls) {
+            if (wall.boundingBox != null) {
+                System.out.println(BoundingBox.isColliding(wall.boundingBox, player.boundingBox));
+
+            }
         }
     }
 

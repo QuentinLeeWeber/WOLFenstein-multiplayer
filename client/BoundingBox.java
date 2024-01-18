@@ -6,6 +6,7 @@ class BoundingBox {
       public int height;
   
   public BoundingBox(int _x, int _y, int _width, int _height) {
+      System.out.println("BoundingBox generated");
        x = _x;
        y = _y;
        width = _width;
