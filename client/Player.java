@@ -20,6 +20,5 @@ class Player extends Kreatur {
         // independently (could save debugging time in the future).
         g2d.rotate(Math.toRadians(direction), x, y + 2.5);
         g2d.drawPolygon(new int[]{x, x + 5, x - 5}, new int[]{y, y + 5, y + 5}, 3);
-
     }
 }

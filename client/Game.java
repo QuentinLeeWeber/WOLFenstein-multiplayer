@@ -4,11 +4,13 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private final int fps = 60;
+  private final int fps = 30;
   private double frameTime;
 
   public static final int stepWidth = 5;
   public static final int turnAngle = 5;
+  public static final int frameHeight = 600;
+  public static final int frameWidth = 800;
 
   private static Game game;
   private BlenderRender renderer = new BlenderRender(true);
@@ -36,7 +38,7 @@ class Game extends JPanel{
   private void start(){
     System.out.println("start...");
     frame.add(this);
-    frame.setSize(800, 600);
+    frame.setSize(frameWidth, frameHeight);
     frame.setTitle("WOLFenstein");
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
@@ -59,7 +61,6 @@ class Game extends JPanel{
       lastTime = time;
       if (timeToNextFrame <= 0) {
         double renderedTime = System.nanoTime();
-        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
         timeToNextFrame = (1000000000 / (float) fps);

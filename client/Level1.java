@@ -11,11 +11,17 @@ class Level1 extends Level {
         float[] f = {200, 400};
         float[] g = {0, 0};
         float[] h = {100, 100};
+        float[] x = {100, 100};
+        float[] y = {600, 100};
+        float[] v = {300, 100};
+        float[] w = {300, 500};
         createWall(c, d);
         createWall(e, f);
         createWall(a, b);
         createWall(h, g);
         createWall(i, j);
+        createWall(x, y);
+        createWall(v, w);
         createEnemy(100, 200);
     }
 }
