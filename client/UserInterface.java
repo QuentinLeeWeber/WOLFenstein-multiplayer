@@ -8,6 +8,8 @@ class UserInterface {
   private int losButtonHeight = 60;
   private int losButtonX = 315;
   private int losButtonY = 270;
+  private int losShadowX = 318;
+  private int losShadowY = 273;
   private Color red = new Color(255, 0, 0);
   private Color grey = new Color(66, 62, 62);
   private Color buttonColor = red;
@@ -17,6 +19,8 @@ class UserInterface {
     mouseX = _mouseX;     
     mouseY = _mouseY - 32;
     if(!Game.getGame().getRunning()) {
+      g.setColor(grey);
+      g.fillRect(losShadowX, losShadowY, losButtonWidth, losButtonHeight);
       g.setColor(buttonColor);
       g.fillRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
       g.setColor(red);
@@ -30,11 +34,10 @@ class UserInterface {
     }
   }
   
-  public void mouseClicked(){
+  public void mouseClicked() {
     Game game = Game.getGame();
     if(mouseX >= losButtonX && mouseX <= losButtonX + losButtonWidth && mouseY >= losButtonY
             && mouseY <= losButtonY + losButtonHeight && !game.getRunning()) {
-      System.out.println("Los Button clicked!");
       game.startGame();
     }
   }
@@ -48,6 +51,23 @@ class UserInterface {
     } else {
       buttonColor = red;
       textColor = grey;
+    }
+  }
+
+  public void mousePressed() {
+    Game game = Game.getGame();
+    if(mouseX >= losButtonX && mouseX <= losButtonX + losButtonWidth && mouseY >= losButtonY
+            && mouseY <= losButtonY + losButtonHeight && !game.getRunning() && losButtonX != losShadowX) {
+      losButtonX = losShadowX;
+      losButtonY = losShadowY;
+    }
+  }
+
+  public void mouseReleased() {
+    Game game = Game.getGame();
+    if(losButtonX == losShadowX) {
+      losButtonX -= 3;
+      losButtonY -= 3;
     }
   }
 }
