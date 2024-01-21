@@ -16,7 +16,7 @@ class Game extends JPanel{
     private UserInterface UI = new UserInterface();
     private boolean gameRunning = false;
 
-    private Player player = new Player(400, 300);
+    private Player player = new Player(400, 400, level);
 
     public int mouseX;
     public int mouseY;
@@ -35,6 +35,7 @@ class Game extends JPanel{
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
         m.addKeyEventDispatcher(dispatcher);
@@ -43,6 +44,7 @@ class Game extends JPanel{
         MyMouseListener ML = new MyMouseListener();
         frame.addMouseMotionListener(MML);
         frame.addMouseListener(ML);
+
         double timeToNextFrame = 0;
         double lastTime = System.nanoTime();
         double time = 0;
@@ -52,7 +54,11 @@ class Game extends JPanel{
             if (timeToNextFrame <= 0) {
                 double renderedTime = System.nanoTime();
                 //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
-                checkCollision();
+                player.update();
+                for (Graphikobjekt gr : level.graphikobjekte) {
+                    gr.update();
+                }
+                checkGraphikobjektCollision();
                 frame.repaint();
                 timeToNextFrame += (1000000000 / (float) fps);
                 //System.out.println(lastTime + "   " + System.nanoTime());
@@ -65,7 +71,7 @@ class Game extends JPanel{
         }
     }
 
-    //getGame ist daf�r da das man von �berall aus durch Game.getGame() zuggriff auf die �ffentlichen Attribute von Game hat
+    //getGame ist dafuer da das man von ueberall aus durch Game.getGame() zuggriff auf die oeffentlichen Attribute von Game hat
     public static Game getGame(){
         return game;
     }
@@ -76,22 +82,17 @@ class Game extends JPanel{
         UI.mouseClicked();
     }
 
-    void checkCollision() {
+    private void checkGraphikobjektCollision() {
         for (Graphikobjekt g : level.graphikobjekte) {
-            System.out.println(g);
-            if (g.boundingBox != null) {
-                System.out.println(BoundingBox.isColliding(player.boundingBox, g.boundingBox));
-            }
-        }
-        for (Wall wall : level.walls) {
-            if (wall.boundingBox != null) {
-                System.out.println(BoundingBox.isColliding(wall.boundingBox, player.boundingBox));
-
+            if (g.boundingBox != null && BoundingBox.isColliding(player.boundingBox, g.boundingBox)) {
+                if (g.getClass() == Enemy.class) {
+                    player.wurdeGetroffen();
+                }
             }
         }
     }
 
-    // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
+    // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedrueckt wird, diese wird dann als char uebegeben
     public void keyPressed(char c){
         if (c == 'w') {
             player.move(stepWidth);
@@ -106,12 +107,12 @@ class Game extends JPanel{
         }
     }
 
-    //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
+    //Funktion wird dann aufgerufen, wenn eine neue Taste gedrueckt wurde, diese wird dann als char uebergeben
     public void keyTyped(char c){
 
     }
 
-    //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
+    //Funktion wird dann aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char uebergeben
     public void keyReleased(char c){
 
     }
@@ -120,12 +121,12 @@ class Game extends JPanel{
         UI.mouseMoved();
     }
 
-    //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
+    //Funktion ist dafuer vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
     public void startGame(){
         gameRunning = true;
     }
 
-    //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
+    //Funktion ist dafuer vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
     public void stopGame(){
         gameRunning = false;
     }
@@ -137,7 +138,7 @@ class Game extends JPanel{
         if(gameRunning){
             renderer.draw(g, player);
         } else {
-            g.setColor(new Color(0, 0, 0));
+            g.setColor(Color.BLACK);
             g.fillRect(0, 0, 800, 600);
         }
         UI.update(g, mouseX, mouseY);

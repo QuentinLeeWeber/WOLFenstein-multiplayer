@@ -4,8 +4,11 @@ abstract class Kreatur extends Graphikobjekt {
 
     public int direction = 0; //nur 0, 90, 180, 270
 
-    public Kreatur(int x, int y) {
+    public Level level;
+
+    public Kreatur(int x, int y, Level _level) {
         super(x, y);
+        level = _level;
     }
 
     public int getLeben() {
@@ -22,22 +25,33 @@ abstract class Kreatur extends Graphikobjekt {
         }
     }
 
-    public void move(float speed) {
+    public void move(int speed) {
         switch (direction) {
             case 0:
-                y -= speed;
+                setY(getY() - speed);
                 break;
             case 90:
-                x += speed;
+                setX(getX() + speed);
                 break;
             case 180:
-                y += speed;
+                setY(getY() + speed);
                 break;
             case 270:
-                x -= speed;
+                setX(getX() - speed);
                 break;
             default:
-
         }
+        if (getCollidingWall() != null) {
+            move(-1);
+        }
+    }
+
+    public Wall getCollidingWall() {
+        for (Wall wall : level.walls) {
+            if (BoundingBox.isColliding(boundingBox, wall.boundingBox)) {
+                return wall;
+            }
+        }
+        return null;
     }
 }

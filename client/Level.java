@@ -10,6 +10,13 @@ abstract class Level {
     }
 
     public void createEnemy(int x, int y) {
-        graphikobjekte.add(new Enemy(x, y));
+        graphikobjekte.add(new Enemy(x, y, this));
+    }
+
+    public ArrayList<BoundingBox> getBoundingBoxes() {
+        ArrayList<BoundingBox> boundingBoxes = new ArrayList<BoundingBox>();
+        graphikobjekte.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
+        walls.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
+        return boundingBoxes;
     }
 }
