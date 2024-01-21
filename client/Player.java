@@ -3,7 +3,6 @@ import java.awt.*;
 class Player extends Kreatur {
 
     private final int size = 15;
-    private Level level;
 
     public Player(int x, int y, Level level) {
         super(x, y, level);
@@ -12,11 +11,7 @@ class Player extends Kreatur {
 
     public void update() {
     }
-
-    public void setLevel(Level _level) {
-        level = _level;
-    }
-
+    
     public void wurdeGetroffen() {
         System.out.println("Ouch! :(");
     }
