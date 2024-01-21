@@ -22,7 +22,7 @@ class Game extends JPanel{
   private boolean ePressed = false;
   private boolean pPressed = false;
 
-  private Player player = new Player(400, 300);
+  private Player player = new Player(400, 300, level);
   
   public int mouseX;
   public int mouseY;
@@ -41,14 +41,17 @@ class Game extends JPanel{
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
-    renderer.level = level;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
+    
+    renderer.level = level;
+    
     double timeToNextFrame = 0;
     double lastTime = 0;
     double time = 0;
@@ -56,6 +59,12 @@ class Game extends JPanel{
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
+        player.update();
+        for (Graphikobjekt gr : level.graphikobjekte) {
+            gr.update();
+        }
+        checkGraphikobjektCollision();
+        
         double renderedTime = System.nanoTime();
         //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;

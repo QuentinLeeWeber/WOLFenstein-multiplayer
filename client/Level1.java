@@ -1,8 +1,10 @@
 class Level1 extends Level {
     public Level1() {
-        float[] a = {200, 200};
-        float[] b = {300, 300};
+        int[] a = {200, 200};
+        int[] b = {500, 200};
+        int[] c = {200, 100};
         createWall(a, b);
+        createWall(a, c);
         createEnemy(100, 200);
     }
 }
