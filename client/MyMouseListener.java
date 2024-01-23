@@ -13,12 +13,16 @@ public class MyMouseListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
-
+        if (e.getButton() == 1) {
+            Game.getGame().mousePressed();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
+        if (e.getButton() == 1) {
+            Game.getGame().mouseReleased();
+        }
 
     }
 
