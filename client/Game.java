@@ -4,11 +4,14 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 1232;
+  private int fps = 30;
   private double frameTime;
 
   public static final int stepWidth = 5;
   public static final int turnAngle = 5;
+
+  public static final int windowHeight = 600;
+  public static final int windowWidth = 800;
 
   private static Game game;
   private BlenderRender renderer = new BlenderRender();
@@ -22,8 +25,8 @@ class Game extends JPanel{
   private boolean ePressed = false;
   private boolean pPressed = false;
 
-  private Player player = new Player(400, 300, level);
-  
+  private Player player = new Player(windowWidth/2, windowHeight/2, level);
+
   public int mouseX;
   public int mouseY;
   
@@ -36,7 +39,7 @@ class Game extends JPanel{
   private void start(){
     System.out.println("start...");
     frame.add(this);
-    frame.setSize(800, 600);
+    frame.setSize(windowWidth, windowHeight);
     frame.setTitle("WOLFenstein");
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
