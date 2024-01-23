@@ -26,16 +26,19 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        setX(getX()+(int) (Math.sin(Math.toRadians(direction))*speed));
-        setY(getY()+(int) (-Math.cos(Math.toRadians(direction))*speed));
-        if (getCollidingWall() != null) {
-            move(-1);
+        int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
+        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
+        if (getCollidingWall(newX, newY) != null) {
+            return;
         }
+        setX(newX);
+        setY(newY);
     }
 
-    public Wall getCollidingWall() {
+    public Wall getCollidingWall(int newX, int newY) {
+        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
         for (Wall wall : level.walls) {
-            if (BoundingBox.isColliding(boundingBox, wall.boundingBox)) {
+            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
                 return wall;
             }
         }
