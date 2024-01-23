@@ -81,6 +81,17 @@ class Game extends JPanel{
   public static Game getGame(){
     return game; 
   }
+
+  public void checkGraphikobjektCollision() {
+    for (Graphikobjekt gr : level.graphikobjekte) {
+        if (BoundingBox.isColliding(player.boundingBox, gr.boundingBox)) {
+            if (gr.getClass() == Enemy.class)
+            {
+              player.wurdeGetroffen();
+            }
+        }
+    }
+}
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
