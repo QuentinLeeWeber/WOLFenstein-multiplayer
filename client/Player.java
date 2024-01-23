@@ -2,7 +2,7 @@ import java.awt.*;
 
 class Player extends Kreatur {
 
-    private final int size = 15;
+    final static int size = 14;
 
     public Player(int x, int y, Level level) {
         super(x, y, level);

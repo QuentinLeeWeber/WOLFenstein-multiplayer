@@ -2,7 +2,7 @@ abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
 
-    public int direction = 0; //nur 0, 90, 180, 270
+    public int direction = 0;
 
     public Level level;
 
@@ -26,29 +26,19 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        switch (direction) {
-            case 0:
-                setY(getY() - speed);
-                break;
-            case 90:
-                setX(getX() + speed);
-                break;
-            case 180:
-                setY(getY() + speed);
-                break;
-            case 270:
-                setX(getX() - speed);
-                break;
-            default:
+        int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
+        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
+        if (getCollidingWall(newX, newY) != null) {
+            return;
         }
-        if (getCollidingWall() != null) {
-            move(-1);
-        }
+        setX(newX);
+        setY(newY);
     }
 
-    public Wall getCollidingWall() {
+    public Wall getCollidingWall(int newX, int newY) {
+        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
         for (Wall wall : level.walls) {
-            if (BoundingBox.isColliding(boundingBox, wall.boundingBox)) {
+            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
                 return wall;
             }
         }
