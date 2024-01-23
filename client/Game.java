@@ -4,7 +4,7 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 1232;
+  private int fps = 30;
   private double frameTime;
 
   public static final int stepWidth = 5;
