@@ -24,6 +24,7 @@ class Game extends JPanel{
   private boolean qPressed = false;
   private boolean ePressed = false;
   private boolean pPressed = false;
+  private boolean sPressed = false;
 
   private Player player = new Player(windowWidth/2, windowHeight/2, level);
 
@@ -121,6 +122,9 @@ class Game extends JPanel{
     if (qPressed) {
       player.turn(-turnAngle);
     }
+    if (sPressed) {
+      player.move(-stepWidth);
+    }
     if (pPressed && gameRunning) {
       game.stopGame();
     }
@@ -136,6 +140,8 @@ class Game extends JPanel{
       qPressed = true;
     } else if (c == 'p') {
       pPressed = true;
+    } else if (c == 's') {
+      sPressed = true;
     }
   }
   
@@ -149,6 +155,8 @@ class Game extends JPanel{
       qPressed = false;
     } else if (c == 'p') {
       pPressed = false;
+    } else if (c == 's') {
+      sPressed = false;
     }
   }
   
