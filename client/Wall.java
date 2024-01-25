@@ -3,8 +3,8 @@ import java.util.Random;
 import java.lang.Math;
 
 class Wall {
-    public float[] a = new float[2];
-    public float[] b = new float[2];
+    public int[] a = new int[2];
+    public int[] b = new int[2];
     public float[] physicA = new float[2];
     public float[] physicB = new float[2];
     public BoundingBox boundingBox;
@@ -34,10 +34,10 @@ class Wall {
         }
         
         Random rand = new Random();
-        float r = rand.nextFloat();
-        float g = rand.nextFloat();
-        float b = rand.nextFloat();
-        renderColor = new Color(r, g, b);
+        float R = rand.nextFloat();
+        float G = rand.nextFloat();
+        float B = rand.nextFloat();
+        renderColor = new Color(R, G, B);
       
         boundingBox = new BoundingBox(Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(1, Math.abs(b[0] - a[0])), Math.max(1, Math.abs(b[1] - a[1])));
     }

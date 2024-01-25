@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.lang.Math;
+import java.util.ArrayList;
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -9,7 +10,7 @@ class BlenderRender {
     private boolean renderIn3d;
     private boolean debug = false;
     private final int viewDistance = 1000;
-    private final int resolution = 400;
+    private final int resolution = 800;
     private final int fov = 70;
     private final float wallHeight = 3;
     private boolean renderBoundingBoxes = false;
@@ -57,7 +58,7 @@ class BlenderRender {
                 }
             }
             g.setColor(Color.orange);
-            g.fillRect(p.boundingBox.x, p.boundingBox.y, p.boundingBox.width, p.boundingBox.height);
+            g.fillRect(Game.getGame().player.boundingBox.x, Game.getGame().player.boundingBox.y, Game.getGame().player.boundingBox.width, Game.getGame().player.boundingBox.height);
             g.setColor(prevColor);
         }
     }
@@ -104,15 +105,8 @@ class BlenderRender {
             }
             int drawX = (int) (((float) i) * (float) (Game.frameWidth) / (float) (resolution));
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
-            //g.setColor(new Color(255, 0, (int) (255 * colorValue)));
             if(hitDistance <= 1000){
-                //g.setColor(new Color((byte) (wallColor.getRed() * colorValue), (byte) (wallColor.getGreen() * colorValue), (byte) (wallColor.getBlue() * colorValue)));
                 g.setColor(renderColor);
-                //g.setColor(new Color(wallColor.red - (wallColor.red ))
-
-
-
-                //g.fillRect(drawX, Game.frameHeight / 2 - drawY, drawX + (int) (Game.frameWidth / resolution), drawY * 2);
                 g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
             }
             if(debug){

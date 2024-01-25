@@ -35,6 +35,10 @@ abstract class Kreatur extends Graphikobjekt {
         setY(newY);
     }
 
+    public void moveSideways(int speed){
+        
+    }
+
     public Wall getCollidingWall(int newX, int newY) {
         BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
         for (Wall wall : level.walls) {
