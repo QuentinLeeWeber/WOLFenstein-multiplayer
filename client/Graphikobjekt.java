@@ -1,7 +1,7 @@
 abstract class Graphikobjekt {
 
-    private int x;
-    private int y;
+    public int x;
+    public int y;
     public String texture;
     public BoundingBox boundingBox;
 

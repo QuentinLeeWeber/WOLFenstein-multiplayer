@@ -27,8 +27,10 @@ class Game extends JPanel{
   private boolean ePressed = false;
   private boolean pPressed = false;
   private boolean sPressed = false;
+  private boolean aPressed = false;
+  private boolean dPressed = false;
 
-  private Player player = new Player(windowWidth/2, windowHeight/2, level);
+  public Player player = new Player(windowWidth/2, windowHeight/2, level);
 
   public int mouseX;
   public int mouseY;
@@ -126,6 +128,12 @@ class Game extends JPanel{
     if (sPressed) {
       player.move(-stepWidth);
     }
+    if(aPressed){
+      player.moveSideways(stepWidth);
+    }
+    if(dPressed){
+      player.moveSideways(-stepWidth);
+    }
     if (pPressed && gameRunning) {
       game.stopGame();
     }
@@ -143,6 +151,10 @@ class Game extends JPanel{
       pPressed = true;
     } else if (c == 's') {
       sPressed = true;
+    } else if (c == 'a'){
+      aPressed = true;
+    } else if (c == 'd'){
+      dPressed = true;
     }
   }
   
@@ -158,6 +170,10 @@ class Game extends JPanel{
       pPressed = false;
     } else if (c == 's') {
       sPressed = false;
+    } else if (c == 'a'){
+      aPressed = false;
+    } else if (c == 'd'){
+      dPressed = false;
     }
   }
   
