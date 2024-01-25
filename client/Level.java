@@ -3,6 +3,7 @@ import java.util.ArrayList;
 abstract class Level {
     public ArrayList<Wall> walls = new ArrayList<Wall>();
     public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
+    public ArrayList<Vectordata> vector = new ArrayList<Vectordata>();
 
     public Level() {
         createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
@@ -25,5 +26,20 @@ abstract class Level {
         graphikobjekte.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
         walls.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
         return boundingBoxes;
+    }
+
+    public void createVector( int x, int y, int x2, int y2) {
+       GM2D04.Vector vecA = new GM2D04.Vector(
+                            new GM2D04.ColMatrix(x,y));
+       GM2D04.Vector vecB = new GM2D04.Vector(
+                            new GM2D04.ColMatrix(x2,y2));
+    
+       GM2D04.Vector sumOf2 = vecA.add(vecB);
+       vector.add (new Vectordata(x, y, x2, y2));
+    }
+    public void paint(Graphics g){
+        for (Vectordata a : vector ) {
+          g.drawLine(a.x, a.y, a.x2, a.y2);
+        }
     }
 }
