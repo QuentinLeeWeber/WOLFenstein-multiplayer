@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.util.ArrayList;
+import java.lang.Math;
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -12,6 +12,7 @@ class BlenderRender {
     private final int resolution = 400;
     private final int fov = 70;
     private final float wallHeight = 3;
+    private boolean renderBoundingBoxes = false;
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
@@ -44,6 +45,20 @@ class BlenderRender {
                 g.setColor(new Color(0, 0, 0));
                 g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
             }
+        }
+        if (renderBoundingBoxes) {
+            Color prevColor = g.getColor();
+            g.setColor(Color.green);
+
+            for (BoundingBox boundingBox : level.getBoundingBoxes()) {
+                if (boundingBox != null) {
+                    //BoundingBoxes mit einer minimalen Größe von 3 gemalt, damit sie immer sichtbar sind
+                    g.fillRect(boundingBox.x, boundingBox.y, Math.max(3, boundingBox.width), Math.max(3, boundingBox.height));
+                }
+            }
+            g.setColor(Color.orange);
+            g.fillRect(p.boundingBox.x, p.boundingBox.y, p.boundingBox.width, p.boundingBox.height);
+            g.setColor(prevColor);
         }
     }
 

@@ -1,12 +1,14 @@
-import java.lang.Math;
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
 
-    public int direction = 0; //nur 0, 90, 180, 270
+    public int direction = 0;
 
-    public Kreatur(int x, int y) {
+    public Level level;
+
+    public Kreatur(int x, int y, Level _level) {
         super(x, y);
+        level = _level;
     }
 
     public int getLeben() {
@@ -23,16 +25,23 @@ abstract class Kreatur extends Graphikobjekt {
         }
     }
 
-    public void move(float speed) {
-        x += calcXSteps(speed);
-        y += calcYSteps(speed);
+    public void move(int speed) {
+        int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
+        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
+        if (getCollidingWall(newX, newY) != null) {
+            return;
+        }
+        setX(newX);
+        setY(newY);
     }
-  
-  private int calcYSteps(float speed) {
-    return (int) (-Math.cos(Math.toRadians(direction))*speed);
-  }
-  
-  private int calcXSteps(float speed) {
-      return (int) (Math.sin(Math.toRadians(direction))*speed);
+
+    public Wall getCollidingWall(int newX, int newY) {
+        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
+        for (Wall wall : level.walls) {
+            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
+                return wall;
+            }
+        }
+        return null;
     }
 }

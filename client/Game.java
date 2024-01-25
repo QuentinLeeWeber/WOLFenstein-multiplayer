@@ -12,6 +12,9 @@ class Game extends JPanel{
   public static final int frameHeight = 600;
   public static final int frameWidth = 800;
 
+  public static final int windowHeight = 600;
+  public static final int windowWidth = 800;
+
   private static Game game;
   private BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
@@ -23,9 +26,10 @@ class Game extends JPanel{
   private boolean qPressed = false;
   private boolean ePressed = false;
   private boolean pPressed = false;
+  private boolean sPressed = false;
 
-  private Player player = new Player(400, 300);
-  
+  private Player player = new Player(windowWidth/2, windowHeight/2, level);
+
   public int mouseX;
   public int mouseY;
   
@@ -43,6 +47,7 @@ class Game extends JPanel{
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
@@ -60,6 +65,12 @@ class Game extends JPanel{
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
+        player.update();
+        for (Graphikobjekt gr : level.graphikobjekte) {
+            gr.update();
+        }
+        checkGraphikobjektCollision();
+        
         double renderedTime = System.nanoTime();
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
@@ -75,6 +86,17 @@ class Game extends JPanel{
   public static Game getGame(){
     return game; 
   }
+
+  public void checkGraphikobjektCollision() {
+    for (Graphikobjekt gr : level.graphikobjekte) {
+        if (BoundingBox.isColliding(player.boundingBox, gr.boundingBox)) {
+            if (gr.getClass() == Enemy.class)
+            {
+              player.wurdeGetroffen();
+            }
+        }
+    }
+}
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
@@ -101,6 +123,9 @@ class Game extends JPanel{
     if (qPressed) {
       player.turn(-turnAngle);
     }
+    if (sPressed) {
+      player.move(-stepWidth);
+    }
     if (pPressed && gameRunning) {
       game.stopGame();
     }
@@ -116,6 +141,8 @@ class Game extends JPanel{
       qPressed = true;
     } else if (c == 'p') {
       pPressed = true;
+    } else if (c == 's') {
+      sPressed = true;
     }
   }
   
@@ -129,6 +156,8 @@ class Game extends JPanel{
       qPressed = false;
     } else if (c == 'p') {
       pPressed = false;
+    } else if (c == 's') {
+      sPressed = false;
     }
   }
   
