@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.*;
+import java.awt.Graphics;
 
 abstract class Level {
     public ArrayList<Wall> walls = new ArrayList<Wall>();
