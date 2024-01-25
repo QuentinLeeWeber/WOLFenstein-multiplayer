@@ -7,9 +7,9 @@ class BlenderRender {
     public Player player;
 
     private boolean renderIn3d;
-    private boolean debug = true;
-    private final int viewDistance = 100;
-    private final int resolution = 800;
+    private boolean debug = false;
+    private final int viewDistance = 1000;
+    private final int resolution = 400;
     private final int fov = 70;
     private final float wallHeight = 3;
 
@@ -53,22 +53,14 @@ class BlenderRender {
             float hitX = 99999;
             float hitY = 99999;
             float hitDistance = 99999;
-            float colorValue = 0;
+            Color renderColor = new Color(0, 0, 0);
             for(Wall wall : minWalls){
                 float dirDegree = (player.direction - fov / 2) + ((float) fov / (float) resolution) * (i + 1) - 90;
                 if(dirDegree % 90 == 0.0f || dirDegree % 270 == 0.0f){
                     dirDegree = dirDegree + 0.0001f;
                 }
                 float dir = (float) (dirDegree * (Math.PI / 180));
-
-                float mL = 0;
-                float nL = 0;
-                float mR = 0;
-                float nullX = player.x;
-                float nullY = player.y;
-                float nullSchnittX = 0;
-                float X = 0;
-                float Y = 0;
+                float mL = 0;float nL = 0;float mR = 0;float nullX = player.x;float nullY = player.y;float nullSchnittX = 0;float X = 0;float Y = 0;
                 try {
                     mL = (wall.a[1] - wall.b[1]) / (wall.a[0] - wall.b[0]); 
                 } catch (Exception e){ 
@@ -89,21 +81,29 @@ class BlenderRender {
                             hitDistance = (float) Math.sqrt(Math.pow(X - player.x, 2) + Math.pow(Y - player.y, 2));
                             hitX = X;
                             hitY = Y;
-                            colorValue = wall.colorValue;
+                            renderColor = wall.renderColor;
                         }
                     }
                 }     
                 renderDistance = (float) (hitDistance * Math.cos(((i - resolution / 2) * ((float) fov / (float) resolution)) * (Math.PI / 180)));
             }
-            int drawX = (int) (((float) i + 1) * (float) (Game.frameWidth) / (float) (resolution));
+            int drawX = (int) (((float) i) * (float) (Game.frameWidth) / (float) (resolution));
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
-            g.setColor(new Color(255, 0, (int) (255 * colorValue)));
+            //g.setColor(new Color(255, 0, (int) (255 * colorValue)));
             if(hitDistance <= 1000){
-                g.fillRect(drawX, Game.frameHeight / 2 - drawY, drawX + (int) (Game.frameWidth / resolution), drawY * 2);
+                //g.setColor(new Color((byte) (wallColor.getRed() * colorValue), (byte) (wallColor.getGreen() * colorValue), (byte) (wallColor.getBlue() * colorValue)));
+                g.setColor(renderColor);
+                //g.setColor(new Color(wallColor.red - (wallColor.red ))
+
+
+
+                //g.fillRect(drawX, Game.frameHeight / 2 - drawY, drawX + (int) (Game.frameWidth / resolution), drawY * 2);
+                g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
             }
             if(debug){
                 g.setColor(new Color(255, 0, 0));
                 g.fillOval((int) hitX - 2, (int) hitY - 2, 4, 4);
+                g.setColor(new Color(0, 100, 100));
                 g.drawLine((int) hitX, (int) hitY, player.x, player.y);
             }
         }

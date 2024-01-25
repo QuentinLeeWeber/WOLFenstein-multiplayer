@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.util.Random;
+
 class Wall {
     public float[] a = new float[2];
     public float[] b = new float[2];
@@ -5,7 +8,7 @@ class Wall {
     public float[] physicB = new float[2];
 
     //damit die wände abhänig von ihrer ausrichtung zur kamera eine andere Farbe haben können, für bessere sichtbarkeit
-    public float colorValue = 0;
+    public Color renderColor = new Color(0, 0, 0);
 
     public Wall(float[] _a, float[] _b) {
         a = _a;
@@ -27,21 +30,11 @@ class Wall {
             physicA[1] = b[1];
             physicB[1] = a[1];
         }
-        /*colorValue = (float) Math.atan(Math.abs(physicA[0] - physicB[0] / Math.abs(physicA[1] - physicB[1])) / (Math.PI * 0.5f));
-        if(colorValue >= 1){
-            colorValue = 0.99999f;
-        } else  if(colorValue <= 0){
-            colorValue = 0;
-        }
-        System.out.println(colorValue);*/
-    }
-
-    //berechung des winkels in abhänigkeit zur cameraposition
-    public void calcColorValue(int x, int y, int dir){
         
-        //das ist ganz großer bogus
-        double dirX = Math.cos(Math.toRadians(dir)) * x - Math.sin(Math.toRadians(dir)) * y;
-        double dirY = Math.sin(Math.toRadians(dir)) * x + Math.cos(Math.toRadians(dir)) * y;
-
+        Random rand = new Random();
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        renderColor = new Color(r, g, b);
     }
 }
