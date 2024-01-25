@@ -6,8 +6,8 @@ abstract class Kreatur extends Graphikobjekt {
 
     public Level level;
 
-    public Kreatur(int x, int y, Level _level) {
-        super(x, y);
+    public Kreatur(int x, int y, Level _level, String texture) {
+        super(x, y, texture);
         level = _level;
     }
 

@@ -5,7 +5,7 @@ class Player extends Kreatur {
     final static int size = 14;
 
     public Player(int x, int y, Level level) {
-        super(x, y, level);
+        super(x, y, level, "ignore");
         super.boundingBox = new BoundingBox(x, y, size, size);
     }
 

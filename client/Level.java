@@ -24,7 +24,7 @@ abstract class Level {
     }
 
     public void createEnemy(int x, int y) {
-        graphikobjekte.add(new Enemy(x, y, this));
+        graphikobjekte.add(new Enemy(x, y, this, "felix"));
     }
 
     public ArrayList<BoundingBox> getBoundingBoxes() {

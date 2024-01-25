@@ -1,6 +1,9 @@
 import java.awt.*;
+import java.io.IOException;
 import java.lang.Math;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -15,18 +18,21 @@ class BlenderRender {
     private final float wallHeight = 3;
     private boolean renderBoundingBoxes = false;
 
+    private Image felix;
+
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
 
     public BlenderRender(boolean _3d) {
         renderIn3d = _3d;
-        //renderIn3d = false;
+        loadTexures();
     }
 
     public void draw(Graphics g) { 
         if(renderIn3d){
             checkMinCollision(g);
             raycast(g);
+            calcGraphicsObjekte(g);
         } else { 
             for (Wall wall : level.walls) {
                 g.setColor(new Color(0, 0, 0));
@@ -139,6 +145,25 @@ class BlenderRender {
                 }
                 minWalls.add(wall); 
             }      
+        }
+    }
+
+    private void calcGraphicsObjekte(Graphics g){
+        for(Graphikobjekt gr : level.graphikobjekte){
+            float distance = (float) Math.sqrt(Math.pow(player.x - gr.x, 2) + Math.pow(player.y - gr.y, 2));
+            int x;
+            if(gr.texture.equals("felix")){
+                g.drawImage(felix, x - felix.getWidth(null), Game.frameHeight / 2 - felix.getHeight(null), null);
+            }
+        }
+    }
+
+    private void loadTexures(){
+        try{
+            felix = ImageIO.read(new File("resources/felix.png"));
+        } catch(IOException e){
+            System.err.println("failed to load textures");
+            e.printStackTrace();
         }
     }
 }
