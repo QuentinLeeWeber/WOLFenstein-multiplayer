@@ -153,7 +153,7 @@ class BlenderRender {
             float distance = (float) Math.sqrt(Math.pow(player.x - gr.x, 2) + Math.pow(player.y - gr.y, 2));
             int x;
             if(gr.texture.equals("felix")){
-                g.drawImage(felix, x - felix.getWidth(null), Game.frameHeight / 2 - felix.getHeight(null), null);
+                //g.drawImage(felix, x - felix.getWidth(null), Game.frameHeight / 2 - felix.getHeight(null), null);
             }
         }
     }
@@ -163,7 +163,6 @@ class BlenderRender {
             felix = ImageIO.read(new File("resources/felix.png"));
         } catch(IOException e){
             System.err.println("failed to load textures");
-            e.printStackTrace();
         }
     }
 }
