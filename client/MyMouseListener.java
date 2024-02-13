@@ -4,7 +4,6 @@ public class MyMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
         if (e.getButton() == 1) {
             Game.getGame().leftClick();
         }
@@ -12,7 +11,6 @@ public class MyMouseListener implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
         if (e.getButton() == 1) {
             Game.getGame().mousePressed();
         }
@@ -23,19 +21,15 @@ public class MyMouseListener implements MouseListener {
         if (e.getButton() == 1) {
             Game.getGame().mouseReleased();
         }
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
 
     }
-
 }

@@ -4,17 +4,19 @@ import java.awt.*;
 class Game extends JPanel{
   public Game(){}
   
-  private int fps = 30;
+  private final int fps = 30;
   private double frameTime;
 
   public static final int stepWidth = 5;
   public static final int turnAngle = 5;
+  public static final int frameHeight = 600;
+  public static final int frameWidth = 800;
 
   public static final int windowHeight = 600;
   public static final int windowWidth = 800;
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender();
+  private BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -25,8 +27,10 @@ class Game extends JPanel{
   private boolean ePressed = false;
   private boolean pPressed = false;
   private boolean sPressed = false;
+  private boolean aPressed = false;
+  private boolean dPressed = false;
 
-  private Player player = new Player(windowWidth/2, windowHeight/2, level);
+  public Player player = new Player(windowWidth/2, windowHeight/2, level);
 
   public int mouseX;
   public int mouseY;
@@ -40,7 +44,7 @@ class Game extends JPanel{
   private void start(){
     System.out.println("start...");
     frame.add(this);
-    frame.setSize(windowWidth, windowHeight);
+    frame.setSize(frameWidth, frameHeight);
     frame.setTitle("WOLFenstein");
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
@@ -49,13 +53,13 @@ class Game extends JPanel{
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
+    renderer.level = level;
+    renderer.player = player;
     MyMouseMotionListener MML = new MyMouseMotionListener();
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    
-    renderer.level = level;
-    
+    frame.setResizable(false);
     double timeToNextFrame = 0;
     double lastTime = 0;
     double time = 0;
@@ -70,7 +74,6 @@ class Game extends JPanel{
         checkGraphikobjektCollision();
         
         double renderedTime = System.nanoTime();
-        //System.out.println("frameTime:  " + -(lastRenderedTime - renderedTime) / 1000000 + "ms");
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
         timeToNextFrame = (1000000000 / (float) fps);
@@ -125,6 +128,12 @@ class Game extends JPanel{
     if (sPressed) {
       player.move(-stepWidth);
     }
+    if(aPressed){
+      player.moveSideways(stepWidth);
+    }
+    if(dPressed){
+      player.moveSideways(-stepWidth);
+    }
     if (pPressed && gameRunning) {
       game.stopGame();
     }
@@ -142,6 +151,10 @@ class Game extends JPanel{
       pPressed = true;
     } else if (c == 's') {
       sPressed = true;
+    } else if (c == 'a'){
+      aPressed = true;
+    } else if (c == 'd'){
+      dPressed = true;
     }
   }
   
@@ -157,6 +170,10 @@ class Game extends JPanel{
       pPressed = false;
     } else if (c == 's') {
       sPressed = false;
+    } else if (c == 'a'){
+      aPressed = false;
+    } else if (c == 'd'){
+      dPressed = false;
     }
   }
   
@@ -171,7 +188,11 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void stopGame(){
-     gameRunning = false;
+    gameRunning = false;
+  }
+
+  public Player getPlayer(){
+    return player;
   }
   
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
@@ -180,7 +201,7 @@ class Game extends JPanel{
   protected void paintComponent(Graphics g){
     handleKeys();
     if(gameRunning){
-      renderer.draw(g, player);
+      renderer.draw(g);
       level.paint(g);
     } else {
       g.setColor(new Color(0, 0, 0));
