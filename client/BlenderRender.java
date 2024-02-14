@@ -2,8 +2,13 @@ import java.awt.*;
 import java.io.IOException;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Collections;
+//import java.util.Arrays;
+
 import javax.imageio.ImageIO;
 import java.io.File;
+
+
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -11,17 +16,20 @@ class BlenderRender {
     public Player player;
 
     private boolean renderIn3d;
-    private boolean debug = false;
+    private boolean debug = true;
     private final int viewDistance = 1000;
     private final int resolution = 800;
     private final int fov = 70;
-    private final float wallHeight = 3;
+    private final float wallHeight = 10;
     private boolean renderBoundingBoxes = false;
 
     private Image felix;
+    private Image background;
+    private Image skybox;
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
+    private ArrayList<Pixel> pixels = new ArrayList<Pixel>();
 
     public BlenderRender(boolean _3d) {
         renderIn3d = _3d;
@@ -30,9 +38,16 @@ class BlenderRender {
 
     public void draw(Graphics g) { 
         if(renderIn3d){
+            g.drawImage(background, 0, 0, null);
+            drawSkybox(g);
             checkMinCollision(g);
             raycast(g);
-            calcGraphicsObjekte(g);
+            //calcGraphicObjekte(g);
+            renderPixels(g);
+
+            calcGraphicObjekte(g);
+
+
         } else { 
             for (Wall wall : level.walls) {
                 g.setColor(new Color(0, 0, 0));
@@ -47,10 +62,11 @@ class BlenderRender {
             g.setColor(new Color(255, 0, 0, 50));
             g.drawRect(player.x - viewDistance / 2, player.y - viewDistance / 2, viewDistance, viewDistance);
             g.setColor(new Color(0, 0, 0));
-            player.draw(g);
             for (Wall wall : level.walls) {
-                g.setColor(new Color(0, 0, 0));
                 g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
+            }
+            for(Graphikobjekt gr : level.graphikobjekte){
+                g.drawOval(gr.x, gr.y, 4, 4);
             }
         }
         if (renderBoundingBoxes) {
@@ -113,7 +129,10 @@ class BlenderRender {
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
             if(hitDistance <= 1000){
                 g.setColor(renderColor);
-                g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
+                
+                //g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
+                
+                pixels.add(new WallPixel(drawX, renderDistance, renderColor, drawY));
             }
             if(debug){
                 g.setColor(new Color(255, 0, 0));
@@ -148,21 +167,108 @@ class BlenderRender {
         }
     }
 
-    private void calcGraphicsObjekte(Graphics g){
+    private void calcGraphicObjekte(Graphics g){
         for(Graphikobjekt gr : level.graphikobjekte){
-            float distance = (float) Math.sqrt(Math.pow(player.x - gr.x, 2) + Math.pow(player.y - gr.y, 2));
-            int x;
+
+            System.out.println(Game.getGame().player.direction);
+
+            float X = (float) (player.x + Math.cos(Math.toRadians(90 - player.direction)) * 69);
+            float Y = (float) (player.y - Math.sin(Math.toRadians(90 - player.direction)) * 69);
+
+            float distancePlayerObject = (float) Math.sqrt(Math.pow(player.x - gr.x, 2) + Math.pow(player.y - gr.y, 2));
+            float distancePlayerPoint = 69;
+            float distancePointObject = (float) Math.sqrt(Math.pow(gr.x - X, 2) + Math.pow(gr.y - Y, 2));
+
+
+            //sinussatz
+            float angle = (float) Math.acos((Math.pow(distancePlayerPoint, 2) + Math.pow(distancePlayerObject, 2) - Math.pow(distancePointObject, 2))
+                                            /
+                                            (2 * distancePlayerPoint * distancePlayerObject));
+
+            int drawX;
+
+            if(debug){
+                g.setColor(new Color(0, 255, 255));
+                g.drawOval((int) X, (int) Y, 4, 4);
+            }
+            
+            /*float X = gr.x - player.x;
+            float Y = gr.y - player.y;
+            float distance = (float) Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
+            float relativeX = (float) (X * Math.cos(Math.toRadians(player.direction)) - Y * Math.sin(Math.toRadians(player.direction)));
+            float relativeY = (float) (X * Math.sin(Math.toRadians(player.direction)) + Y * Math.cos(Math.toRadians(player.direction)));
+            float rotation = 0;
+            if(relativeY >= 0){
+                rotation =  (float) Math.asin(relativeX / distance);
+            } else {
+                rotation =  (float) (Math.PI - Math.asin(relativeX / distance));
+            }
+
+            if(debug){
+                g.setColor(new Color(0, 255, 0));
+                g.fillOval((int) (player.x + X), (int) (player.y + Y), 8, 8);
+                g.setColor(new Color(0, 255, 255));
+                g.drawOval((int) relativeX + player.x, (int) relativeY + player.y, 4, 4);
+                System.out.println(X + "    " + Y + "   " +  relativeX + "   " + relativeY + "   " + rotation);
+            }*/
+            
+            
+            //g.drawOval((int) (Math.cos(relativeX) * 20 + player.x), (int) (Math.sin(relativeY) * 20 + player.y), 4, 4);
+            
+            /*int x = Game.frameWidth / 2;
             if(gr.texture.equals("felix")){
                 //g.drawImage(felix, x - felix.getWidth(null), Game.frameHeight / 2 - felix.getHeight(null), null);
-            }
+                g.drawImage(felix, 0, 0, null);
+            }*/
         }
     }
 
-    private void loadTexures(){
+    //function to calculate the the radial position of a Graphicobject (wir haben wirklich sehr komische konventionenen) 
+    //relative to player
+    //
+    //helpfunction for calcGraphicsObjekte
+    /*private float calcRelativeRotation(int x, int y, int r){
+        if(y >= 0){
+            return (float) Math.asin(x / r);
+        } else {
+            return (float) (Math.PI - Math.asin(x / r));
+        }
+    }*/
+
+    //wichtiger Link https://stackoverflow.com/questions/10545300/sorting-an-array-list-of-objects-based-on-a-variable-in-object?rq=3
+    //noch wichtiger https://www.javatpoint.com/java-list-sort-method
+    private void renderPixels(Graphics g){
+        //der try block ist sehr evil, i know
         try{
+            Collections.sort(pixels, new SortByDistance());
+        } catch(Exception e){
+            System.err.println("error while sorting pixels");
+        }
+        for(Pixel pixel : pixels){
+            pixel.draw(g);
+        }
+        pixels.clear();
+    }
+
+    private void loadTexures(){
+        System.out.println("loading textures!");
+        boolean loadSuccess = true;
+        try{
+            skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
+            background = ImageIO.read(new File("resources/blue_background.png"));
             felix = ImageIO.read(new File("resources/felix.png"));
         } catch(IOException e){
+            e.printStackTrace();
             System.err.println("failed to load textures");
+            loadSuccess = false;
         }
+        if(loadSuccess){
+            System.out.println("succesfully loaded textures!");
+        }
+    }
+
+    public void drawSkybox(Graphics g){
+        g.drawImage(skybox, (int) (-800 * 4 * ((float) (player.direction) / 360)), 0, null);
+        g.drawImage(skybox, 800 * 4 + (int) (-800 * 4 * ((float) (player.direction) / 360)), 0, null);
     }
 }
