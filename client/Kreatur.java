@@ -1,3 +1,5 @@
+package client;
+
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
@@ -28,7 +30,7 @@ abstract class Kreatur extends Graphikobjekt {
     public void move(int speed) {
         int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
         int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
-        if (getCollidingWall(newX, newY) != null) {
+        if (checkWallCollision(newX, newY)) {
             return;
         }
         setX(newX);
@@ -39,13 +41,14 @@ abstract class Kreatur extends Graphikobjekt {
         
     }
 
-    public Wall getCollidingWall(int newX, int newY) {
-        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
+    public abstract void wurdeGetroffen();
+
+    public boolean checkWallCollision(int newX, int newY) {
         for (Wall wall : level.walls) {
-            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
-                return wall;
+            if (Collision.KreaturWallCollision(this, newX, newY, wall)) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 }

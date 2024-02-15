@@ -1,3 +1,5 @@
+package client;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +18,7 @@ class Game extends JPanel{
   public static final int windowWidth = 800;
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(true);
+  private BlenderRender renderer = new BlenderRender(false);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -34,6 +36,9 @@ class Game extends JPanel{
 
   public int mouseX;
   public int mouseY;
+
+  public int lastClickX;
+  public int lastClickY;
   
   public static void main(String[] args){
     game = new Game();
@@ -91,9 +96,8 @@ class Game extends JPanel{
 
   public void checkGraphikobjektCollision() {
     for (Graphikobjekt gr : level.graphikobjekte) {
-        if (BoundingBox.isColliding(player.boundingBox, gr.boundingBox)) {
-            if (gr.getClass() == Enemy.class)
-            {
+        if (Collision.GraphikobjektCollision(player, gr)) {
+            if (gr.getClass() == Enemy.class) {
               player.wurdeGetroffen();
             }
         }
@@ -103,7 +107,12 @@ class Game extends JPanel{
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
     System.out.println(mouseX + "  " +  mouseY);
-    UI.mouseClicked();  
+    lastClickX = mouseX;
+    lastClickY = mouseY;
+    UI.mouseClicked();
+    if (gameRunning) {
+      player.shoot();
+    }
   }
 
   public void mousePressed() {

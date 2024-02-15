@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.*;
 import java.util.Random;
 import java.lang.Math;
@@ -7,7 +9,6 @@ class Wall {
     public int[] b = new int[2];
     public float[] physicA = new float[2];
     public float[] physicB = new float[2];
-    public BoundingBox boundingBox;
   
     //damit die wände abhänig von ihrer ausrichtung zur kamera eine andere Farbe haben können, für bessere sichtbarkeit
     public Color renderColor = new Color(0, 0, 0);
@@ -38,7 +39,5 @@ class Wall {
         float G = rand.nextFloat();
         float B = rand.nextFloat();
         renderColor = new Color(R, G, B);
-      
-        boundingBox = new BoundingBox(Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(1, Math.abs(b[0] - a[0])), Math.max(1, Math.abs(b[1] - a[1])));
     }
 }

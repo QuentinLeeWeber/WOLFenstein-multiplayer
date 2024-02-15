@@ -1,11 +1,16 @@
-class Enemy extends Kreatur {
-    private int size = 5;
+package client;
 
+class Enemy extends Kreatur {
     public Enemy(int x, int y, Level level) {
         super(x, y, level);
-        super.boundingBox = new BoundingBox(x, y, size, size);
+        size = 5;
+        hitBoxRadius = size/2;
     }
 
     public void update() {
+    }
+
+    public void wurdeGetroffen() {
+        System.out.println("Oof");
     }
 }
