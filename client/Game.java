@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 class Game extends JPanel{
   public Game(){}
@@ -21,6 +22,7 @@ class Game extends JPanel{
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
+  private char typedChar;
 
   private boolean wPressed = false;
   private boolean qPressed = false;
@@ -29,6 +31,8 @@ class Game extends JPanel{
   private boolean sPressed = false;
   private boolean aPressed = false;
   private boolean dPressed = false;
+  private boolean textInput = false;
+  private boolean backspacePressed = false;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
 
@@ -137,6 +141,12 @@ class Game extends JPanel{
     if (pPressed && gameRunning) {
       game.stopGame();
     }
+    if (backspacePressed && !gameRunning) {
+      UI.deleteChar();
+    }
+    if (textInput && !gameRunning) {
+      UI.textInput(typedChar);
+    }
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
@@ -155,6 +165,11 @@ class Game extends JPanel{
       aPressed = true;
     } else if (c == 'd'){
       dPressed = true;
+    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
+      textInput = true;
+      typedChar = c;
+    } else if (c == KeyEvent.VK_BACK_SPACE) {
+      backspacePressed = true;
     }
   }
   
@@ -174,6 +189,10 @@ class Game extends JPanel{
       aPressed = false;
     } else if (c == 'd'){
       dPressed = false;
+    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
+      textInput = false;
+    } else if (c == KeyEvent.VK_BACK_SPACE) {
+      backspacePressed = false;
     }
   }
   
@@ -205,7 +224,7 @@ class Game extends JPanel{
     } else {
       g.setColor(new Color(0, 0, 0));
       g.fillRect(0, 0, 800, 600);  
-    } 
+    }
     UI.update(g, mouseX, mouseY);
     g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
     g.setColor(new Color(0, 255, 0));
