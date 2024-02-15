@@ -3,12 +3,8 @@ import java.io.IOException;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Collections;
-//import java.util.Arrays;
-
 import javax.imageio.ImageIO;
 import java.io.File;
-
-
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -19,7 +15,7 @@ class BlenderRender {
     private boolean debug = true;
     private final int viewDistance = 1000;
     private final int resolution = 800;
-    private final int fov = 70;
+    private final int fov = 60;
     private final float wallHeight = 10;
     private boolean renderBoundingBoxes = false;
 
@@ -170,7 +166,7 @@ class BlenderRender {
     private void calcGraphicObjekte(Graphics g){
         for(Graphikobjekt gr : level.graphikobjekte){
 
-            System.out.println(Game.getGame().player.direction);
+            //System.out.println(Game.getGame().player.direction);
 
             float X = (float) (player.x + Math.cos(Math.toRadians(90 - player.direction)) * 69);
             float Y = (float) (player.y - Math.sin(Math.toRadians(90 - player.direction)) * 69);
@@ -185,11 +181,25 @@ class BlenderRender {
                                             /
                                             (2 * distancePlayerPoint * distancePlayerObject));
 
+            float relativeX = (float) ((gr.x -player.x) * Math.cos(Math.toRadians(360 - player.direction)) - (gr.y -player.y) * Math.sin(Math.toRadians(360 - player.direction)));
+            //float relativeY = (float) ((gr.x -player.x) * Math.sin(Math.toRadians(360 - player.direction)) + (gr.y -player.y) * Math.cos(Math.toRadians(360 - player.direction)));
+
             int drawX;
+            if (relativeX <= 0) {
+                drawX = (int) (400 + (Math.toDegrees(angle) / (fov / 2) * 400));
+            } else {
+                drawX = (int) (400 - (Math.toDegrees(angle) / (fov / 2) * 400));
+            }
+
+
 
             if(debug){
                 g.setColor(new Color(0, 255, 255));
                 g.drawOval((int) X, (int) Y, 4, 4);
+                //g.setColor(new Color(0, 0, 255));
+                //g.drawOval((int) relativeX + player.x, (int) relativeY + player.y, 4, 4);
+                System.out.println(relativeX + "   " + Math.toDegrees(angle));
+                g.drawOval(drawX, 300, 10, 10);
             }
             
             /*float X = gr.x - player.x;
