@@ -20,8 +20,8 @@ class Game extends JPanel{
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
-  private boolean gameRunning = false;
 
+  private boolean gameRunning = false;
   private boolean wPressed = false;
   private boolean qPressed = false;
   private boolean ePressed = false;
@@ -49,7 +49,7 @@ class Game extends JPanel{
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
+
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
