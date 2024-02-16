@@ -2,7 +2,7 @@ import java.awt.Graphics;
 
 public abstract class Pixel{
 
-    public float distance;
+    public final float distance;
     public float height;
 
     //entspricht der x coord des Bildschirmes

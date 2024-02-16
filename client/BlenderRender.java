@@ -12,16 +12,17 @@ class BlenderRender {
     public Player player;
 
     private boolean renderIn3d;
-    private boolean debug = true;
+    public static final boolean debug = false;
     private final int viewDistance = 1000;
     private final int resolution = 800;
-    private final int fov = 60;
-    private final float wallHeight = 10;
+    public static final int fov = 60;
+    private final float wallHeight = 25;
+    public static final int spriteHeight = 80;
     private boolean renderBoundingBoxes = false;
 
-    private Image felix;
     private Image background;
     private Image skybox;
+    private Image felix;
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
@@ -38,12 +39,8 @@ class BlenderRender {
             drawSkybox(g);
             checkMinCollision(g);
             raycast(g);
-            //calcGraphicObjekte(g);
-            renderPixels(g);
-
             calcGraphicObjekte(g);
-
-
+            renderPixels(g);
         } else { 
             for (Wall wall : level.walls) {
                 g.setColor(new Color(0, 0, 0));
@@ -123,11 +120,7 @@ class BlenderRender {
             }
             int drawX = (int) (((float) i) * (float) (Game.frameWidth) / (float) (resolution));
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
-            if(hitDistance <= 1000){
-                g.setColor(renderColor);
-                
-                //g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
-                
+            if(hitDistance <= 1000){           
                 pixels.add(new WallPixel(drawX, renderDistance, renderColor, drawY));
             }
             if(debug){
@@ -166,8 +159,6 @@ class BlenderRender {
     private void calcGraphicObjekte(Graphics g){
         for(Graphikobjekt gr : level.graphikobjekte){
 
-            //System.out.println(Game.getGame().player.direction);
-
             float X = (float) (player.x + Math.cos(Math.toRadians(90 - player.direction)) * 69);
             float Y = (float) (player.y - Math.sin(Math.toRadians(90 - player.direction)) * 69);
 
@@ -182,78 +173,26 @@ class BlenderRender {
                                             (2 * distancePlayerPoint * distancePlayerObject));
 
             float relativeX = (float) ((gr.x -player.x) * Math.cos(Math.toRadians(360 - player.direction)) - (gr.y -player.y) * Math.sin(Math.toRadians(360 - player.direction)));
-            //float relativeY = (float) ((gr.x -player.x) * Math.sin(Math.toRadians(360 - player.direction)) + (gr.y -player.y) * Math.cos(Math.toRadians(360 - player.direction)));
 
             int drawX;
             if (relativeX <= 0) {
-                drawX = (int) (400 + (Math.toDegrees(angle) / (fov / 2) * 400));
-            } else {
                 drawX = (int) (400 - (Math.toDegrees(angle) / (fov / 2) * 400));
+            } else {
+                drawX = (int) (400 + (Math.toDegrees(angle) / (fov / 2) * 400));
             }
 
-
+            pixels.add(new SpritePixel(drawX, distancePlayerObject, felix));
 
             if(debug){
                 g.setColor(new Color(0, 255, 255));
                 g.drawOval((int) X, (int) Y, 4, 4);
-                //g.setColor(new Color(0, 0, 255));
-                //g.drawOval((int) relativeX + player.x, (int) relativeY + player.y, 4, 4);
-                System.out.println(relativeX + "   " + Math.toDegrees(angle));
                 g.drawOval(drawX, 300, 10, 10);
             }
-            
-            /*float X = gr.x - player.x;
-            float Y = gr.y - player.y;
-            float distance = (float) Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
-            float relativeX = (float) (X * Math.cos(Math.toRadians(player.direction)) - Y * Math.sin(Math.toRadians(player.direction)));
-            float relativeY = (float) (X * Math.sin(Math.toRadians(player.direction)) + Y * Math.cos(Math.toRadians(player.direction)));
-            float rotation = 0;
-            if(relativeY >= 0){
-                rotation =  (float) Math.asin(relativeX / distance);
-            } else {
-                rotation =  (float) (Math.PI - Math.asin(relativeX / distance));
-            }
-
-            if(debug){
-                g.setColor(new Color(0, 255, 0));
-                g.fillOval((int) (player.x + X), (int) (player.y + Y), 8, 8);
-                g.setColor(new Color(0, 255, 255));
-                g.drawOval((int) relativeX + player.x, (int) relativeY + player.y, 4, 4);
-                System.out.println(X + "    " + Y + "   " +  relativeX + "   " + relativeY + "   " + rotation);
-            }*/
-            
-            
-            //g.drawOval((int) (Math.cos(relativeX) * 20 + player.x), (int) (Math.sin(relativeY) * 20 + player.y), 4, 4);
-            
-            /*int x = Game.frameWidth / 2;
-            if(gr.texture.equals("felix")){
-                //g.drawImage(felix, x - felix.getWidth(null), Game.frameHeight / 2 - felix.getHeight(null), null);
-                g.drawImage(felix, 0, 0, null);
-            }*/
         }
     }
 
-    //function to calculate the the radial position of a Graphicobject (wir haben wirklich sehr komische konventionenen) 
-    //relative to player
-    //
-    //helpfunction for calcGraphicsObjekte
-    /*private float calcRelativeRotation(int x, int y, int r){
-        if(y >= 0){
-            return (float) Math.asin(x / r);
-        } else {
-            return (float) (Math.PI - Math.asin(x / r));
-        }
-    }*/
-
-    //wichtiger Link https://stackoverflow.com/questions/10545300/sorting-an-array-list-of-objects-based-on-a-variable-in-object?rq=3
-    //noch wichtiger https://www.javatpoint.com/java-list-sort-method
-    private void renderPixels(Graphics g){
-        //der try block ist sehr evil, i know
-        try{
-            Collections.sort(pixels, new SortByDistance());
-        } catch(Exception e){
-            System.err.println("error while sorting pixels");
-        }
+    private void renderPixels(Graphics g){ 
+        Collections.sort(pixels, new SortByDistance());     
         for(Pixel pixel : pixels){
             pixel.draw(g);
         }
