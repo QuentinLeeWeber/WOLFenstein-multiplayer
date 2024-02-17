@@ -6,7 +6,6 @@ class Wall {
     public float[] physicA = new float[2];
     public float[] physicB = new float[2];
     public BoundingBox boundingBox;
-    public float lenght;
 
     public Wall(int[] _a, int[] _b) {
         a = _a;
@@ -28,8 +27,6 @@ class Wall {
             physicA[1] = b[1];
             physicB[1] = a[1];
         }
-
-        lenght = (float) Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
       
         boundingBox = new BoundingBox(Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(1, Math.abs(b[0] - a[0])), Math.max(1, Math.abs(b[1] - a[1])));
     }
