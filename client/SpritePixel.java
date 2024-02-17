@@ -2,11 +2,8 @@ import java.awt.*;
 
 public class SpritePixel extends Pixel{
 
-    private Image texture;
-
     public SpritePixel(int _x, float _distance, Image _texture){
-        super(_x, _distance);
-        texture = _texture;
+        super(_x, _distance, _texture);
     }
 
     @Override
