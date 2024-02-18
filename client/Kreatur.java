@@ -2,7 +2,7 @@ abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
 
-    public int direction = 0;
+    public float direction = 0;
 
     public Level level;
 
@@ -36,7 +36,13 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void moveSideways(int speed){
-        
+        int newX = getX()+(int) (Math.sin(Math.toRadians(direction + 90))*speed);
+        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction + 90))*speed);
+        if (getCollidingWall(newX, newY) != null) {
+            return;
+        }
+        setX(newX);
+        setY(newY);
     }
 
     public Wall getCollidingWall(int newX, int newY) {

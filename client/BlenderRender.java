@@ -18,8 +18,8 @@ class BlenderRender {
     private final int viewDistance = 10000;
     private final int resolution = 800;
     public static final int fov = 60;
-    private final float wallHeight = 20;
-    public static final int spriteHeight = 80;
+    private final float wallHeight = 8;
+    public static final int spriteHeight = 20000;
     private boolean renderBoundingBoxes = false;
     private float wallDarkness = 1.6f;
 
@@ -57,7 +57,7 @@ class BlenderRender {
             for (Graphikobjekt gr : level.graphikobjekte) {
                 g.drawOval(gr.x, gr.y, 5, 5);
             }
-            player.draw(g);    
+            player.draw2D(g);    
         }
         if(debug){
             g.setColor(new Color(255, 0, 0, 50));
@@ -137,7 +137,7 @@ class BlenderRender {
                 Color angleColor = new Color(0, 0, 0, Math.min(10000000, (int) ((wallAngle / 1.5708f) * 100 * wallDarkness)));
                 float lenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitX, 2) + Math.pow(hitWall.a[1] - hitY, 2));
 
-                int wallIndex = (int) ((lenght * wallTex.size() * 0.0175f) % wallTex.size());
+                int wallIndex = (int) ((lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size());
                 Image pixelTex = wallTex.get(wallIndex);
 
                 pixels.add(new WallPixel(drawX, renderDistance, pixelTex, angleColor, drawY));
@@ -223,7 +223,7 @@ class BlenderRender {
         boolean loadSuccess = true;
         try{
             skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
-            Sprite1 = ImageIO.read(new File("resources/sprite_1.png"));
+            Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
             wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
             preCalcWallTexture();
         } catch(IOException e){
@@ -247,8 +247,8 @@ class BlenderRender {
     }
 
     public void drawSkybox(Graphics g){
-        g.drawImage(skybox, (int) (-800 * 4 * ((float) (player.direction) / 360)), 0, null);
-        g.drawImage(skybox, 800 * 4 + (int) (-800 * 4 * ((float) (player.direction) / 360)), 0, null);
+        g.drawImage(skybox, (int) (-800 * 4 * (player.direction / 360)), 0, null);
+        g.drawImage(skybox, 800 * 4 + (int) (-800 * 4 * (player.direction / 360)), 0, null);
     }
 
     public Color avarageColor(BufferedImage image){
