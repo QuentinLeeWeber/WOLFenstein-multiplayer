@@ -256,6 +256,7 @@ class Game extends JPanel{
     handleKeys();
     if(gameRunning){
       renderer.draw(g);
+      level.paint(g);
     } else {
       g.setColor(new Color(0, 0, 0));
       g.fillRect(0, 0, 800, 600);  
