@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 class Game extends JPanel{
   public Game(){}
@@ -9,12 +15,14 @@ class Game extends JPanel{
   private double frameTime;
 
   public static final int stepWidth = 5;
-  public static final int turnAngle = 5;
+  public static final float mouseSensitivity = 1;
   public static final int frameHeight = 600;
   public static final int frameWidth = 800;
 
   public static final int windowHeight = 600;
   public static final int windowWidth = 800;
+
+  
 
   private static Game game;
   private BlenderRender renderer = new BlenderRender(true);
@@ -23,7 +31,9 @@ class Game extends JPanel{
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   private char typedChar;
+  private Robot robot;
 
+  private boolean gameRunning = false;
   private boolean wPressed = false;
   private boolean qPressed = false;
   private boolean ePressed = false;
@@ -33,30 +43,39 @@ class Game extends JPanel{
   private boolean dPressed = false;
   private boolean textInput = false;
   private boolean backspacePressed = false;
+  private boolean WindowActive = false;
+
+  private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
 
   public int mouseX;
   public int mouseY;
   
-  public static void main(String[] args){
+  public static void main(String[] args) throws IOException, AWTException, InterruptedException { 
     game = new Game();
     game.start();
   }
   
   // kann eigentlich ignoriert werden
-  private void start(){
+  private void start() throws IOException, AWTException, InterruptedException {
     System.out.println("start...");
+    cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    robot = new Robot();
+    Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
+    frame.getContentPane().setCursor(defaultCursor);
+
     frame.add(this);
     frame.setSize(frameWidth, frameHeight);
     frame.setTitle("WOLFenstein");
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
+
     KeyboardFocusManager m = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     MyKeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
     m.addKeyEventDispatcher(dispatcher);
+
     renderer.level = level;
     renderer.player = player;
     MyMouseMotionListener MML = new MyMouseMotionListener();
@@ -68,6 +87,17 @@ class Game extends JPanel{
     double lastTime = 0;
     double time = 0;
     double lastRenderedTime = 0;
+    frame.addWindowFocusListener(new WindowAdapter() {
+      @Override
+      public void windowGainedFocus(WindowEvent e) {
+        WindowActive = true;
+      }
+      @Override
+      public void windowLostFocus(WindowEvent e) {
+        WindowActive = false;
+      }
+    });
+    frame.toFront();
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
@@ -95,14 +125,13 @@ class Game extends JPanel{
 
   public void checkGraphikobjektCollision() {
     for (Graphikobjekt gr : level.graphikobjekte) {
-        if (BoundingBox.isColliding(player.boundingBox, gr.boundingBox)) {
-            if (gr.getClass() == Enemy.class)
-            {
-              player.wurdeGetroffen();
-            }
+      if (BoundingBox.isColliding(player.boundingBox, gr.boundingBox)) {
+        if (gr.getClass() == Enemy.class){
+          player.wurdeGetroffen();
         }
+      }
     }
-}
+  }
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
@@ -124,19 +153,19 @@ class Game extends JPanel{
       player.move(stepWidth);
     }
     if (ePressed) {
-      player.turn(turnAngle);
+      
     }
     if (qPressed) {
-      player.turn(-turnAngle);
+      
     }
     if (sPressed) {
       player.move(-stepWidth);
     }
     if(aPressed){
-      player.moveSideways(stepWidth);
+      player.moveSideways(-stepWidth);
     }
     if(dPressed){
-      player.moveSideways(-stepWidth);
+      player.moveSideways(stepWidth);
     }
     if (pPressed && gameRunning) {
       game.stopGame();
@@ -203,11 +232,16 @@ class Game extends JPanel{
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
     gameRunning = true; 
+    BufferedImage blankCursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+    Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(blankCursorImage, new Point(0, 0), "blank cursor");
+    frame.getContentPane().setCursor(blankCursor);
   }
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void stopGame(){
     gameRunning = false;
+    Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
+    frame.getContentPane().setCursor(defaultCursor);
   }
 
   public Player getPlayer(){
@@ -218,6 +252,7 @@ class Game extends JPanel{
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
   protected void paintComponent(Graphics g){
+    handleMouse();
     handleKeys();
     if(gameRunning){
       renderer.draw(g);
@@ -229,6 +264,14 @@ class Game extends JPanel{
     g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
     g.setColor(new Color(0, 255, 0));
     g.drawString(Float.toString((float) ((int) (frameTime * 10)) /10) + "ms", 723, 13);
+  }
+
+  private void handleMouse(){
+    float mouseMoved = mouseX - 400;
+    player.turn(mouseMoved * mouseSensitivity * 0.03f);
+    if(WindowActive && gameRunning){
+      robot.mouseMove(frame.getX() + 400, frame.getY() + 300);
+    }
   }
 
   public boolean getRunning() {
