@@ -33,7 +33,6 @@ class Game extends JPanel{
   private char typedChar;
   private Robot robot;
 
-  private boolean gameRunning = false;
   private boolean wPressed = false;
   private boolean qPressed = false;
   private boolean ePressed = false;
