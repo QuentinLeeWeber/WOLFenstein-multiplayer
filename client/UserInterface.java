@@ -19,6 +19,8 @@ class UserInterface {
     private int losButtonY = 210;
     private int losShadowX = losButtonX + 3;
     private int losShadowY = losButtonY + 3;
+    private int char_width = 18;
+    private int ticks = 0;
     private Color red = new Color(255, 0, 0);
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
@@ -49,24 +51,25 @@ class UserInterface {
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
         }
+        ticks++;
     }
 
     public void textInput(char c) {
-        if (bufferSize == 15) {
+        if (bufferSize == 15 || ticks % 2 != 0) {
             return;
         }
         input[bufferSize] = c;
         bufferSize++;
-        cursorX += 18;
+        cursorX += char_width;
     }
 
     public void deleteChar() {
-        if (bufferSize == 0) {
+        if (bufferSize == 0 || ticks % 2 != 0) {
             return;
         }
         input[bufferSize - 1] = 0;
         bufferSize--;
-        cursorX -= 18;
+        cursorX -= char_width;
     }
 
     public void mouseClicked() {
