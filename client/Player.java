@@ -1,4 +1,5 @@
 import java.awt.*;
+import commands.Move;
 
 class Player extends Kreatur {
 
@@ -21,4 +22,13 @@ class Player extends Kreatur {
         g2d.rotate(Math.toRadians(direction), getX() + size/2, getY() + size/2);
         g2d.drawPolygon(new int[]{getX(), getX() + size/2, getX() + size}, new int[]{getY() + size, getY(), getY() + size}, 3);
     }
+  
+  @Override
+  public boolean move(int speed) {
+    if (!super.move(speed)) {
+      return false;
+    }
+    Game.getGame().remote.sendCommand(new Move(speed));
+    return true;
+  }
 }

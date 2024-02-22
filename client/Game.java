@@ -7,6 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.util.HashMap;
+import connect.*;
+import commands.*;
 
 class Game extends JPanel{
   public Game(){}
@@ -47,6 +50,40 @@ class Game extends JPanel{
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
+  
+  public HashMap<Integer, Kreatur> remotePlayers = new HashMap<>();
+  public Remote remote = new Remote("127.0.0.1", new Executor() {
+    private boolean cmdDone = false;
+
+    @Override
+    public void execute(CommandWithSender c) {
+      if (!cmdDone) {
+        player.setX(((Register) c.command).x);
+        player.setY(((Register) c.command).y);
+        cmdDone = true;
+        return;
+      }
+      if (c.command instanceof Move) {
+        remotePlayers.get(c.sender).move(((Move) c.command).speed);
+      } else if (c.command instanceof Turn) {
+        remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
+      } else if (c.command instanceof Register) {
+        remotePlayers.put(c.sender, new Kreatur(((Register) c.command).x, ((Register) c.command).y, level, "resources/cursor.png") {
+            @Override
+            public void update() {
+              }
+        });
+      } else if (c.command instanceof Unregister) {
+        remotePlayers.remove(c.sender);
+      }
+    }
+
+    @Override
+    public void close() {
+      stopGame();
+      // TODO back to entry
+    }
+  });
 
   public int mouseX;
   public int mouseY;
@@ -97,6 +134,16 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
+    
+    // start server connection
+    try {
+      remote.connect();
+    } catch (IOException e) {
+      e.printStackTrace();
+      // TODO return err to user
+      return;
+    }
+    
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
