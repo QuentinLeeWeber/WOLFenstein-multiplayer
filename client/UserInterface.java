@@ -1,6 +1,23 @@
 import java.awt.*;
+import java.awt.*;
+import java.io.IOException;
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+
+
 
 class UserInterface {
+
+    public UserInterface(){
+        frame1 = ImageIO.read(new File("resources/EPFrame1.png"));
+    }
+
+    private Image frame1;
+
     private int mouseX = 0;
     private int mouseY = 0;
     private char[] input = new char[15];
@@ -23,6 +40,10 @@ class UserInterface {
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
     private Color textColor = grey;
+    private int gesundheitsBalkenWidth = 230;
+    private int gesundheitsBalkenHeigth =35;
+    private int gesundheitsBalkenX = 0;
+    private int gesundheitsBalkenY = 0;
 
     public void update(Graphics g, int _mouseX, int _mouseY) {
         mouseX = _mouseX;
@@ -49,6 +70,21 @@ class UserInterface {
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
         }
+        if (Game.getGame().getRunning()){
+            if (Game.getGame().leben >= 75) {
+                g.setColor(new Color(81, 201, 27));
+            }
+            if (Game.getGame().leben < 75 && Game.getGame().leben >= 50) {
+                g.setColor(new Color(255, 242, 0));
+            }
+            if (Game.getGame().leben < 50 && Game.getGame().leben >= 25) {
+                g.setColor(new Color(252, 169, 3));
+            }
+            if (Game.getGame().leben < 25 && Game.getGame().leben >=0) {
+                g.setColor(new Color(215, 18, 18));
+            }
+            g.fillRect(gesundheitsBalkenX, gesundheitsBalkenY, (int) (gesundheitsBalkenWidth * ((float) (Game.getGame().leben)/100)), gesundheitsBalkenHeigth);
+            }
     }
 
     public void textInput(char c) {

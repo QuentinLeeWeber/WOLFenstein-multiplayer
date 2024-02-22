@@ -1,5 +1,5 @@
 abstract class Kreatur extends Graphikobjekt {
-    private int leben;
+    private int lebenK;
     public int angriffsstaerke;
 
     public float direction = 0;
@@ -12,7 +12,7 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public int getLeben() {
-        return leben;
+        return lebenK;
     }
 
     public void turn(float angle) {

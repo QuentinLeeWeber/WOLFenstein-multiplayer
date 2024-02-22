@@ -50,6 +50,7 @@ class Game extends JPanel{
 
   public int mouseX;
   public int mouseY;
+  public int leben = 100;
   
   public static void main(String[] args) throws IOException, AWTException, InterruptedException { 
     game = new Game();
