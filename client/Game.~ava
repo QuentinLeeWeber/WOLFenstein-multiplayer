@@ -59,7 +59,7 @@ class Game extends JPanel{
     MyMouseListener ML = new MyMouseListener();
     frame.addMouseMotionListener(MML);
     frame.addMouseListener(ML);
-    frame.setResizable(false);
+    frame.setResizable(true);
     double timeToNextFrame = 0;
     double lastTime = 0;
     double time = 0;

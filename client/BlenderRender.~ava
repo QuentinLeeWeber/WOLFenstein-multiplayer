@@ -24,7 +24,6 @@ class BlenderRender {
     }
 
     public void draw(Graphics g) { 
-        System.out.println(level.walls.size());
         if(renderIn3d){
             checkMinCollision(g);
             raycast(g);

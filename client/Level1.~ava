@@ -1,6 +1,6 @@
 class Level1 extends Level {
     public Level1() {   
-        super();
+    super();
         int[] a = {200, 200};
         int[] b = {300, 300};
         int[] c = {500, 500};
