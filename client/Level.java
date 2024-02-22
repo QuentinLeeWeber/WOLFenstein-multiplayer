@@ -20,6 +20,7 @@ abstract class Level {
     public void createWall(int[] a, int[] b) {
         Wall wall = new Wall(a, b);
         walls.add(wall);
+    System.out.println("test");
     }
 
     public void generateWallsFromVectors() {
