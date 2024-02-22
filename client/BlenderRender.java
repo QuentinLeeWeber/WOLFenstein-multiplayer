@@ -237,11 +237,11 @@ class BlenderRender {
 
     public void preCalcWallTexture(){
         System.out.println(("pre calculating wall texture..."));
-        int width = wallImage.getWidth(null);
+        int width = (int) ( (float) wallImage.getWidth(null) / (800.0f / (float) fov) );
         int height = wallImage.getHeight(null);
         for(int i = 0; i < width; i++){
             if((i != 0) && (i != width)){
-                wallTex.add(wallImage.getSubimage(i, 0, 1, height));       
+                wallTex.add(wallImage.getSubimage(i, 0, (int) (800.0f / (float) resolution), height));
             }    
         }
     }
