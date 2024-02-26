@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 class Server {
     public static void main(String[] args) {
-        int port = 8081;
+        int port = 6969; // port muss 6969 sein, aufgrund der port forwardings des dev-servers
 
         ServerSocket serverSocket;
 
@@ -15,7 +15,7 @@ class Server {
             e.printStackTrace();
             return;
         }
-        System.out.println("running server on :8081");
+        System.out.println("running server on :6969");
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
