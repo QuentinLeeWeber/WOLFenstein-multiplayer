@@ -23,7 +23,7 @@ public class Remote extends Thread {
     }
 
     public void connect() throws IOException {
-        clientSocket = new Socket(ip, 8081);
+        clientSocket = new Socket(ip, 6969);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 

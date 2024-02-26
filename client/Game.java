@@ -52,7 +52,7 @@ class Game extends JPanel{
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
   
   public HashMap<Integer, Kreatur> remotePlayers = new HashMap<>();
-  public Remote remote = new Remote("127.0.0.1", new Executor() {
+  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
     private boolean cmdDone = false;
 
     @Override
