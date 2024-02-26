@@ -20,9 +20,11 @@ public class EchoThread extends Thread {
             BufferedReader brinp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = brinp.readLine();
             while (line != null) {
-                if (!line.isBlank()) {
-                    System.out.println(line.trim());
-                    Server.notify(line.trim() + "\r\n", id);
+                if (!line.isEmpty()) {
+                    if (line.trim().length() == 0){
+                        System.out.println(line.trim());
+                        Server.notify(line.trim() + "\r\n", id);
+                    }
                 }
                 line = brinp.readLine();
             }
