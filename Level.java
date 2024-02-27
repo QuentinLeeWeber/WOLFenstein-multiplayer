@@ -26,14 +26,14 @@ abstract class Level {
         ArrayList<Wall> newWalls = new ArrayList<>();
     
         for (Vectordata vector : this.vector) {
-            // Calculate the direction of the current vector
+            // Richtung momentaner Vektor
             double direction = Math.atan2(vector.y2 - vector.y, vector.x2 - vector.x);
     
-            // Calculate the perpendicular direction for the left and right walls
+            // Senkrechte Richtung rechter und linker Wand
             double perpendicularDirectionLeft = direction + Math.PI / 2;
             double perpendicularDirectionRight = direction - Math.PI / 2;
     
-            // Calculate the positions for the left and right walls
+            // Position rechte linke Wand
             int wallLeftX1 = vector.x + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
             int wallLeftY1 = vector.y + (int) (Math.sin(perpendicularDirectionLeft) * wallWidth);
             int wallLeftX2 = vector.x2 + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
@@ -44,16 +44,16 @@ abstract class Level {
             int wallRightX2 = vector.x2 + (int) (Math.cos(perpendicularDirectionRight) * wallWidth);
             int wallRightY2 = vector.y2 + (int) (Math.sin(perpendicularDirectionRight) * wallWidth);
     
-            // Create walls left and right of the vector
+            // Wände rechts und links vom Vektor
             Wall wallLeft = new Wall(new int[]{wallLeftX1, wallLeftY1}, new int[]{wallLeftX2, wallLeftY2});
             Wall wallRight = new Wall(new int[]{wallRightX1, wallRightY1}, new int[]{wallRightX2, wallRightY2});
     
-            // Add walls to the list
+            // fügt Wände zur Liste hinzu
             newWalls.add(wallLeft);
             newWalls.add(wallRight);
         }
     
-        // Add the new walls to the existing walls list
+        // fügt Wände zur Wand/Oberliste hinzu
         walls.addAll(newWalls);
     }
     private Point calculateIntersection(Vectordata vectorA, Vectordata vectorB) {
