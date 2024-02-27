@@ -12,6 +12,7 @@ class UserInterface {
     private int cursorHeight = 25;
     private int cursorX = inputBoxX + 16;
     private int cursorY = inputBoxY + inputBoxHeight / 2 - cursorHeight / 2;
+    private int char_width = 18;
     private int bufferSize = 0;
     private int losButtonWidth = 150;
     private int losButtonHeight = 60;
@@ -19,12 +20,11 @@ class UserInterface {
     private int losButtonY = 210;
     private int losShadowX = losButtonX + 3;
     private int losShadowY = losButtonY + 3;
-    private int char_width = 18;
-    private int ticks = 0;
     private Color red = new Color(255, 0, 0);
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
     private Color textColor = grey;
+    private int ticks = 0;
 
     public void update(Graphics g, int _mouseX, int _mouseY) {
         mouseX = _mouseX;
@@ -55,7 +55,7 @@ class UserInterface {
     }
 
     public void textInput(char c) {
-        if (bufferSize == 15 || ticks % 2 != 0) {
+        if (bufferSize == 15 || ticks % 2 == 0 || c < 32 || c > 126) {
             return;
         }
         input[bufferSize] = c;
@@ -64,11 +64,11 @@ class UserInterface {
     }
 
     public void deleteChar() {
-        if (bufferSize == 0 || ticks % 2 != 0) {
+        if (bufferSize == 0 || ticks % 2 == 0) {
             return;
         }
-        input[bufferSize - 1] = 0;
         bufferSize--;
+        input[bufferSize] = 0;
         cursorX -= char_width;
     }
 
