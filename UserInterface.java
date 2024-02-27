@@ -1,6 +1,29 @@
 import java.awt.*;
+import java.awt.*;
+import java.io.IOException;
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+
+
 
 class UserInterface {
+
+    public UserInterface() {
+        try {
+           //if() {
+               frame1 = ImageIO.read(new File("resources/EPFrame1.png"));
+          // }
+    } catch(Exception e) {
+
+        }
+
+    }
+    private Image frame1;
+
     private int mouseX = 0;
     private int mouseY = 0;
     private char[] input = new char[15];
@@ -67,7 +90,7 @@ class UserInterface {
                 g.setColor(new Color(215, 18, 18));
             }
             g.fillRect(gesundheitsBalkenX, gesundheitsBalkenY, (int) (gesundheitsBalkenWidth * ((float) (Game.getGame().leben)/100)), gesundheitsBalkenHeigth);
-            //if ()
+            g.drawImage(frame1, 450, 370, null);
         }
     }
 
