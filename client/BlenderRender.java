@@ -16,7 +16,7 @@ class BlenderRender {
     private boolean renderIn3d;
     public static final boolean debug = false;
     private final int viewDistance = 10000;
-    private final int resolution = 800;
+    private final int resolution = 200;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
@@ -237,11 +237,12 @@ class BlenderRender {
 
     public void preCalcWallTexture(){
         System.out.println(("pre calculating wall texture..."));
-        int width = (int) ( (float) wallImage.getWidth(null) / (800.0f / (float) fov) );
+        int width = (int) ( (float) wallImage.getWidth(null) / (800.0f / (float) resolution) );
         int height = wallImage.getHeight(null);
         for(int i = 0; i < width; i++){
             if((i != 0) && (i != width)){
-                wallTex.add(wallImage.getSubimage(i, 0, (int) (800.0f / (float) resolution), height));
+                wallTex.add(wallImage.getSubimage(i * (int) (800.0f / (float) resolution), 0, (int) (800.0f / (float) resolution), height));
+                System.out.println((int) (800.0f / (float) resolution));
             }    
         }
     }
