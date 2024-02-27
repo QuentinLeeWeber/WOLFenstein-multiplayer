@@ -6,7 +6,7 @@ abstract class Level {
     public ArrayList<Wall> walls = new ArrayList<Wall>();
     public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
     public ArrayList<Vectordata> vector = new ArrayList<Vectordata>();
-
+    public int wallWidth = 10;
 
     public Level() {
         createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
@@ -24,26 +24,38 @@ abstract class Level {
 
     public void generateWallsFromVectors() {
         ArrayList<Wall> newWalls = new ArrayList<>();
-
-        for (int i = 0; i < vector.size(); i++) {
-            Vectordata vectorA = vector.get(i);
-            for (int j = i + 1; j < vector.size(); j++) {
-                Vectordata vectorB = vector.get(j);
-
-                Point intersection = calculateIntersection(vectorA, vectorB);
-
-                if (intersection != null) {
-                    Wall wallLeft = new Wall(new int[]{intersection.x - 5, intersection.y - 5}, new int[]{intersection.x - 5, intersection.y + 5});
-                    Wall wallRight = new Wall(new int[]{intersection.x + 5, intersection.y - 5}, new int[]{intersection.x + 5, intersection.y + 5});
-                    newWalls.add(wallLeft);
-                    newWalls.add(wallRight);
-                }
-            }
+    
+        for (Vectordata vector : this.vector) {
+            // Calculate the direction of the current vector
+            double direction = Math.atan2(vector.y2 - vector.y, vector.x2 - vector.x);
+    
+            // Calculate the perpendicular direction for the left and right walls
+            double perpendicularDirectionLeft = direction + Math.PI / 2;
+            double perpendicularDirectionRight = direction - Math.PI / 2;
+    
+            // Calculate the positions for the left and right walls
+            int wallLeftX1 = vector.x + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
+            int wallLeftY1 = vector.y + (int) (Math.sin(perpendicularDirectionLeft) * wallWidth);
+            int wallLeftX2 = vector.x2 + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
+            int wallLeftY2 = vector.y2 + (int) (Math.sin(perpendicularDirectionLeft) * wallWidth);
+    
+            int wallRightX1 = vector.x + (int) (Math.cos(perpendicularDirectionRight) * wallWidth);
+            int wallRightY1 = vector.y + (int) (Math.sin(perpendicularDirectionRight) * wallWidth);
+            int wallRightX2 = vector.x2 + (int) (Math.cos(perpendicularDirectionRight) * wallWidth);
+            int wallRightY2 = vector.y2 + (int) (Math.sin(perpendicularDirectionRight) * wallWidth);
+    
+            // Create walls left and right of the vector
+            Wall wallLeft = new Wall(new int[]{wallLeftX1, wallLeftY1}, new int[]{wallLeftX2, wallLeftY2});
+            Wall wallRight = new Wall(new int[]{wallRightX1, wallRightY1}, new int[]{wallRightX2, wallRightY2});
+    
+            // Add walls to the list
+            newWalls.add(wallLeft);
+            newWalls.add(wallRight);
         }
-
+    
+        // Add the new walls to the existing walls list
         walls.addAll(newWalls);
     }
-
     private Point calculateIntersection(Vectordata vectorA, Vectordata vectorB) {
       int x1 = vectorA.x;
       int y1 = vectorA.y;
