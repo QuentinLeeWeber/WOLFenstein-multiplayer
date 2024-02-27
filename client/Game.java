@@ -68,11 +68,13 @@ class Game extends JPanel{
       } else if (c.command instanceof Turn) {
         remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
       } else if (c.command instanceof Register) {
-        remotePlayers.put(c.sender, new Kreatur(((Register) c.command).x, ((Register) c.command).y, level, "resources/cursor.png") {
+        Kreatur k = new Kreatur(((Register) c.command).x, ((Register) c.command).y, level, "resources/cursor.png") {
             @Override
             public void update() {
               }
-        });
+        };
+        k.boundingBox = new BoundingBox(k.x, k.y, 5, 5);
+        remotePlayers.put(c.sender, k);
       } else if (c.command instanceof Unregister) {
         remotePlayers.remove(c.sender);
       }
