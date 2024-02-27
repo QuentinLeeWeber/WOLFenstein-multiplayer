@@ -12,6 +12,7 @@ class UserInterface {
     private int cursorHeight = 25;
     private int cursorX = inputBoxX + 16;
     private int cursorY = inputBoxY + inputBoxHeight / 2 - cursorHeight / 2;
+    private int char_width = 18;
     private int bufferSize = 0;
     private int losButtonWidth = 150;
     private int losButtonHeight = 60;
@@ -23,6 +24,7 @@ class UserInterface {
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
     private Color textColor = grey;
+    private int ticks = 0;
 
     public void update(Graphics g, int _mouseX, int _mouseY) {
         mouseX = _mouseX;
@@ -49,24 +51,25 @@ class UserInterface {
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
         }
+        ticks++;
     }
 
     public void textInput(char c) {
-        if (bufferSize == 15) {
+        if (bufferSize == 15 || ticks % 2 == 0 || c < 32 || c > 126) {
             return;
         }
         input[bufferSize] = c;
         bufferSize++;
-        cursorX += 18;
+        cursorX += char_width;
     }
 
     public void deleteChar() {
-        if (bufferSize == 0) {
+        if (bufferSize == 0 || ticks % 2 == 0) {
             return;
         }
-        input[bufferSize - 1] = 0;
         bufferSize--;
-        cursorX -= 18;
+        input[bufferSize] = 0;
+        cursorX -= char_width;
     }
 
     public void mouseClicked() {

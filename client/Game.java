@@ -193,12 +193,11 @@ class Game extends JPanel{
       aPressed = true;
     } else if (c == 'd'){
       dPressed = true;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = true;
-      typedChar = c;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
+    textInput = true;
+    typedChar = c;
   }
   
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
@@ -217,11 +216,10 @@ class Game extends JPanel{
       aPressed = false;
     } else if (c == 'd'){
       dPressed = false;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
     }
+    textInput = false;
   }
   
   public void mouseMoved() {
