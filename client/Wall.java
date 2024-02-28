@@ -17,7 +17,7 @@ class Wall {
         a = _a;
         b = _b;
         if(a[0] == b[0]){
-            b[0] += 0.001f;
+            b[0] += 1;
         }
         if(a[0] <= b[0]){
             physicA[0] = a[0];
@@ -39,5 +39,12 @@ class Wall {
         float G = rand.nextFloat();
         float B = rand.nextFloat();
         renderColor = new Color(R, G, B);
+    }
+
+    public double getDirection() {
+        float dx = b[0] - a[0];
+        float dy = b[1] - a[1];
+
+        return Math.toDegrees(Math.atan(dy/dx)) + 90;
     }
 }
