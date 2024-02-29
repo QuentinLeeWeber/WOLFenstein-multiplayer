@@ -32,7 +32,6 @@ class Server {
     }
 
     public static void notify(String cmd, int from) {
-        System.out.println("notify " + from + " " + cmd);
         for (EchoThread t : clients) {
             // skip sender
             if (t.id != from) {
