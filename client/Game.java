@@ -159,7 +159,12 @@ class Game extends JPanel{
       
     }
     if (qPressed) {
-
+      gamePaused = !gamePaused;
+      if(gamePaused) {
+        startGame();
+      } else {
+        stopGame();
+      }
     }
     if (sPressed) {
       player.move(-stepWidth);
@@ -170,14 +175,8 @@ class Game extends JPanel{
     if(dPressed){
       player.moveSideways(stepWidth);
     }
-    if (pPressed) {
-      if(gameRunning) {
-        gamePaused = true;
-        stopGame();
-      } else {
-        gamePaused = false;
-        startGame();
-      }
+    if (pPressed && gameRunning) {
+      game.stopGame();
     }
     if (backspacePressed && !gameRunning) {
       UI.deleteChar();

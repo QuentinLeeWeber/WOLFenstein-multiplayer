@@ -13,7 +13,7 @@ class Player extends Kreatur {
     }
     
     public void wurdeGetroffen() {
-        System.out.println("Ouch! :(");
+         Game.getGame().leben -= 0.5;
     }
 
     public void draw2D(Graphics g) {

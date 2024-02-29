@@ -33,11 +33,17 @@ class UserInterface {
     private Color textColor = grey;
     private int ticks = 0;
     private Image frame1;
+    private Image frame2;
+    private Image frame3;
+    private Image frame4;
 
     public UserInterface(){
-        try{
-            frame1 = ImageIO.read(new File("resources/EPFrame1.png"));}
-        catch(Exception e){
+        try {
+            frame1 = ImageIO.read(new File("resources/EPFrame1.png"));
+            frame2 = ImageIO.read(new File("resources/EPFrame1.png"));
+            frame3 = ImageIO.read(new File("resources/EPFrame1.png"));
+            frame4 = ImageIO.read(new File("resources/EPFrame1.png"));
+        } catch(Exception e){
 
         }
     }
@@ -70,7 +76,7 @@ class UserInterface {
             g.fillRect(0, 0, 800, 600);
             g.setColor(red);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-            g.drawString("Pause", 340, 100);
+            g.drawString("Pause", 250, 100);
         } else if(Game.getGame().getRunning()) {
             if (Game.getGame().leben >= 75) {
                 g.setColor(new Color(81, 201, 27));
