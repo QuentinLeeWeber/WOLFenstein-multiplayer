@@ -30,8 +30,11 @@ class Game extends JPanel{
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
+  private boolean gamePaused = false;
   private char typedChar;
   private Robot robot;
+
+  public int leben = 100;
 
   private boolean wPressed = false;
   private boolean qPressed = false;
@@ -100,12 +103,13 @@ class Game extends JPanel{
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
-        player.update();
-        for (Graphikobjekt gr : level.graphikobjekte) {
+        if(gameRunning) {
+          player.update();
+          for (Graphikobjekt gr : level.graphikobjekte) {
             gr.update();
+          }
+          checkGraphikobjektCollision();
         }
-        checkGraphikobjektCollision();
-        
         double renderedTime = System.nanoTime();
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
@@ -155,7 +159,12 @@ class Game extends JPanel{
       
     }
     if (qPressed) {
-      
+      gamePaused = !gamePaused;
+      if(gamePaused) {
+        startGame();
+      } else {
+        stopGame();
+      }
     }
     if (sPressed) {
       player.move(-stepWidth);
@@ -193,12 +202,11 @@ class Game extends JPanel{
       aPressed = true;
     } else if (c == 'd'){
       dPressed = true;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = true;
-      typedChar = c;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
+    textInput = true;
+    typedChar = c;
   }
   
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
@@ -217,11 +225,10 @@ class Game extends JPanel{
       aPressed = false;
     } else if (c == 'd'){
       dPressed = false;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
     }
+    textInput = false;
   }
   
   public void mouseMoved() {
@@ -275,5 +282,9 @@ class Game extends JPanel{
 
   public boolean getRunning() {
     return gameRunning;
+  }
+
+  public boolean getPaused() {
+    return gamePaused;
   }
 }
