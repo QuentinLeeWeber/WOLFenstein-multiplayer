@@ -16,7 +16,7 @@ class BlenderRender {
     private boolean renderIn3d;
     public static final boolean debug = false;
     private final int viewDistance = 10000;
-    private final int resolution = 200;
+    public static final int resolution = 50;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
@@ -26,8 +26,8 @@ class BlenderRender {
     private Color floorColor;
 
     private Image skybox;
-    private Image Sprite1;
-    private BufferedImage wallImage;
+    private BufferedImage Sprite1;
+    public BufferedImage wallImage;
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
@@ -40,7 +40,7 @@ class BlenderRender {
         floorColor = avarageColor(wallImage);
     }
 
-    public void draw(Graphics g) { 
+    public void draw(Graphics g) {
         if(renderIn3d){
             g.setColor(floorColor);
             g.fillRect(0, 0, 800, 600);
@@ -83,6 +83,9 @@ class BlenderRender {
             g.setColor(Color.orange);
             g.fillRect(Game.getGame().player.boundingBox.x, Game.getGame().player.boundingBox.y, Game.getGame().player.boundingBox.width, Game.getGame().player.boundingBox.height);
             g.setColor(prevColor);
+        }
+        for(int i = 0; i < wallTex.size();i++){
+
         }
     }
 
@@ -136,11 +139,17 @@ class BlenderRender {
 
                 Color angleColor = new Color(0, 0, 0, Math.min(10000000, (int) ((wallAngle / 1.5708f) * 100 * wallDarkness)));
                 float lenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitX, 2) + Math.pow(hitWall.a[1] - hitY, 2));
+                float wallLenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitWall.b[0], 2) + Math.pow(hitWall.a[1] - hitWall.b[1], 2));
 
-                int wallIndex = (int) ((lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size());
-                Image pixelTex = wallTex.get(wallIndex);
+                //float wallIndex = (lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size();
+                float wallIndex = lenght / wallLenght;
+                //wallIndex = 9;
+                //Image pixelTex = wallTex.get(wallIndex);
+                //renderDistance = 1;
+                //System.out.println(renderDistance);
+                //drawY = 100;
 
-                pixels.add(new WallPixel(drawX, renderDistance, pixelTex, angleColor, drawY));
+                pixels.add(new WallPixel(drawX, renderDistance, angleColor, drawY, wallIndex));
             }
             if(debug){
                 g.setColor(new Color(255, 0, 0));
