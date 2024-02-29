@@ -70,7 +70,7 @@ class UserInterface {
             g.fillRect(0, 0, 800, 600);
             g.setColor(red);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 50));
-            g.drawString("Pause", 250, 100);
+            g.drawString("Pause", 340, 100);
         } else if(Game.getGame().getRunning()) {
             if (Game.getGame().leben >= 75) {
                 g.setColor(new Color(81, 201, 27));
