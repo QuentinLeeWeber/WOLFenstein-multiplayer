@@ -48,8 +48,10 @@ class BlenderRender {
                 g.setColor(new Color(0, 0, 0));
                 g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
             }
+            g.setColor(Color.red);
             int maxShotDistance = Game.getGame().getWidth();
             g.drawLine(player.x, player.y, player.x-(int) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance), player.y-(int) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance));
+            g.setColor(new Color(0, 0, 0));
         }
         if (renderBoundingBoxes) {
             Color prevColor = g.getColor();

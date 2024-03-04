@@ -28,7 +28,6 @@ class Player extends Kreatur {
     public void shoot(){
         for (Graphikobjekt gr : level.graphikobjekte){
             if (gr.getClass() == Enemy.class){
-                System.out.println("test");
                 Collision.EnemyShotCollision((Enemy) gr, this, level);
             }
         }

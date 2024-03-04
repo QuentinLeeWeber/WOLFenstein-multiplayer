@@ -1,5 +1,7 @@
 package client;
 
+import java.util.ArrayList;
+
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
@@ -31,17 +33,26 @@ abstract class Kreatur extends Graphikobjekt {
         int dx = (int) (Math.sin(Math.toRadians(direction))*speed);
         int dy = (int) (-Math.cos(Math.toRadians(direction))*speed);
 
-        Wall wall = getCollidingWall(x + dx, y + dy);
-        if (wall != null) {
-            double newDirection = wall.getDirection();
-            System.out.println(Math.abs(direction - wall.getDirection()));
-            System.out.println(newDirection);
-            if (Math.abs(direction - wall.getDirection()) > 90) {
-                newDirection *= -1;
-            }
+        ArrayList<Wall> walls = getCollidingWalls(x + dx, y + dy);
+        if (walls.size() != 0) {
+            if (walls.size() == 1) {
+                Wall wall = (Wall)walls.toArray()[0];
+                double newDirection = wall.getDirection();
+                int collisionAngle = Math.abs(direction - wall.getDirection());
+            
+                if (collisionAngle > 90) {
+                    newDirection += 180;
+                    collisionAngle = 180 - collisionAngle;
+                }
 
-            dx = (int) (Math.sin(Math.toRadians(newDirection))*speed);
-            dy = (int) (-Math.cos(Math.toRadians(newDirection))*speed);
+                double newSpeed = Math.cos(Math.toRadians(collisionAngle))*speed;
+
+                dx = (int) (Math.sin(Math.toRadians(newDirection))*newSpeed);
+                dy = (int) (-Math.cos(Math.toRadians(newDirection))*newSpeed);
+            }
+            else {
+                return;
+            }
         }
         setX(x + dx);
         setY(y + dy);
@@ -53,12 +64,13 @@ abstract class Kreatur extends Graphikobjekt {
 
     public abstract void wurdeGetroffen();
 
-    public Wall getCollidingWall(int newX, int newY) {
+    public ArrayList<Wall> getCollidingWalls(int newX, int newY) {
+        ArrayList<Wall> walls = new ArrayList<Wall>();
         for (Wall wall : level.walls) {
             if (Collision.KreaturWallCollision(this, newX, newY, wall)) {
-                return wall;
+                walls.add(wall);
             }
         }
-        return null;
+        return walls;
     }
 }

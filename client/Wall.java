@@ -41,10 +41,10 @@ class Wall {
         renderColor = new Color(R, G, B);
     }
 
-    public double getDirection() {
+    public int getDirection() {
         float dx = b[0] - a[0];
         float dy = b[1] - a[1];
 
-        return Math.toDegrees(Math.atan(dy/dx)) + 90;
+        return (int)Math.toDegrees(Math.atan(dy/dx)) + 90;
     }
 }
