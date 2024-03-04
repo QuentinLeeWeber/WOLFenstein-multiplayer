@@ -9,7 +9,7 @@ class Wall {
     public int[] b = new int[2];
     public float[] physicA = new float[2];
     public float[] physicB = new float[2];
-  
+ 
     //damit die wände abhänig von ihrer ausrichtung zur kamera eine andere Farbe haben können, für bessere sichtbarkeit
     public Color renderColor = new Color(0, 0, 0);
 
@@ -32,8 +32,7 @@ class Wall {
         } else {
             physicA[1] = b[1];
             physicB[1] = a[1];
-        }
-        
+        }    
         Random rand = new Random();
         float R = rand.nextFloat();
         float G = rand.nextFloat();

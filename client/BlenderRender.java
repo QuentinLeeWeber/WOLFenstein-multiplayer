@@ -1,8 +1,14 @@
 package client;
 
 import java.awt.*;
+import java.io.IOException;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Collections;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+
 
 class BlenderRender {
     //level und player wird von Game aus übergeben
@@ -10,25 +16,42 @@ class BlenderRender {
     public Player player;
 
     private boolean renderIn3d;
-    private boolean debug = true;
-    private final int viewDistance = 1000;
+    public static final boolean debug = false;
+    private final int viewDistance = 10000;
     private final int resolution = 800;
-    private final int fov = 70;
-    private final float wallHeight = 3;
-    private boolean renderBoundingBoxes = true;
+    public static final int fov = 60;
+    private final float wallHeight = 8;
+    public static final int spriteHeight = 20000;
+    private boolean renderBoundingBoxes = false;
+    private float wallDarkness = 1.6f;
+
+    private Color floorColor;
+
+    private Image skybox;
+    private Image Sprite1;
+    private BufferedImage wallImage;
+
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
+    private ArrayList<Pixel> pixels = new ArrayList<Pixel>();
+    private ArrayList<Image> wallTex = new ArrayList<Image>();
 
     public BlenderRender(boolean _3d) {
         renderIn3d = _3d;
-        //renderIn3d = false;
+        loadTexures();
+        floorColor = avarageColor(wallImage);
     }
 
     public void draw(Graphics g) { 
         if(renderIn3d){
+            g.setColor(floorColor);
+            g.fillRect(0, 0, 800, 600);
+            drawSkybox(g);
             checkMinCollision(g);
             raycast(g);
+            calcGraphicObjekte(g);
+            renderPixels(g);
         } else { 
             for (Wall wall : level.walls) {
                 g.setColor(new Color(0, 0, 0));
@@ -37,28 +60,22 @@ class BlenderRender {
             for (Graphikobjekt gr : level.graphikobjekte) {
                 g.drawOval(gr.x, gr.y, 5, 5);
             }
-            player.draw(g);    
+            player.draw2D(g);    
         }
         if(debug){
             g.setColor(new Color(255, 0, 0, 50));
             g.drawRect(player.x - viewDistance / 2, player.y - viewDistance / 2, viewDistance, viewDistance);
             g.setColor(new Color(0, 0, 0));
-            player.draw(g);
             for (Wall wall : level.walls) {
-                g.setColor(new Color(0, 0, 0));
                 g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
             }
             g.setColor(Color.red);
             int maxShotDistance = Game.getGame().getWidth();
             g.drawLine(player.x, player.y, player.x-(int) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance), player.y-(int) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance));
             g.setColor(new Color(0, 0, 0));
-        }
-        if (renderBoundingBoxes) {
-            Color prevColor = g.getColor();
-            g.setColor(Color.green);
-
-            g.drawOval(player.x, player.y, player.hitBoxRadius, player.hitBoxRadius);
-            g.setColor(prevColor);
+            for(Graphikobjekt gr : level.graphikobjekte){
+                g.drawOval(gr.x, gr.y, 4, 4);
+            }
         }
     }
 
@@ -68,7 +85,7 @@ class BlenderRender {
             float hitX = 99999;
             float hitY = 99999;
             float hitDistance = 99999;
-            Color renderColor = new Color(0, 0, 0);
+            Wall hitWall = null;
             for(Wall wall : minWalls){
                 float dirDegree = (player.direction - fov / 2) + ((float) fov / (float) resolution) * (i + 1) - 90;
                 if(dirDegree % 90 == 0.0f || dirDegree % 270 == 0.0f){
@@ -96,17 +113,27 @@ class BlenderRender {
                             hitDistance = (float) Math.sqrt(Math.pow(X - player.x, 2) + Math.pow(Y - player.y, 2));
                             hitX = X;
                             hitY = Y;
-                            renderColor = wall.renderColor;
+                            hitWall = wall;
                         }
                     }
-                }     
+                }
                 renderDistance = (float) (hitDistance * Math.cos(((i - resolution / 2) * ((float) fov / (float) resolution)) * (Math.PI / 180)));
             }
             int drawX = (int) (((float) i) * (float) (Game.frameWidth) / (float) (resolution));
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
             if(hitDistance <= 1000){
-                g.setColor(renderColor);
-                g.drawLine(drawX, Game.frameHeight / 2 - drawY, drawX, Game.frameHeight / 2 + drawY);
+                float wallAngle = (float) Math.acos(Math.abs(
+                    (Math.cos(Math.toRadians(player.direction)) * (hitWall.a[0] - hitWall.b[0]) + Math.sin(Math.toRadians(player.direction)) * (hitWall.a[1] - hitWall.b[1]))
+                    / (Math.sqrt(Math.pow((hitWall.a[0] - hitWall.b[0]), 2) + Math.pow((hitWall.a[1] - hitWall.b[1]), 2)))
+                ));
+
+                Color angleColor = new Color(0, 0, 0, Math.min(10000000, (int) ((wallAngle / 1.5708f) * 100 * wallDarkness)));
+                float lenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitX, 2) + Math.pow(hitWall.a[1] - hitY, 2));
+
+                int wallIndex = (int) ((lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size());
+                Image pixelTex = wallTex.get(wallIndex);
+
+                pixels.add(new WallPixel(drawX, renderDistance, pixelTex, angleColor, drawY));
             }
             if(debug){
                 g.setColor(new Color(255, 0, 0));
@@ -139,5 +166,99 @@ class BlenderRender {
                 minWalls.add(wall); 
             }      
         }
+    }
+
+    private void calcGraphicObjekte(Graphics g){
+        for(Graphikobjekt gr : level.graphikobjekte){
+
+            float X = (float) (player.x + Math.cos(Math.toRadians(90 - player.direction)) * 69);
+            float Y = (float) (player.y - Math.sin(Math.toRadians(90 - player.direction)) * 69);
+
+            float distancePlayerObject = (float) Math.sqrt(Math.pow(player.x - gr.x, 2) + Math.pow(player.y - gr.y, 2));
+            float distancePlayerPoint = 69;
+            float distancePointObject = (float) Math.sqrt(Math.pow(gr.x - X, 2) + Math.pow(gr.y - Y, 2));
+
+
+            //sinussatz
+            float angle = (float) Math.acos((Math.pow(distancePlayerPoint, 2) + Math.pow(distancePlayerObject, 2) - Math.pow(distancePointObject, 2))
+                                            /
+                                            (2 * distancePlayerPoint * distancePlayerObject));
+
+            float relativeX = (float) ((gr.x -player.x) * Math.cos(Math.toRadians(360 - player.direction)) - (gr.y -player.y) * Math.sin(Math.toRadians(360 - player.direction)));
+
+            int drawX;
+            if (relativeX <= 0) {
+                drawX = (int) (400 - (Math.toDegrees(angle) / (fov / 2) * 400));
+            } else {
+                drawX = (int) (400 + (Math.toDegrees(angle) / (fov / 2) * 400));
+            }
+
+            pixels.add(new SpritePixel(drawX, distancePlayerObject, Sprite1));
+
+            if(debug){
+                g.setColor(new Color(0, 255, 255));
+                g.drawOval((int) X, (int) Y, 4, 4);
+                g.drawOval(drawX, 300, 10, 10);
+            }
+        }
+    }
+
+    private void renderPixels(Graphics g){ 
+        Collections.sort(pixels, new SortByDistance());     
+        for(Pixel pixel : pixels){
+            pixel.draw(g);
+        }
+        pixels.clear();
+    }
+
+    private void loadTexures(){
+        System.out.println("loading textures...");
+        boolean loadSuccess = true;
+        try{
+            skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
+            Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
+            wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
+            preCalcWallTexture();
+        } catch(IOException e){
+            System.err.println("failed to load textures");
+            loadSuccess = false;
+        }
+        if(loadSuccess){
+            System.out.println("succesfully loaded textures!");
+        }
+    }
+
+    public void preCalcWallTexture(){
+        System.out.println(("pre calculating wall texture..."));
+        int width = wallImage.getWidth(null);
+        int height = wallImage.getHeight(null);
+        for(int i = 0; i < width; i++){
+            if((i != 0) && (i != width)){
+                wallTex.add(wallImage.getSubimage(i, 0, 1, height));       
+            }    
+        }
+    }
+
+    public void drawSkybox(Graphics g){
+        g.drawImage(skybox, (int) (-800 * 4 * (player.direction / 360)), 0, null);
+        g.drawImage(skybox, 800 * 4 + (int) (-800 * 4 * (player.direction / 360)), 0, null);
+    }
+
+    public Color avarageColor(BufferedImage image){
+        long redBucket = 0;
+        long greenBucket = 0;
+        long blueBucket = 0;
+        long pixelCount = 0;
+
+        for (int y = 0; y < image.getHeight(); y++){
+            for (int x = 0; x < image.getWidth(); x++){
+                int p = image.getRGB(3,3);
+                pixelCount++;
+                redBucket += (p>>16) & 255;
+                greenBucket += (p>>8) & 255;
+                blueBucket += p & 255;
+            }
+        }
+        return new Color((int) (redBucket / pixelCount), (int) (greenBucket / pixelCount), (int) (blueBucket / pixelCount));
     }
 }

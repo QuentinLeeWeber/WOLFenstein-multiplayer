@@ -12,7 +12,8 @@ abstract class Graphikobjekt {
 
     public abstract void update();
 
-    public Graphikobjekt(int _x, int _y) {
+    public Graphikobjekt(int _x, int _y, String _texture) {
+        texture = _texture;
         x = _x;
         y = _y;
     }
