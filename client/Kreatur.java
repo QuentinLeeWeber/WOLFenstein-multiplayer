@@ -30,15 +30,23 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        int dx = (int) (Math.sin(Math.toRadians(direction))*speed);
-        int dy = (int) (-Math.cos(Math.toRadians(direction))*speed);
+        moveDirection(speed, direction);
+    }
+
+    public void moveSideways(int speed){
+        moveDirection(speed, direction + 90);
+    }
+
+    private void moveDirection(int speed, float moveDirection) {
+        int dx = (int) (Math.sin(Math.toRadians(moveDirection))*speed);
+        int dy = (int) (-Math.cos(Math.toRadians(moveDirection))*speed);
 
         ArrayList<Wall> walls = getCollidingWalls(x + dx, y + dy);
         if (walls.size() != 0) {
             if (walls.size() == 1) {
                 Wall wall = (Wall)walls.toArray()[0];
                 double newDirection = wall.getDirection();
-                int collisionAngle = Math.abs(direction - wall.getDirection());
+                float collisionAngle = Math.abs(moveDirection - wall.getDirection());
             
                 if (collisionAngle > 90) {
                     newDirection += 180;
@@ -56,16 +64,6 @@ abstract class Kreatur extends Graphikobjekt {
         }
         setX(x + dx);
         setY(y + dy);
-    }
-
-    public void moveSideways(int speed){
-        int newX = getX()+(int) (Math.sin(Math.toRadians(direction + 90))*speed);
-        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction + 90))*speed);
-        if (getCollidingWall(newX, newY) != null) {
-            return;
-        }
-        setX(newX);
-        setY(newY);
     }
 
     public abstract void wurdeGetroffen();
