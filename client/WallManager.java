@@ -3,7 +3,7 @@ import java.util.List;
 
 public class WallManager {
     
-    // Methode zum Auflisten aller Eckpunkte einer Wand mit anderen Wänden
+    // Auflistung aller Eckpunkte einer Wand mit anderen Wänden
     public List<int[]> listAllCornerPoints(List<Wall> walls) {
         List<int[]> cornerPoints = new ArrayList<>();
         
@@ -19,7 +19,7 @@ public class WallManager {
         return cornerPoints;
     }
     
-    // Methode zum Erzeugen von Wänden zwischen allen Eckpunkten
+    // Erzeugung von Wänden zwischen allen Eckpunkten
     public List<Wall> createWallsBetweenCornerPoints(List<int[]> cornerPoints) {
         List<Wall> newWalls = new ArrayList<>();
         
@@ -37,7 +37,7 @@ public class WallManager {
         return newWalls;
     }
     
-    // Methode zum Löschen von Wänden, die einen anderen Eckpunkt auf ihrer Strecke haben
+    // löscht Wände, die einen anderen Eckpunkt auf ihrer Strecke haben
     public void removeWallsWithInternalCornerPoints(List<Wall> walls, List<int[]> cornerPoints) {
         walls.removeIf(wall -> {
             for (int[] point : cornerPoints) {
@@ -49,7 +49,7 @@ public class WallManager {
         });
     }
     
-    // Methode zum Löschen von Wänden, die eine Länge von 10 haben
+    // löscht Wände, die eine Länge von 10 haben
     public void removeWallsWithLength(List<Wall> walls) {
         walls.removeIf(wall -> wall.getLength() == 10);
     }
