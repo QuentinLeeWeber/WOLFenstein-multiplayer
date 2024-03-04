@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.event.*;
 
 public class MyMouseListener implements MouseListener {

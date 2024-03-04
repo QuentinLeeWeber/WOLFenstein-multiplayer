@@ -1,3 +1,7 @@
+package client;
+
+import java.util.ArrayList;
+
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
@@ -26,13 +30,32 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
-        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
-        if (getCollidingWall(newX, newY) != null) {
-            return;
+        int dx = (int) (Math.sin(Math.toRadians(direction))*speed);
+        int dy = (int) (-Math.cos(Math.toRadians(direction))*speed);
+
+        ArrayList<Wall> walls = getCollidingWalls(x + dx, y + dy);
+        if (walls.size() != 0) {
+            if (walls.size() == 1) {
+                Wall wall = (Wall)walls.toArray()[0];
+                double newDirection = wall.getDirection();
+                int collisionAngle = Math.abs(direction - wall.getDirection());
+            
+                if (collisionAngle > 90) {
+                    newDirection += 180;
+                    collisionAngle = 180 - collisionAngle;
+                }
+
+                double newSpeed = Math.cos(Math.toRadians(collisionAngle))*speed;
+
+                dx = (int) (Math.sin(Math.toRadians(newDirection))*newSpeed);
+                dy = (int) (-Math.cos(Math.toRadians(newDirection))*newSpeed);
+            }
+            else {
+                return;
+            }
         }
-        setX(newX);
-        setY(newY);
+        setX(x + dx);
+        setY(y + dy);
     }
 
     public void moveSideways(int speed){
@@ -45,13 +68,15 @@ abstract class Kreatur extends Graphikobjekt {
         setY(newY);
     }
 
-    public Wall getCollidingWall(int newX, int newY) {
-        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
+    public abstract void wurdeGetroffen();
+
+    public ArrayList<Wall> getCollidingWalls(int newX, int newY) {
+        ArrayList<Wall> walls = new ArrayList<Wall>();
         for (Wall wall : level.walls) {
-            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
-                return wall;
+            if (Collision.KreaturWallCollision(this, newX, newY, wall)) {
+                walls.add(wall);
             }
         }
-        return null;
+        return walls;
     }
 }

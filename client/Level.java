@@ -1,3 +1,5 @@
+package client;
+
 import java.util.ArrayList;
 
 abstract class Level {
@@ -7,8 +9,8 @@ abstract class Level {
     public Level() {
         createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
         createWall(new int[]{0, 0}, new int[]{0, Game.windowHeight});
-        createWall(new int[]{Game.windowWidth-Player.size, 0}, new int[]{Game.windowWidth-Player.size, Game.windowHeight});
-        createWall(new int[]{0, Game.windowHeight-Player.size-24}, new int[]{Game.windowWidth, Game.windowHeight-Player.size-24});
+        //createWall(new int[]{Game.windowWidth-Player.size, 0}, new int[]{Game.windowWidth-Player.size, Game.windowHeight});
+        //createWall(new int[]{0, Game.windowHeight-Player.size-24}, new int[]{Game.windowWidth, Game.windowHeight-Player.size-24});
     }
 
     public void createWall(int[] a, int[] b) {
@@ -27,10 +29,4 @@ abstract class Level {
         graphikobjekte.add(new Enemy(x, y, this, "felix"));
     }
 
-    public ArrayList<BoundingBox> getBoundingBoxes() {
-        ArrayList<BoundingBox> boundingBoxes = new ArrayList<BoundingBox>();
-        graphikobjekte.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
-        walls.forEach((gr) -> {boundingBoxes.add(gr.boundingBox);});
-        return boundingBoxes;
-    }
 }
