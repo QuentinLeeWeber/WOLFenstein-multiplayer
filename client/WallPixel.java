@@ -25,7 +25,20 @@ public class WallPixel extends Pixel{
     public void draw(Graphics g){
         //g.drawImage(texture, x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution), (int) (height * 2), null);
         //System.out.println(texture.getWidth(null));
-        g.drawImage(texture.getSubimage((int) (texture.getWidth(null) * wallIndex), 0, (int) (800.0f / (float) BlenderRender.resolution), texture.getHeight(null)), x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution), (int) (height * 2), null);
+        BufferedImage subImage = null;
+        try {
+            subImage = texture.getSubimage((int) (texture.getWidth(null) * (wallIndex / 1.0f) ), 0, 1, texture.getHeight(null));
+        } catch (Exception e){
+            subImage = null;
+        }
+
+        /*for(int i = 0; i < (int) (800.0f / (float) BlenderRender.resolution);i++) {
+            g.drawImage(subImage, x + i, (int) (Game.frameHeight / 2 - height), 1, (int) (height * 2), null);
+            System.out.println((int) (800.0f / (float) BlenderRender.resolution));
+        }*/
+
+        g.drawImage(subImage, x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution) , (int) (height * 2), null);
+
         g.setColor(darker);
         g.fillRect(x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution), (int) height * 2);
     }

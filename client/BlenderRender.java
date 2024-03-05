@@ -16,7 +16,7 @@ class BlenderRender {
     private boolean renderIn3d;
     public static final boolean debug = false;
     private final int viewDistance = 10000;
-    public static final int resolution = 50;
+    public static final int resolution = 800;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
@@ -142,7 +142,13 @@ class BlenderRender {
                 float wallLenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitWall.b[0], 2) + Math.pow(hitWall.a[1] - hitWall.b[1], 2));
 
                 //float wallIndex = (lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size();
-                float wallIndex = lenght / wallLenght;
+
+
+                //float wallIndex = lenght / wallLenght;
+                float wallIndex = lenght % 1;
+                //wallIndex = 2.0f;
+
+
                 //wallIndex = 9;
                 //Image pixelTex = wallTex.get(wallIndex);
                 //renderDistance = 1;
