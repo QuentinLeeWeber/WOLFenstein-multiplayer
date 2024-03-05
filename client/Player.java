@@ -22,13 +22,9 @@ class Player extends Kreatur {
         g2d.rotate(Math.toRadians(direction), getX() + size/2, getY() + size/2);
         g2d.drawPolygon(new int[]{getX(), getX() + size/2, getX() + size}, new int[]{getY() + size, getY(), getY() + size}, 3);
     }
-  
-  @Override
-  public boolean move(int speed) {
-    if (!super.move(speed)) {
-      return false;
+
+    @Override
+    public void moveHook(int x, int y) {
+        Game.getGame().remote.sendCommand(new Move(x, y));
     }
-    Game.getGame().remote.sendCommand(new Move(speed));
-    return true;
-  }
 }

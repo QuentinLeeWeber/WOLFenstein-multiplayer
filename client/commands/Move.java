@@ -1,19 +1,22 @@
 package commands;
 
 public class Move extends Command {
-    public final int speed;
+    public final int x;
+    public final int y;
 
     Move() {
-        this(0);
+        this(0, 0);
     }
 
-    public Move(int speed) {
-        this.speed = speed;
+    public Move(int x, int  y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
     public Command parseCmd(String raw) {
-        return new Move(Integer.parseInt(raw));
+        String[] s = raw.split(" ");
+        return new Move(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
     }
 
     @Override
@@ -23,6 +26,6 @@ public class Move extends Command {
 
     @Override
     public String cmdString() {
-        return Integer.toString(speed);
+        return x + " " + y;
     }
 }

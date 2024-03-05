@@ -6,6 +6,11 @@ class Enemy extends Kreatur {
         super.boundingBox = new BoundingBox(x, y, size, size);
     }
 
+    @Override
     public void update() {
+    }
+
+    @Override
+    public void moveHook(int x, int y) {
     }
 }

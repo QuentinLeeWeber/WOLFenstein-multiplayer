@@ -51,32 +51,33 @@ class Game extends JPanel{
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
   
-  public HashMap<Integer, Kreatur> remotePlayers = new HashMap<>();
+  public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
   public Remote remote = new Remote("quentman.hopto.org", new Executor() {
-    private boolean cmdDone = false;
+    private int ownID = -1;
 
     @Override
     public void execute(CommandWithSender c) {
-      if (!cmdDone) {
+      if (ownID < 0) {
         player.setX(((Register) c.command).x);
         player.setY(((Register) c.command).y);
-        cmdDone = true;
+        ownID = c.sender;
         return;
       }
       if (c.command instanceof Move) {
-        remotePlayers.get(c.sender).move(((Move) c.command).speed);
+        remotePlayers.get(c.sender).moveTo(((Move) c.command).x, ((Move) c.command).y);
       } else if (c.command instanceof Turn) {
         remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
       } else if (c.command instanceof Register) {
-        Kreatur k = new Kreatur(((Register) c.command).x, ((Register) c.command).y, level, "resources/cursor.png") {
-            @Override
-            public void update() {
-              }
-        };
-        k.boundingBox = new BoundingBox(k.x, k.y, 5, 5);
-        remotePlayers.put(c.sender, k);
+        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level));
       } else if (c.command instanceof Unregister) {
         remotePlayers.remove(c.sender);
+      } else if (c.command instanceof Users) {
+        for (Integer id: ((Users) c.command).users.keySet()) {
+          if (id != ownID) {
+            Integer[] coords = ((Users) c.command).users.get(id);
+            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level));
+          }
+        }
       }
     }
 

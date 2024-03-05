@@ -25,15 +25,21 @@ abstract class Kreatur extends Graphikobjekt {
         }
     }
 
-    public boolean move(int speed) {
+    public void move(int speed) {
         int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
         int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
         if (getCollidingWall(newX, newY) != null) {
-            return false;
+            return;
         }
-        setX(newX);
-        setY(newY);
-        return true;
+        moveTo(newX, newY);
+    }
+
+    public abstract void moveHook(int x, int y);
+
+    public void moveTo(int x, int y) {
+        setX(x);
+        setY(y);
+        moveHook(x, y);
     }
 
     public void moveSideways(int speed){
@@ -42,8 +48,7 @@ abstract class Kreatur extends Graphikobjekt {
         if (getCollidingWall(newX, newY) != null) {
             return;
         }
-        setX(newX);
-        setY(newY);
+        moveTo(newX, newY);
     }
 
     public Wall getCollidingWall(int newX, int newY) {
