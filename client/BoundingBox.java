@@ -1,5 +1,3 @@
-package client;
-
 class BoundingBox {
       //x und y sind die Koordinaten der oberen linken Ecke
       public int x;   
