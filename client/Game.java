@@ -1,5 +1,3 @@
-package client;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -27,7 +25,7 @@ class Game extends JPanel{
   
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(true);
+  private BlenderRender renderer = new BlenderRender(false);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -64,7 +62,7 @@ class Game extends JPanel{
   // kann eigentlich ignoriert werden
   private void start() throws IOException, AWTException, InterruptedException {
     System.out.println("start...");
-    cursorImg = ImageIO.read(new File("client/resources/cursor.png"));
+    cursorImg = ImageIO.read(new File("resources/cursor.png"));
     robot = new Robot();
     Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
     frame.getContentPane().setCursor(defaultCursor);

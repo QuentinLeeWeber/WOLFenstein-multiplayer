@@ -1,5 +1,3 @@
-package client;
-
 import java.awt.*;
 
 class UserInterface {
