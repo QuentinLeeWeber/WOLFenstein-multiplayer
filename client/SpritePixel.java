@@ -1,10 +1,11 @@
 package client;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class SpritePixel extends Pixel{
 
-    public SpritePixel(int _x, float _distance, Image _texture){
+    public SpritePixel(int _x, float _distance, BufferedImage _texture){
         super(_x, _distance, _texture);
     }
 
@@ -20,7 +21,5 @@ public class SpritePixel extends Pixel{
             g.setColor(new Color(255, 0, 0));
             g.drawOval(x, 300, 10, 10);
         }
-
-        
     }
 }
