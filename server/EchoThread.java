@@ -17,6 +17,7 @@ public class EchoThread extends Thread {
     public void run() {
         try {
             Server.notify(registerCmd, id);
+            this.notify(id + " USERS " + Server.ul.toString());
             BufferedReader brinp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = brinp.readLine();
             while (line != null) {

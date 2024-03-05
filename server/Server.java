@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 class Server {
+    public static UserList ul = new UserList();
+
     public static void main(String[] args) {
         int port = 6969; // port muss 6969 sein, aufgrund der port forwardings des dev-servers
 
@@ -31,7 +33,17 @@ class Server {
         }
     }
 
+    public static void applyToUsers(String cmd, int from) {
+        if (cmd.trim().startsWith("UNREGISTER")) {
+            ul.unregister(from);
+        } else if (cmd.trim().startsWith("REGISTER") || (cmd.trim().startsWith("MOVE"))) {
+            String[] args = cmd.trim().split(" ", 3);
+            ul.moveTo(from, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        }
+    }
+
     public static void notify(String cmd, int from) {
+        applyToUsers(cmd, from);
         for (EchoThread t : clients) {
             // skip sender
             if (t.id != from) {
