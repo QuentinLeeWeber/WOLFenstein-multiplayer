@@ -85,9 +85,6 @@ class BlenderRender {
             g.fillRect(Game.getGame().player.boundingBox.x, Game.getGame().player.boundingBox.y, Game.getGame().player.boundingBox.width, Game.getGame().player.boundingBox.height);
             g.setColor(prevColor);
         }
-        for(int i = 0; i < wallTex.size();i++){
-
-        }
     }
 
     private void raycast(Graphics g){
