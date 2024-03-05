@@ -215,13 +215,13 @@ class BlenderRender {
         System.out.println("loading textures...");
         boolean loadSuccess = true;
         try{
-            skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
-            Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
-            wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
+            skybox = ImageIO.read(new File("client/resources/skybox_blue_sky_3.png"));
+            Sprite1 = ImageIO.read(new File("client/resources/sprite_3.png"));
+            wallImage = ImageIO.read(new File("client/resources/wall_sandstone_lowRes.png"));
             preCalcWallTexture();
         } catch(IOException e){
             System.err.println("failed to load textures");
-            loadSuccess = false;
+            loadSuccess = false;e.printStackTrace();
         }
         if(loadSuccess){
             System.out.println("succesfully loaded textures!");

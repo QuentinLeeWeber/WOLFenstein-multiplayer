@@ -1,3 +1,5 @@
+package client;
+
 import java.util.Comparator;
 
 public class SortByDistance implements Comparator<Pixel>{

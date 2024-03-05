@@ -1,8 +1,8 @@
 package client;
 
 class Enemy extends Kreatur {
-    public Enemy(int x, int y, Level level) {
-        super(x, y, level);
+    public Enemy(int x, int y, Level level, String texture) {
+        super(x, y, level, texture);
         size = 5;
         hitBoxRadius = size/2;
     }
