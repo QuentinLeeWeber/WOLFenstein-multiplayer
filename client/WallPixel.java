@@ -1,11 +1,4 @@
 import java.awt.*;
-import java.awt.*;
-import java.io.IOException;
-import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Collections;
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.awt.image.BufferedImage;
 
 public class WallPixel extends Pixel{
@@ -23,22 +16,15 @@ public class WallPixel extends Pixel{
 
     @Override
     public void draw(Graphics g){
-        //g.drawImage(texture, x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution), (int) (height * 2), null);
-        //System.out.println(texture.getWidth(null));
         BufferedImage subImage = null;
         try {
-            subImage = texture.getSubimage((int) (texture.getWidth(null) * (wallIndex / 1.0f) ), 0, 1, texture.getHeight(null));
+            subImage = texture.getSubimage((int) ((wallIndex) * (800.0f / (float) BlenderRender.resolution)), 0, 1, texture.getHeight(null));
         } catch (Exception e){
             subImage = null;
-        }
-
-        /*for(int i = 0; i < (int) (800.0f / (float) BlenderRender.resolution);i++) {
-            g.drawImage(subImage, x + i, (int) (Game.frameHeight / 2 - height), 1, (int) (height * 2), null);
-            System.out.println((int) (800.0f / (float) BlenderRender.resolution));
-        }*/
+            System.out.println("wallIndex error");
+        } 
 
         g.drawImage(subImage, x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution) , (int) (height * 2), null);
-
         g.setColor(darker);
         g.fillRect(x, (int) (Game.frameHeight / 2 - height), (int) (800.0f / (float) BlenderRender.resolution), (int) height * 2);
     }
