@@ -1,5 +1,3 @@
-package client;
-
 class Enemy extends Kreatur {
     public Enemy(int x, int y, Level level, String texture) {
         super(x, y, level, texture);

@@ -1,5 +1,3 @@
-package client;
-
 abstract class Graphikobjekt {
 
     public int x;

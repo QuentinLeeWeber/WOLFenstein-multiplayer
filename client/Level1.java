@@ -1,5 +1,3 @@
-package client;
-
 class Level1 extends Level {
     public Level1() {
         float[] a = {200, 200};

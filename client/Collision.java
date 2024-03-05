@@ -1,5 +1,3 @@
-package client;
-
 public class Collision {
     static double distancePointToLineSegment(int pointX, int pointY, int lineStartX, int lineStartY, int lineEndX, int lineEndY){
 
