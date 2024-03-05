@@ -2,5 +2,5 @@
 echo start Compiling...
 cd client
 javac Game.java
-java -Xmx2048m Game
+java Game
 echo end of bat!

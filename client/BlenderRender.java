@@ -18,7 +18,7 @@ class BlenderRender {
     private boolean renderIn3d;
     public static final boolean debug = false;
     private final int viewDistance = 10000;
-    public static final int resolution = 400;
+    private final int resolution = 800;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
@@ -28,14 +28,13 @@ class BlenderRender {
     private Color floorColor;
 
     private Image skybox;
-    private BufferedImage Sprite1;
-    public BufferedImage wallImage;
+    private Image Sprite1;
+    private BufferedImage wallImage;
 
 
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
     private ArrayList<Pixel> pixels = new ArrayList<Pixel>();
-    //auch die liste ist veraltet, aber so ist es eben
     private ArrayList<Image> wallTex = new ArrayList<Image>();
 
     public BlenderRender(boolean _3d) {
@@ -44,7 +43,7 @@ class BlenderRender {
         floorColor = avarageColor(wallImage);
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics g) { 
         if(renderIn3d){
             g.setColor(floorColor);
             g.fillRect(0, 0, 800, 600);
@@ -120,10 +119,8 @@ class BlenderRender {
                 }
                 renderDistance = (float) (hitDistance * Math.cos(((i - resolution / 2) * ((float) fov / (float) resolution)) * (Math.PI / 180)));
             }
-
             int drawX = (int) (((float) i) * (float) (Game.frameWidth) / (float) (resolution));
             int drawY = (int) (((float) (Game.frameHeight) / renderDistance) * 2 * wallHeight);
-
             if(hitDistance <= 1000){
                 float wallAngle = (float) Math.acos(Math.abs(
                     (Math.cos(Math.toRadians(player.direction)) * (hitWall.a[0] - hitWall.b[0]) + Math.sin(Math.toRadians(player.direction)) * (hitWall.a[1] - hitWall.b[1]))
@@ -131,11 +128,12 @@ class BlenderRender {
                 ));
 
                 Color angleColor = new Color(0, 0, 0, Math.min(10000000, (int) ((wallAngle / 1.5708f) * 100 * wallDarkness)));
-
                 float lenght = (float) Math.sqrt(Math.pow(hitWall.a[0] - hitX, 2) + Math.pow(hitWall.a[1] - hitY, 2));
-                float wallIndex = ((lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size());
 
-                pixels.add(new WallPixel(drawX, renderDistance, angleColor, drawY, wallIndex));
+                int wallIndex = (int) ((lenght * wallTex.size() * 0.350f * (1 / wallHeight)) % wallTex.size());
+                Image pixelTex = wallTex.get(wallIndex);
+
+                pixels.add(new WallPixel(drawX, renderDistance, pixelTex, angleColor, drawY));
             }
             if(debug){
                 g.setColor(new Color(255, 0, 0));
@@ -230,15 +228,13 @@ class BlenderRender {
         }
     }
 
-
-    //funktion ist veraltet, ohne gibt es allerdings ueble bugs, daher bleibt das jetzt hier noch ein weilchen
     public void preCalcWallTexture(){
         System.out.println(("pre calculating wall texture..."));
-        int width = (int) ( (float) wallImage.getWidth(null) / (800.0f / (float) resolution) );
+        int width = wallImage.getWidth(null);
         int height = wallImage.getHeight(null);
         for(int i = 0; i < width; i++){
             if((i != 0) && (i != width)){
-                wallTex.add(wallImage.getSubimage(i * (int) (800.0f / (float) resolution), 0, (int) (800.0f / (float) resolution), height));
+                wallTex.add(wallImage.getSubimage(i, 0, 1, height));       
             }    
         }
     }
