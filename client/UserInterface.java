@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 class UserInterface {
     private int mouseX = 0;
@@ -26,6 +27,9 @@ class UserInterface {
     private Color buttonColor = red;
     private Color textColor = grey;
 
+    public boolean displayLeaderboard = false;
+    public ArrayList<String> playerNames = new ArrayList<String>();
+
     public void update(Graphics g, int _mouseX, int _mouseY) {
         mouseX = _mouseX;
         mouseY = _mouseY - 32;
@@ -50,6 +54,17 @@ class UserInterface {
             g.setColor(new Color(217, 105, 28));
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
+        }
+        else if (displayLeaderboard) {
+            playerNames.add("a");
+            playerNames.add("b");
+            g.setColor(new Color(0, 0, 0, 127));
+            g.fillRect(0, 0, 200, 100);
+            g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+
+            for (int i = 0; i < playerNames.size(); i++) {
+                g.drawString((String)playerNames.toArray()[i], 10, 21 + 20*i);
+            }
         }
     }
 

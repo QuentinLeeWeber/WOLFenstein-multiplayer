@@ -9,7 +9,7 @@ class Player extends Kreatur {
     public Player(int x, int y, Level level) {
         super(x, y, level, "ignore");
         size = 14;
-        hitBoxRadius = size/2;
+        hitBoxRadius = (int)(size/1.5);
     }
 
     public void update() {
