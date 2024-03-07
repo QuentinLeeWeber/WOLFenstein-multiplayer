@@ -1,5 +1,6 @@
 import java.awt.*;
 import commands.Move;
+import java.util.ArrayList;
 
 class Player extends Kreatur {
 
@@ -30,7 +31,7 @@ class Player extends Kreatur {
     }
 
     public void shoot(){
-        for (Graphikobjekt gr : level.graphikobjekte){
+        for (Graphikobjekt gr : new ArrayList<Graphikobjekt>(level.graphikobjekte)){
             if (gr.getClass() == Enemy.class || gr.getClass() == RemotePlayer.class){
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
