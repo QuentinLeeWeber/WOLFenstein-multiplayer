@@ -43,7 +43,7 @@ class BlenderRender {
         floorColor = avarageColor(wallImage);
     }
 
-    public void draw(Graphics g) { 
+    public void draw(Graphics g) {
         if(renderIn3d){
             g.setColor(floorColor);
             g.fillRect(0, 0, 800, 600);
@@ -169,7 +169,10 @@ class BlenderRender {
     }
 
     private void calcGraphicObjekte(Graphics g){
-        for(Graphikobjekt gr : level.graphikobjekte){
+        ArrayList<Graphikobjekt> allGraphikobjekte = new ArrayList<>(level.graphikobjekte);
+        allGraphikobjekte.addAll(Game.getGame().remotePlayers.values());
+
+        for(Graphikobjekt gr : allGraphikobjekte){
 
             float X = (float) (player.x + Math.cos(Math.toRadians(90 - player.direction)) * 69);
             float Y = (float) (player.y - Math.sin(Math.toRadians(90 - player.direction)) * 69);
