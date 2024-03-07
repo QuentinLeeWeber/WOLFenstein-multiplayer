@@ -25,7 +25,7 @@ class Game extends JPanel{
   
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(false);
+  public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
