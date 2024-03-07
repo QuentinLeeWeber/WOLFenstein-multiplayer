@@ -30,7 +30,7 @@ class Game extends JPanel{
   private static Game game;
   public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
-  private Level level = new Level1();
+  public Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   private boolean gamePaused = false;
