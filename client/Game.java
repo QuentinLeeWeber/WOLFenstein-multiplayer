@@ -7,6 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.util.HashMap;
+import connect.*;
+import commands.*;
 
 class Game extends JPanel{
   public Game(){}
