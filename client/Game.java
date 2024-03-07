@@ -7,9 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.util.HashMap;
-import connect.*;
-import commands.*;
 
 class Game extends JPanel{
   public Game(){}
@@ -53,43 +50,6 @@ class Game extends JPanel{
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
-  
-  public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
-  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
-    private int ownID = -1;
-
-    @Override
-    public void execute(CommandWithSender c) {
-      if (ownID < 0) {
-        player.setX(((Register) c.command).x);
-        player.setY(((Register) c.command).y);
-        ownID = c.sender;
-        return;
-      }
-      if (c.command instanceof Move) {
-        remotePlayers.get(c.sender).moveTo(((Move) c.command).x, ((Move) c.command).y);
-      } else if (c.command instanceof Turn) {
-        remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
-      } else if (c.command instanceof Register) {
-        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level));
-      } else if (c.command instanceof Unregister) {
-        remotePlayers.remove(c.sender);
-      } else if (c.command instanceof Users) {
-        for (Integer id: ((Users) c.command).users.keySet()) {
-          if (id != ownID) {
-            Integer[] coords = ((Users) c.command).users.get(id);
-            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level));
-          }
-        }
-      }
-    }
-
-    @Override
-    public void close() {
-      stopGame();
-      // TODO back to entry
-    }
-  });
 
   public int mouseX;
   public int mouseY;
@@ -105,7 +65,12 @@ class Game extends JPanel{
   // kann eigentlich ignoriert werden
   private void start() throws IOException, AWTException, InterruptedException {
     System.out.println("start...");
-    cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    try {
+      cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    }
+    catch (IOException e) {
+      cursorImg = ImageIO.read(new File("client/resources/cursor.png"));
+    }
     robot = new Robot();
     Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
     frame.getContentPane().setCursor(defaultCursor);
@@ -143,18 +108,6 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
-    
-    // start server connection
-    new Thread(() -> {
-      try {
-        remote.connect();
-      } catch (Exception e) {
-        e.printStackTrace();
-        // TODO return err to user
-        //return;
-      }
-    }).start();
-    
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {

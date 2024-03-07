@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 class UserInterface {
     private int mouseX = 0;
@@ -44,7 +45,15 @@ class UserInterface {
             frame3 = ImageIO.read(new File("resources/EPFrame1.png"));
             frame4 = ImageIO.read(new File("resources/EPFrame1.png"));
         } catch(Exception e){
-
+            try {
+                frame1 = ImageIO.read(new File("client/resources/EPFrame1.png"));
+                frame2 = ImageIO.read(new File("client/resources/EPFrame1.png"));
+                frame3 = ImageIO.read(new File("client/resources/EPFrame1.png"));
+                frame4 = ImageIO.read(new File("client/resources/EPFrame1.png"));
+            }
+            catch (IOException e1) {
+                e.printStackTrace();
+            }
         }
     }
 
