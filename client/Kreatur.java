@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 abstract class Kreatur extends Graphikobjekt {
     private int leben;
     public int angriffsstaerke;
@@ -26,12 +28,7 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        int newX = getX()+(int) (Math.sin(Math.toRadians(direction))*speed);
-        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction))*speed);
-        if (getCollidingWall(newX, newY) != null) {
-            return;
-        }
-        moveTo(newX, newY);
+      moveDirection(speed, direction);
     }
 
     public abstract void moveHook(int x, int y);
@@ -43,21 +40,46 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void moveSideways(int speed){
-        int newX = getX()+(int) (Math.sin(Math.toRadians(direction + 90))*speed);
-        int newY = getY()+(int) (-Math.cos(Math.toRadians(direction + 90))*speed);
-        if (getCollidingWall(newX, newY) != null) {
-            return;
-        }
-        moveTo(newX, newY);
+        moveDirection(speed, direction + 90);
     }
 
-    public Wall getCollidingWall(int newX, int newY) {
-        BoundingBox bb = new BoundingBox(newX, newY, boundingBox.width, boundingBox.height);
-        for (Wall wall : level.walls) {
-            if (BoundingBox.isColliding(bb, wall.boundingBox)) {
-                return wall;
+    private void moveDirection(int speed, float moveDirection) {
+        int dx = (int) (Math.sin(Math.toRadians(moveDirection))*speed);
+        int dy = (int) (-Math.cos(Math.toRadians(moveDirection))*speed);
+
+        ArrayList<Wall> walls = getCollidingWalls(x + dx, y + dy);
+        if (walls.size() != 0) {
+            if (walls.size() == 1) {
+                Wall wall = (Wall)walls.toArray()[0];
+                double newDirection = wall.getDirection();
+                float collisionAngle = Math.abs(moveDirection - wall.getDirection());
+            
+                if (collisionAngle > 90) {
+                    newDirection += 180;
+                    collisionAngle = 180 - collisionAngle;
+                }
+
+                double newSpeed = Math.cos(Math.toRadians(collisionAngle))*speed;
+
+                dx = (int) (Math.sin(Math.toRadians(newDirection))*newSpeed);
+                dy = (int) (-Math.cos(Math.toRadians(newDirection))*newSpeed);
+            }
+            else {
+                return;
             }
         }
-        return null;
+        moveTo(x + dx, y + dy);
+    }
+
+    public abstract void wurdeGetroffen();
+
+    public ArrayList<Wall> getCollidingWalls(int newX, int newY) {
+        ArrayList<Wall> walls = new ArrayList<Wall>();
+        for (Wall wall : level.walls) {
+            if (Collision.KreaturWallCollision(this, newX, newY, wall)) {
+                walls.add(wall);
+            }
+        }
+        return walls;
     }
 }

@@ -3,18 +3,19 @@ import commands.Move;
 
 class Player extends Kreatur {
 
-    final static int size = 14;
+    public int shotWidth = 20;
 
     public Player(int x, int y, Level level) {
         super(x, y, level, "ignore");
-        super.boundingBox = new BoundingBox(x, y, size, size);
+        size = 14;
+        hitBoxRadius = size/2;
     }
 
     public void update() {
     }
     
     public void wurdeGetroffen() {
-        System.out.println("Ouch! :(");
+         Game.getGame().leben -= 0.5;
     }
 
     public void draw2D(Graphics g) {
@@ -26,5 +27,13 @@ class Player extends Kreatur {
     @Override
     public void moveHook(int x, int y) {
         Game.getGame().remote.sendCommand(new Move(x, y));
+    }
+
+    public void shoot(){
+        for (Graphikobjekt gr : level.graphikobjekte){
+            if (gr.getClass() == Enemy.class){
+                Collision.EnemyShotCollision((Enemy) gr, this, level);
+            }
+        }
     }
 }

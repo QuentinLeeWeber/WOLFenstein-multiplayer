@@ -3,7 +3,10 @@ abstract class Graphikobjekt {
     public int x;
     public int y;
     public String texture;
-    public BoundingBox boundingBox;
+
+    public int hitBoxRadius;
+
+    public int size;
 
     public abstract void update();
 
@@ -18,9 +21,6 @@ abstract class Graphikobjekt {
     }
     public void setX(int _x) {
         x = _x;
-        if (boundingBox != null) {
-            boundingBox.x = _x;
-        }
     }
 
     public int getY() {
@@ -28,8 +28,5 @@ abstract class Graphikobjekt {
     }
     public void setY(int _y) {
         y = _y;
-        if (boundingBox != null) {
-            boundingBox.y = _y;
-        }
     }
 }

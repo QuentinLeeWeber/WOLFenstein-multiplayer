@@ -29,6 +29,7 @@ class BlenderRender {
     private Image Sprite1;
     private BufferedImage wallImage;
 
+
     //liste der objecte welche es sich lohnt zu zeichen (optimierung)
     private ArrayList<Wall> minWalls = new ArrayList<Wall>();
     private ArrayList<Pixel> pixels = new ArrayList<Pixel>();
@@ -66,23 +67,13 @@ class BlenderRender {
             for (Wall wall : level.walls) {
                 g.drawLine((int) wall.a[0], (int) wall.a[1], (int) wall.b[0], (int) wall.b[1]);
             }
+            g.setColor(Color.red);
+            int maxShotDistance = Game.getGame().getWidth();
+            g.drawLine(player.x, player.y, player.x-(int) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance), player.y-(int) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance));
+            g.setColor(new Color(0, 0, 0));
             for(Graphikobjekt gr : level.graphikobjekte){
                 g.drawOval(gr.x, gr.y, 4, 4);
             }
-        }
-        if (renderBoundingBoxes) {
-            Color prevColor = g.getColor();
-            g.setColor(Color.green);
-
-            for (BoundingBox boundingBox : level.getBoundingBoxes()) {
-                if (boundingBox != null) {
-                    //BoundingBoxes mit einer minimalen Größe von 3 gemalt, damit sie immer sichtbar sind
-                    g.fillRect(boundingBox.x, boundingBox.y, Math.max(3, boundingBox.width), Math.max(3, boundingBox.height));
-                }
-            }
-            g.setColor(Color.orange);
-            g.fillRect(Game.getGame().player.boundingBox.x, Game.getGame().player.boundingBox.y, Game.getGame().player.boundingBox.width, Game.getGame().player.boundingBox.height);
-            g.setColor(prevColor);
         }
     }
 
@@ -231,7 +222,7 @@ class BlenderRender {
             preCalcWallTexture();
         } catch(IOException e){
             System.err.println("failed to load textures");
-            loadSuccess = false;
+            loadSuccess = false;e.printStackTrace();
         }
         if(loadSuccess){
             System.out.println("succesfully loaded textures!");
