@@ -28,7 +28,7 @@ class Game extends JPanel{
   
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(false);
+  private BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -145,13 +145,15 @@ class Game extends JPanel{
     frame.toFront();
     
     // start server connection
-    try {
-      remote.connect();
-    } catch (IOException e) {
-      e.printStackTrace();
-      // TODO return err to user
-      return;
-    }
+    new Thread(() -> {
+      try {
+        remote.connect();
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
     
     while (true) {
       lastTime = time;
