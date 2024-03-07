@@ -166,8 +166,13 @@ class Game extends JPanel{
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
+    final float sqrt2 = 1.41f;
     if (wPressed) {
-      player.move(stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)step);
     }
     if (ePressed) {
       
@@ -181,13 +186,25 @@ class Game extends JPanel{
       }
     }
     if (sPressed) {
-      player.move(-stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)-step);
     }
     if(aPressed){
-      player.moveSideways(-stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)-step);
     }
     if(dPressed){
-      player.moveSideways(stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)step);
     }
     if (pPressed && gameRunning) {
       game.stopGame();
