@@ -49,6 +49,7 @@ class Game extends JPanel{
   private boolean textInput = false;
   private boolean backspacePressed = false;
   private boolean WindowActive = false;
+  private boolean tabPressed = false;
 
   private BufferedImage cursorImg;
 
@@ -272,6 +273,7 @@ class Game extends JPanel{
     if (textInput && !gameRunning) {
       UI.textInput(typedChar);
     }
+    UI.displayLeaderboard = tabPressed;
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
@@ -293,6 +295,10 @@ class Game extends JPanel{
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
+    else if (c == KeyEvent.VK_TAB) {
+      tabPressed = true;
+    }
+
     textInput = true;
     typedChar = c;
   }
@@ -315,6 +321,8 @@ class Game extends JPanel{
       dPressed = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
+    } else if (c == KeyEvent.VK_TAB) {
+      tabPressed = false;
     }
     textInput = false;
   }
