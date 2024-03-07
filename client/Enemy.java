@@ -5,9 +5,13 @@ class Enemy extends Kreatur {
         hitBoxRadius = size/2;
     }
 
+    @Override
     public void update() {
     }
 
+    @Override
+    public void moveHook(int x, int y) {}
+  
     public void wurdeGetroffen() {
         System.out.println("Oof");
     }

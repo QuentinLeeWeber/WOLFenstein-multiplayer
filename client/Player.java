@@ -1,4 +1,5 @@
 import java.awt.*;
+import commands.Move;
 
 class Player extends Kreatur {
 
@@ -14,13 +15,18 @@ class Player extends Kreatur {
     }
     
     public void wurdeGetroffen() {
-        System.out.println("Ouch! :(");
+         Game.getGame().leben -= 0.5;
     }
 
     public void draw2D(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.rotate(Math.toRadians(direction), getX() + size/2, getY() + size/2);
         g2d.drawPolygon(new int[]{getX(), getX() + size/2, getX() + size}, new int[]{getY() + size, getY(), getY() + size}, 3);
+    }
+
+    @Override
+    public void moveHook(int x, int y) {
+        Game.getGame().remote.sendCommand(new Move(x, y));
     }
 
     public void shoot(){
