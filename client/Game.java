@@ -152,6 +152,19 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
+    
+    // start server connection
+    new Thread(() -> {
+      try {
+        remote.connect();
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
+
+
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
