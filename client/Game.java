@@ -50,6 +50,47 @@ class Game extends JPanel{
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
+  
+  public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
+  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
+    private int ownID = -1;
+
+    @Override
+    public void execute(CommandWithSender c) {
+      if (ownID < 0) {
+        player.setX(((Register) c.command).x);
+        player.setY(((Register) c.command).y);
+        ownID = c.sender;
+        return;
+      }
+      if (c.command instanceof Move) {
+        remotePlayers.get(c.sender).moveTo(((Move) c.command).x, ((Move) c.command).y);
+      } else if (c.command instanceof Turn) {
+        remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
+      } else if (c.command instanceof Register) {
+        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level, c.sender));
+      } else if (c.command instanceof Unregister) {
+        remotePlayers.remove(c.sender);
+      } else if (c.command instanceof Users) {
+        for (Integer id: ((Users) c.command).users.keySet()) {
+          if (id != ownID) {
+            Integer[] coords = ((Users) c.command).users.get(id);
+            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level, id));
+          }
+        }
+      } else if (c.command instanceof Hit) {
+        if (((Hit) c.command).id == ownID) {
+          player.wurdeGetroffen();
+        }
+      }
+    }
+
+    @Override
+    public void close() {
+      stopGame();
+      // TODO back to entry
+    }
+  });
 
   public int mouseX;
   public int mouseY;

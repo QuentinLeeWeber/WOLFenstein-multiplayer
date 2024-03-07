@@ -1,6 +1,11 @@
+import commands.Hit;
+
 class RemotePlayer extends Kreatur {
-    public RemotePlayer(Integer x, Integer y, Level level) {
+    private final int id;
+
+    public RemotePlayer(Integer x, Integer y, Level level, int id) {
         super(x, y, level, "resources/cursor.png");
+        this.id = id;
         size = 5;
         hitBoxRadius = size/2;
     }
@@ -16,6 +21,6 @@ class RemotePlayer extends Kreatur {
   
     @Override
     public void wurdeGetroffen() {
-           // TODO 
+        Game.getGame().remote.sendCommand(new Hit(id));
     }
 }

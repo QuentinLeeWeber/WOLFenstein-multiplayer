@@ -31,6 +31,7 @@ public class Remote extends Thread {
     }
 
     public void sendCommand(Command c) {
+        if (out == null) return;
         out.write(c.toString() + "\r\n");
         out.flush();
     }

@@ -31,8 +31,8 @@ class Player extends Kreatur {
 
     public void shoot(){
         for (Graphikobjekt gr : level.graphikobjekte){
-            if (gr.getClass() == Enemy.class){
-                Collision.EnemyShotCollision((Enemy) gr, this, level);
+            if (gr.getClass() == Enemy.class || gr.getClass() == RemotePlayer.class){
+                Collision.ShotCollision((Kreatur) gr, this, level);
             }
         }
     }
