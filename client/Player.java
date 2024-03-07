@@ -1,6 +1,5 @@
-package client;
-
 import java.awt.*;
+import commands.Move;
 
 class Player extends Kreatur {
 
@@ -16,7 +15,7 @@ class Player extends Kreatur {
     }
     
     public void wurdeGetroffen() {
-        System.out.println("Ouch! :(");
+         Game.getGame().leben -= 0.5;
     }
 
     public void draw2D(Graphics g) {
@@ -25,10 +24,15 @@ class Player extends Kreatur {
         g2d.drawPolygon(new int[]{getX(), getX() + size/2, getX() + size}, new int[]{getY() + size, getY(), getY() + size}, 3);
     }
 
+    @Override
+    public void moveHook(int x, int y) {
+        Game.getGame().remote.sendCommand(new Move(x, y));
+    }
+
     public void shoot(){
         for (Graphikobjekt gr : level.graphikobjekte){
-            if (gr.getClass() == Enemy.class){
-                Collision.EnemyShotCollision((Enemy) gr, this, level);
+            if (gr.getClass() == Enemy.class || gr.getClass() == RemotePlayer.class){
+                Collision.ShotCollision((Kreatur) gr, this, level);
             }
         }
     }

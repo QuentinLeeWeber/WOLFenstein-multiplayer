@@ -1,5 +1,3 @@
-package client;
-
 public class Collision {
     static double distancePointToLineSegment(int pointX, int pointY, int lineStartX, int lineStartY, int lineEndX, int lineEndY){
 
@@ -38,21 +36,21 @@ public class Collision {
         return distance < kreatur.hitBoxRadius;
     }
 
-    public static void EnemyShotCollision(Enemy enemy, Player player, Level level)
+    public static void ShotCollision(Kreatur kreatur, Player player, Level level)
     {
         int maxShotDistance = Game.getGame().getWidth();
         int shotEndX = player.x-(int) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance);
         int shotEndY = player.y-(int) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance);
         
         for (Wall wall : level.walls) {
-            if (checkLineSegmentCollision(enemy.x, enemy.y, player.x, player.y, wall.a[0], wall.a[1], wall.b[0], wall.b[1])) {
+            if (checkLineSegmentCollision(kreatur.x, kreatur.y, player.x, player.y, wall.a[0], wall.a[1], wall.b[0], wall.b[1])) {
                 return;
             }
         }
 
-        double distance = distancePointToLineSegment(enemy.x, enemy.y, player.x, player.y, shotEndX, shotEndY);
+        double distance = distancePointToLineSegment(kreatur.x, kreatur.y, player.x, player.y, shotEndX, shotEndY);
         if (distance < player.shotWidth) {
-            enemy.wurdeGetroffen();
+            kreatur.wurdeGetroffen();
         }
     }
 

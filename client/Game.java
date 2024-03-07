@@ -1,5 +1,3 @@
-package client;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -9,6 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.util.HashMap;
+import connect.*;
+import commands.*;
 
 class Game extends JPanel{
   public Game(){}
@@ -27,13 +28,16 @@ class Game extends JPanel{
   
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(true);
+  public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
+  private boolean gamePaused = false;
   private char typedChar;
   private Robot robot;
+
+  public int leben = 100;
 
   private boolean wPressed = false;
   private boolean qPressed = false;
@@ -50,6 +54,47 @@ class Game extends JPanel{
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
+  
+  public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
+  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
+    private int ownID = -1;
+
+    @Override
+    public void execute(CommandWithSender c) {
+      if (ownID < 0) {
+        player.setX(((Register) c.command).x);
+        player.setY(((Register) c.command).y);
+        ownID = c.sender;
+        return;
+      }
+      if (c.command instanceof Move) {
+        remotePlayers.get(c.sender).moveTo(((Move) c.command).x, ((Move) c.command).y);
+      } else if (c.command instanceof Turn) {
+        remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
+      } else if (c.command instanceof Register) {
+        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level, c.sender));
+      } else if (c.command instanceof Unregister) {
+        remotePlayers.remove(c.sender);
+      } else if (c.command instanceof Users) {
+        for (Integer id: ((Users) c.command).users.keySet()) {
+          if (id != ownID) {
+            Integer[] coords = ((Users) c.command).users.get(id);
+            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level, id));
+          }
+        }
+      } else if (c.command instanceof Hit) {
+        if (((Hit) c.command).id == ownID) {
+          player.wurdeGetroffen();
+        }
+      }
+    }
+
+    @Override
+    public void close() {
+      stopGame();
+      // TODO back to entry
+    }
+  });
 
   public int mouseX;
   public int mouseY;
@@ -65,7 +110,12 @@ class Game extends JPanel{
   // kann eigentlich ignoriert werden
   private void start() throws IOException, AWTException, InterruptedException {
     System.out.println("start...");
-    cursorImg = ImageIO.read(new File("client/resources/cursor.png"));
+    try {
+      cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    }
+    catch (IOException e) {
+      cursorImg = ImageIO.read(new File("client/resources/cursor.png"));
+    }
     robot = new Robot();
     Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
     frame.getContentPane().setCursor(defaultCursor);
@@ -103,15 +153,29 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
+    
+    // start server connection
+    new Thread(() -> {
+      try {
+        remote.connect();
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
+
+
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
-        player.update();
-        for (Graphikobjekt gr : level.graphikobjekte) {
+        if(gameRunning) {
+          player.update();
+          for (Graphikobjekt gr : level.graphikobjekte) {
             gr.update();
+          }
+          checkGraphikobjektCollision();
         }
-        checkGraphikobjektCollision();
-        
         double renderedTime = System.nanoTime();
         frameTime = -(lastRenderedTime - renderedTime) / 1000000;
         frame.repaint();
@@ -160,23 +224,45 @@ class Game extends JPanel{
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
+    final float sqrt2 = 1.41f;
     if (wPressed) {
-      player.move(stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)step);
     }
     if (ePressed) {
       
     }
     if (qPressed) {
-      
+      gamePaused = !gamePaused;
+      if(gamePaused) {
+        startGame();
+      } else {
+        stopGame();
+      }
     }
     if (sPressed) {
-      player.move(-stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)-step);
     }
     if(aPressed){
-      player.moveSideways(-stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)-step);
     }
     if(dPressed){
-      player.moveSideways(stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)step);
     }
     if (pPressed && gameRunning) {
       game.stopGame();
@@ -206,15 +292,15 @@ class Game extends JPanel{
       aPressed = true;
     } else if (c == 'd'){
       dPressed = true;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = true;
-      typedChar = c;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
     else if (c == KeyEvent.VK_TAB) {
       tabPressed = true;
     }
+
+    textInput = true;
+    typedChar = c;
   }
   
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
@@ -233,13 +319,12 @@ class Game extends JPanel{
       aPressed = false;
     } else if (c == 'd'){
       dPressed = false;
-    } else if (c == '0' || c == '1'|| c == '2'|| c == '3'|| c == '4'|| c == '5'|| c == '6' || c == '7'|| c == '8' || c == '9' || c == '.') {
-      textInput = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
     } else if (c == KeyEvent.VK_TAB) {
       tabPressed = false;
     }
+    textInput = false;
   }
   
   public void mouseMoved() {
@@ -293,5 +378,9 @@ class Game extends JPanel{
 
   public boolean getRunning() {
     return gameRunning;
+  }
+
+  public boolean getPaused() {
+    return gamePaused;
   }
 }

@@ -1,5 +1,3 @@
-package client;
-
 import java.util.ArrayList;
 
 abstract class Kreatur extends Graphikobjekt {
@@ -30,7 +28,15 @@ abstract class Kreatur extends Graphikobjekt {
     }
 
     public void move(int speed) {
-        moveDirection(speed, direction);
+      moveDirection(speed, direction);
+    }
+
+    public abstract void moveHook(int x, int y);
+
+    public void moveTo(int x, int y) {
+        setX(x);
+        setY(y);
+        moveHook(x, y);
     }
 
     public void moveSideways(int speed){
@@ -62,8 +68,7 @@ abstract class Kreatur extends Graphikobjekt {
                 return;
             }
         }
-        setX(x + dx);
-        setY(y + dy);
+        moveTo(x + dx, y + dy);
     }
 
     public abstract void wurdeGetroffen();
