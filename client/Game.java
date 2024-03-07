@@ -71,15 +71,19 @@ class Game extends JPanel{
       } else if (c.command instanceof Turn) {
         remotePlayers.get(c.sender).turn(((Turn) c.command).angle);
       } else if (c.command instanceof Register) {
-        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level));
+        remotePlayers.put(c.sender, new RemotePlayer(((Register) c.command).x, ((Register) c.command).y, level, c.sender));
       } else if (c.command instanceof Unregister) {
         remotePlayers.remove(c.sender);
       } else if (c.command instanceof Users) {
         for (Integer id: ((Users) c.command).users.keySet()) {
           if (id != ownID) {
             Integer[] coords = ((Users) c.command).users.get(id);
-            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level));
+            remotePlayers.put(id, new RemotePlayer(coords[0], coords[1], level, id));
           }
+        }
+      } else if (c.command instanceof Hit) {
+        if (((Hit) c.command).id == ownID) {
+          player.wurdeGetroffen();
         }
       }
     }
