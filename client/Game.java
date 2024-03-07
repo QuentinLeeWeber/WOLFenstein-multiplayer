@@ -7,9 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.util.HashMap;
-import connect.*;
-import commands.*;
 
 class Game extends JPanel{
   public Game(){}
@@ -28,7 +25,7 @@ class Game extends JPanel{
   
 
   private static Game game;
-  private BlenderRender renderer = new BlenderRender(true);
+  public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
   private Level level = new Level1();
   private UserInterface UI = new UserInterface();
@@ -109,7 +106,12 @@ class Game extends JPanel{
   // kann eigentlich ignoriert werden
   private void start() throws IOException, AWTException, InterruptedException {
     System.out.println("start...");
-    cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    try {
+      cursorImg = ImageIO.read(new File("resources/cursor.png"));
+    }
+    catch (IOException e) {
+      cursorImg = ImageIO.read(new File("client/resources/cursor.png"));
+    }
     robot = new Robot();
     Cursor defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "default cursor 2");
     frame.getContentPane().setCursor(defaultCursor);
@@ -147,18 +149,6 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
-    
-    // start server connection
-    new Thread(() -> {
-      try {
-        remote.connect();
-      } catch (Exception e) {
-        e.printStackTrace();
-        // TODO return err to user
-        //return;
-      }
-    }).start();
-    
     while (true) {
       lastTime = time;
       if (timeToNextFrame <= 0) {
@@ -217,8 +207,13 @@ class Game extends JPanel{
   
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
+    final float sqrt2 = 1.41f;
     if (wPressed) {
-      player.move(stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)step);
     }
     if (ePressed) {
       
@@ -232,13 +227,25 @@ class Game extends JPanel{
       }
     }
     if (sPressed) {
-      player.move(-stepWidth);
+      float step = stepWidth;
+      if (aPressed || dPressed) {
+        step /= sqrt2;
+      }
+      player.move((int)-step);
     }
     if(aPressed){
-      player.moveSideways(-stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)-step);
     }
     if(dPressed){
-      player.moveSideways(stepWidth);
+      float step = stepWidth;
+      if (wPressed || sPressed) {
+        step /= sqrt2;
+      }
+      player.moveSideways((int)step);
     }
     if (pPressed && gameRunning) {
       game.stopGame();
