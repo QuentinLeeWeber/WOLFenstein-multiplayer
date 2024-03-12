@@ -39,9 +39,9 @@ class Game extends JPanel{
 
   public int leben = 100;
 
+  public boolean schiessen = false;
+
   private boolean wPressed = false;
-  private boolean qPressed = false;
-  private boolean ePressed = false;
   private boolean pPressed = false;
   private boolean sPressed = false;
   private boolean aPressed = false;
@@ -93,7 +93,7 @@ class Game extends JPanel{
       stopGame();
       // TODO back to entry
     }
-  });;
+  });
 
   public int mouseX;
   public int mouseY;
@@ -219,17 +219,6 @@ class Game extends JPanel{
       }
       player.move((int)step);
     }
-    if (ePressed) {
-      
-    }
-    if (qPressed) {
-      /*gamePaused = !gamePaused;
-      if(gamePaused) {
-        startGame();
-      } else {
-        stopGame();
-      }*/
-    }
     if (sPressed && gameRunning) {
       float step = stepWidth;
       if (aPressed || dPressed) {
@@ -266,10 +255,6 @@ class Game extends JPanel{
   public void keyTyped(char c){
     if (c == 'w') {
       wPressed = true;
-    } else if (c == 'e') {
-      ePressed = true;
-    } else if (c == 'q') {
-      qPressed = true;
     } else if (c == 'p') {
       pPressed = true;
     } else if (c == 's') {
@@ -289,10 +274,6 @@ class Game extends JPanel{
   public void keyReleased(char c){
     if (c == 'w') {
       wPressed = false;
-    } else if (c == 'e') {
-      ePressed = false;
-    } else if (c == 'q') {
-      qPressed = false;
     } else if (c == 'p') {
       pPressed = false;
     } else if (c == 's') {
