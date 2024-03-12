@@ -38,6 +38,7 @@ class Game extends JPanel{
   private Robot robot;
 
   public int leben = 100;
+  public boolean schiessen = false;
 
   private boolean wPressed = false;
   private boolean qPressed = false;
