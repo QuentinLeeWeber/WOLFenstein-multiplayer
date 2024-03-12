@@ -7,8 +7,8 @@ abstract class Level {
     public Level() {
         createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
         createWall(new int[]{0, 0}, new int[]{0, Game.windowHeight});
-        //createWall(new int[]{Game.windowWidth-Player.size, 0}, new int[]{Game.windowWidth-Player.size, Game.windowHeight});
-        //createWall(new int[]{0, Game.windowHeight-Player.size-24}, new int[]{Game.windowWidth, Game.windowHeight-Player.size-24});
+        createWall(new int[]{Game.windowWidth, 0}, new int[]{Game.windowWidth, Game.windowHeight});
+        createWall(new int[]{0, Game.windowHeight}, new int[]{Game.windowWidth, Game.windowHeight});
     }
 
     public void createWall(int[] a, int[] b) {
