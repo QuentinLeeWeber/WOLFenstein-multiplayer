@@ -25,9 +25,9 @@ abstract class Level {
         walls.add(wall);    
     }
 
-        public void generateWallsFromVectors() {
+    public void generateWallsFromVectors() {
         ArrayList<Wall> newWalls = new ArrayList<>();
-    
+        WallManager wallManager = new WallManager();
         for (Vectordata vector : this.vector) {
             // Richtung momentaner Vektor
             double direction = Math.atan2(vector.y2 - vector.y, vector.x2 - vector.x);
@@ -37,35 +37,50 @@ abstract class Level {
             double perpendicularDirectionRight = direction - Math.PI / 2;
     
             // Position rechte linke Wand
-      for (; ; ) {
+      
             int wallLeftX1 = vector.x + (vector.x - vector.x2) + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
             int wallLeftY1 = vector.y + (vector.y -vector.y2) + (int) (Math.sin(perpendicularDirectionLeft) * wallWidth);
             int wallLeftX2 = vector.x2 + (vector.x2 - vector.x) + (int) (Math.cos(perpendicularDirectionLeft) * wallWidth);
             int wallLeftY2 = vector.y2 + (vector.y2 -vector.y) + (int) (Math.sin(perpendicularDirectionLeft) * wallWidth);
-                }
-      for (; ; ) {
+                
+      
             int wallRightX1 = vector.x + (vector.x - vector.x2) + (int) (Math.cos(perpendicularDirectionRight) * wallWidth);
             int wallRightY1 = vector.y + (vector.y -vector.y2) + (int) (Math.sin(perpendicularDirectionRight) * wallWidth);
             int wallRightX2 = vector.x2 + (vector.x2 - vector.x) + (int) (Math.cos(perpendicularDirectionRight) * wallWidth);
             int wallRightY2 = vector.y2 + (vector.y2 -vector.y) + (int) (Math.sin(perpendicularDirectionRight) * wallWidth);
-                }
+                
     
             // Wände rechts und links vom Vektor
             Wall wallLeft = new Wall(new int[]{wallLeftX1, wallLeftY1}, new int[]{wallLeftX2, wallLeftY2});
             Wall wallRight = new Wall(new int[]{wallRightX1, wallRightY1}, new int[]{wallRightX2, wallRightY2});
     
+          /*  for (Wall existingWall : newWalls) {
+                Point intersectionPointLeft = calculateWallCorner(existingWall, wallLeft);
+                if (intersectionPointLeft != null) {
+                System.out.println(intersectionPointLeft);
+                    wallLeft.b = new int[]{intersectionPointLeft.x, intersectionPointLeft.y};
+                }
+                Point intersectionPointRight = calculateWallCorner(existingWall, wallRight);
+                if (intersectionPointRight != null) {
+                    wallRight.b = new int[]{intersectionPointRight.x, intersectionPointRight.y};
+                }
+            }             */
             
-            Point calculateWallCorner;
+            ArrayList<Integer[]> cornerPoints = wallManager.listAllCornerPoints(walls);
+            newWalls.addAll(wallManager.createWallsBetweenCornerPoints(cornerPoints));
+            wallManager.removeWallsWithInternalCornerPoints(walls, cornerPoints);
+            // wallManager.removeWallsWithLength(walls);  
       
             // fügt Wände zur Liste hinzu
             newWalls.add(wallLeft);
             newWalls.add(wallRight);
             _wallLeft = wallLeft;
-            _wallRight = wallRight; 
+            _wallRight = wallRight;  
+            
         }
-    
-        // fügt Wände zur Wand/Oberliste hinzu
-        walls.addAll(newWalls);
+         // fügt Wände zur Wand/Oberliste hinzu
+            walls.addAll(newWalls);
+        
     }
 
     private Point calculateIntersection(Vectordata vectorA, Vectordata vectorB) {
@@ -103,7 +118,7 @@ abstract class Level {
     return null;
     }
   
-    private Point calculateWallCorner() {
+    public static Point calculateWallCorner(Wall _wallLeft, Wall _wallRight) {
       int x1 = _wallLeft.a[0];
       int y1 = _wallLeft.a[1];
       int x2 = _wallLeft.b[0];
@@ -123,7 +138,7 @@ abstract class Level {
               ( (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4) );
       
         // Überprüft, ob Schnittpunkt innerhalb Grenzen der Vektoren liegt
-      if (x >= Math.min(x1, x2) && x <= Math.max(x1, x2) &&
+      /*if (x >= Math.min(x1, x2) && x <= Math.max(x1, x2) &&
           x >= Math.min(x3, x4) && x <= Math.max(x3, x4) &&
           y >= Math.min(y1, y2) && y <= Math.max(y1, y2) &&
           y >= Math.min(y3, y4) && y <= Math.max(y3, y4)) {
@@ -131,7 +146,8 @@ abstract class Level {
       } else {
           return null;
           
-      }
+      }  */
+      return new Point(x, y);
       }catch(Exception e){
         
       }

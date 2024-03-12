@@ -5,8 +5,8 @@ import java.awt.Point;
 public class WallManager {
    
     // Auflistung aller Eckpunkte einer Wand mit anderen Waenden
-    public List<Integer[]> listAllCornerPoints(List<Wall> walls) {
-        List<Integer[]> cornerPoints = new ArrayList<>();
+    public ArrayList<Integer[]> listAllCornerPoints(ArrayList<Wall> walls) {
+        ArrayList<Integer[]> cornerPoints = new ArrayList<>();
        
         for (int i = 0; i < walls.size(); i++) {
             Wall currentWall = walls.get(i);
@@ -14,7 +14,12 @@ public class WallManager {
             for (int j = i + 1; j < walls.size(); j++) {
                 Wall otherWall = walls.get(j);
                 Point p = Level.calculateWallCorner(currentWall, otherWall);
-                cornerPoints.add(new Integer[]{p.x, p.y});
+                if(p == null){
+          
+                } else {
+                  cornerPoints.add(new Integer[]{p.x, p.y});
+                } // end of if-else
+                
             }
         }
        
@@ -22,16 +27,16 @@ public class WallManager {
     }
    
     // Erzeugung von Waenden zwischen allen Eckpunkten
-    public List<Wall> createWallsBetweenCornerPoints(List<int[]> cornerPoints) {
-        List<Wall> newWalls = new ArrayList<>();
+    public ArrayList<Wall> createWallsBetweenCornerPoints(ArrayList<Integer[]> cornerPoints) {
+        ArrayList<Wall> newWalls = new ArrayList<>();
        
         for (int i = 0; i < cornerPoints.size(); i++) {
-            int[] point1 = cornerPoints.get(i);
+            Integer[] point1 = cornerPoints.get(i);
             for (int j = i + 1; j < cornerPoints.size(); j++) {
-                int[] point2 = cornerPoints.get(j);
+                Integer[] point2 = cornerPoints.get(j);
                 double distance = Math.sqrt(Math.pow(point2[0] - point1[0], 2) + Math.pow(point2[1] - point1[1], 2));
                 if (distance > 10) {
-                    newWalls.add(new Wall(point1, point2));
+                    newWalls.add(new Wall(new int[]{point1[0], point1[1]}, new int[]{point2[0], point2[1]}));
                 }
             }
         }
@@ -40,10 +45,10 @@ public class WallManager {
     }
    
     // loescht Waende, die einen anderen Eckpunkt auf ihrer Strecke haben
-    public void removeWallsWithInternalCornerPoints(List<Wall> walls, List<int[]> cornerPoints) {
+    public void removeWallsWithInternalCornerPoints(ArrayList<Wall> walls, ArrayList<Integer[]> cornerPoints) {
         walls.removeIf(wall -> {
-            for (int[] point : cornerPoints) {
-                if (wall.hasInternalPoint(point)) {
+            for (Integer[] point : cornerPoints) {
+                if (wall.hasInternalPoint(new int[]{point[0], point[1]})) {
                     return true;
                 }
             }
@@ -52,7 +57,7 @@ public class WallManager {
     }
    
     // loescht Waende, die eine Laenge von 10 haben
-    public void removeWallsWithLength(List<Wall> walls) {
+   /* public void removeWallsWithLength(List<Wall> walls) {
         walls.removeIf(wall -> wall.getLength() == 10);
-    }
+    }    */
 }

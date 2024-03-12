@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.util.Random;
 import java.lang.Math;
+import java.util.ArrayList;
+
 
 class Wall {
     public int[] a = new int[2];
@@ -41,7 +43,12 @@ class Wall {
       
         boundingBox = new BoundingBox(Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(1, Math.abs(b[0] - a[0])), Math.max(1, Math.abs(b[1] - a[1])));
     }
-  public void hasInternalPoint(List<int[]> cornerPoints, List<Wall> walls) {
-    boolean distance = (Math.sqrt(Math.pow(walls.a[0] - cornerPoints.x, 2) + Math.pow(walls.b[0]- cornerPoints.y, 2));) + (Math.sqrt(Math.pow(walls.a[1] - cornerPoints.x, 2) + Math.pow(walls.b[1] - cornerPoints.y, 2));) == (Math.sqrt(Math.pow(walls.a[0] - walls.b[0], 2) + Math.pow(walls.a[1] - walls.b[1], 2)););
+  
+  public boolean hasInternalPoint(int[] p) {
+    double dist_p_w1 = Math.sqrt(Math.pow(a[0] - p[0], 2) + Math.pow(b[0] - p[1], 2));
+    double dist_p_w2 = Math.sqrt(Math.pow(a[1] - p[0], 2) + Math.pow(b[1] - p[1], 2));
+    double dist_w1_w2 = Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+    
+    return (dist_p_w1 + dist_p_w2) == dist_w1_w2;
     }
 }
