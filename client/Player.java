@@ -13,9 +13,12 @@ class Player extends Kreatur {
 
     public void update() {
     }
-    
-    public void wurdeGetroffen() {
-         Game.getGame().leben -= 0.5;
+
+    public void wurdeGetroffen(Kreatur damager) {
+        Game.getGame().leben -= 0.5;
+        if (Game.getGame().leben <= 0) {
+            damager.isKiller();
+        }
     }
 
     public void draw2D(Graphics g) {

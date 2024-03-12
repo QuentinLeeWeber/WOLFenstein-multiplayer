@@ -3,6 +3,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 
 class UserInterface {
     private int mouseX = 0;
@@ -39,6 +41,9 @@ class UserInterface {
     private Image frame3;
     private Image frame4;
 
+    public boolean displayLeaderboard = false;
+
+
     public UserInterface(){
         try {
             frame1 = ImageIO.read(new File("resources/EPFrame1.png"));
@@ -57,9 +62,6 @@ class UserInterface {
             }
         }
     }
-
-    public boolean displayLeaderboard = false;
-    public ArrayList<String> playerNames = new ArrayList<String>();
 
     public void update(Graphics g, int _mouseX, int _mouseY) {
         mouseX = _mouseX;
@@ -106,15 +108,22 @@ class UserInterface {
             g.fillRect(gesundheitsBalkenX, gesundheitsBalkenY, (int) (gesundheitsBalkenWidth * ((float) (Game.getGame().leben)/100)), gesundheitsBalkenHeigth);
             g.drawImage(frame1, 450, 370, null);
         }
-        else if (displayLeaderboard) {
-            playerNames.add("a");
-            playerNames.add("b");
+
+        if (displayLeaderboard) {
+            ArrayList<Kreatur> remotePlayers = new ArrayList<Kreatur>(Game.getGame().remotePlayers.values());
+            remotePlayers.add(Game.getGame().player);
+            remotePlayers.sort(Comparator.reverseOrder());
+
             g.setColor(new Color(0, 0, 0, 127));
-            g.fillRect(0, 0, 200, 100);
+            g.fillRect(Game.windowWidth - 200, 0, 200, 20*remotePlayers.size() + 10);
+            g.setColor(Color.white);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 
-            for (int i = 0; i < playerNames.size(); i++) {
-                g.drawString((String)playerNames.toArray()[i], 10, 21 + 20*i);
+            int i = 0;
+            for (Kreatur player : remotePlayers) {
+                g.drawString(player.name, Game.windowWidth - 190, 21 + 20*i);
+                g.drawString(String.valueOf(player.killCount), Game.windowWidth - 30, 21 + 20*i);
+                i++;
             }
         }
 

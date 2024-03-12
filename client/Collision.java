@@ -50,7 +50,7 @@ public class Collision {
 
         double distance = distancePointToLineSegment(kreatur.x, kreatur.y, player.x, player.y, shotEndX, shotEndY);
         if (distance < player.shotWidth) {
-            kreatur.wurdeGetroffen();
+            kreatur.wurdeGetroffen(player);
         }
     }
 

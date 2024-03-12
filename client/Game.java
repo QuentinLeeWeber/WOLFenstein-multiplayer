@@ -54,7 +54,7 @@ class Game extends JPanel{
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
-  
+
   public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
   public Remote remote = new Remote("quentman.hopto.org", new Executor() {
     private int ownID = -1;
@@ -84,7 +84,7 @@ class Game extends JPanel{
         }
       } else if (c.command instanceof Hit) {
         if (((Hit) c.command).id == ownID) {
-          player.wurdeGetroffen();
+          player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
       }
     }
@@ -102,7 +102,7 @@ class Game extends JPanel{
   public int lastClickX;
   public int lastClickY;
   
-  public static void main(String[] args) throws IOException, AWTException, InterruptedException { 
+  public static void main(String[] args) throws IOException, AWTException, InterruptedException {
     game = new Game();
     game.start();
   }
@@ -164,7 +164,14 @@ class Game extends JPanel{
         //return;
       }
     }).start();
-
+    //remove before merge
+    RemotePlayer testPlayer = new RemotePlayer(10, 10, level, 0);
+    RemotePlayer testPlayer2 = new RemotePlayer(0, 0, level, 1);
+    testPlayer2.isKiller();
+    testPlayer.isKiller();
+    testPlayer.isKiller();
+    remotePlayers.put(0, testPlayer);
+    remotePlayers.put(1, testPlayer2);
 
     while (true) {
       lastTime = time;
@@ -196,7 +203,7 @@ class Game extends JPanel{
     for (Graphikobjekt gr : level.graphikobjekte) {
         if (Collision.GraphikobjektCollision(player, gr)) {
             if (gr.getClass() == Enemy.class) {
-              player.wurdeGetroffen();
+              player.wurdeGetroffen((Kreatur)gr);
             }
         }
       }
