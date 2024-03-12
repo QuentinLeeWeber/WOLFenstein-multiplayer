@@ -39,6 +39,8 @@ class Game extends JPanel{
 
   public int leben = 100;
 
+  public boolean schiessen = false;
+
   private boolean wPressed = false;
   private boolean qPressed = false;
   private boolean ePressed = false;
@@ -93,7 +95,7 @@ class Game extends JPanel{
       stopGame();
       // TODO back to entry
     }
-  });;
+  });
 
   public int mouseX;
   public int mouseY;
@@ -223,12 +225,7 @@ class Game extends JPanel{
       
     }
     if (qPressed) {
-      /*gamePaused = !gamePaused;
-      if(gamePaused) {
-        startGame();
-      } else {
-        stopGame();
-      }*/
+
     }
     if (sPressed && gameRunning) {
       float step = stepWidth;
