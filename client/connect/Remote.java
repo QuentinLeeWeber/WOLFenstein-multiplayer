@@ -14,15 +14,13 @@ public class Remote extends Thread {
     private PrintWriter out;
     private BufferedReader in;
 
-    private final String ip;
     private final Executor executor;
 
-    public Remote(String ip, Executor executor) {
-        this.ip = ip;
+    public Remote(Executor executor) {
         this.executor = executor;
     }
 
-    public void connect() throws IOException {
+    public void connect(String ip) throws IOException {
         clientSocket = new Socket(ip, 6969);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
