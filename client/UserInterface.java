@@ -80,6 +80,7 @@ class UserInterface {
             g.setColor(new Color(66, 62, 62));
             g.drawRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
             g.fillRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight);
+            
             g.setColor(new Color(127, 127, 127));
             g.fillRect(inputBoxX + 5, inputBoxY + 5, inputBoxWidth - 10, inputBoxHeight - 10);
             g.setColor(new Color(0, 0, 0));
@@ -121,7 +122,12 @@ class UserInterface {
 
             int i = 0;
             for (Kreatur player : remotePlayers) {
+                if (player == Game.getGame().player)
+                {
+                    g.setColor(Color.green);
+                }
                 g.drawString(player.name, Game.windowWidth - 190, 21 + 20*i);
+                g.setColor(Color.white);
                 g.drawString(String.valueOf(player.killCount), Game.windowWidth - 30, 21 + 20*i);
                 i++;
             }

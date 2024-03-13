@@ -3,13 +3,13 @@ import commands.Hit;
 class RemotePlayer extends Kreatur {
     private final int id;
 
-    public final String name = "Test";
 
     public RemotePlayer(Integer x, Integer y, Level level, int id) {
         super(x, y, level, "resources/cursor.png");
         this.id = id;
         size = 5;
         hitBoxRadius = size/2;
+        name = "Test";
     }
 
     @Override
