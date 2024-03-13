@@ -132,21 +132,20 @@ abstract class Level {
       // Berechnung des Schnittpunkts (x, y) mit Line-Line-Intersection-Methode von Wikipedia
     try{
       
+
+        /*int denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denominator == 0) {
+            // Linien sind parallel oder identisch, kein Schnittpunkt vorhanden
+            return null;
+        } */
+
+
       int x = ( (x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4) ) /
               ( (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4) );
       int y = ( (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4) ) /
               ( (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4) );
-      
-        // Überprüft, ob Schnittpunkt innerhalb Grenzen der Vektoren liegt
-      /*if (x >= Math.min(x1, x2) && x <= Math.max(x1, x2) &&
-          x >= Math.min(x3, x4) && x <= Math.max(x3, x4) &&
-          y >= Math.min(y1, y2) && y <= Math.max(y1, y2) &&
-          y >= Math.min(y3, y4) && y <= Math.max(y3, y4)) {
-          return new Point(x, y);
-      } else {
-          return null;
-          
-      }  */
+              
+    
       return new Point(x, y);
       }catch(Exception e){
         
@@ -174,7 +173,8 @@ abstract class Level {
        GM2D04.Vector sumOf2 = vecA.add(vecB);
        vector.add (new Vectordata(x, y, x2, y2));
     }
-  
+
+    //temporär um Vektorn zu überprüfen
     public void paint(Graphics graphics){
         for (Vectordata a : vector ) {
           graphics.drawLine(a.x, a.y, a.x2, a.y2);
