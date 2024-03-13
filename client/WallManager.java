@@ -1,11 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class WallManager {
    
     // Auflistung aller Eckpunkte einer Wand mit anderen Waenden
-    public ArrayList<Integer[]> listAllCornerPoints(ArrayList<Wall> walls) {
+    /*public ArrayList<Integer[]> listAllCornerPoints(ArrayList<Wall> walls) {
         ArrayList<Integer[]> cornerPoints = new ArrayList<>();
        
         for (int i = 0; i < walls.size(); i++) {
@@ -14,7 +14,7 @@ public class WallManager {
             for (int j = i + 1; j < walls.size(); j++) {
                 Wall otherWall = walls.get(j);
                 Point p = Level.calculateWallCorner(currentWall, otherWall);
-                if(p == null){
+                if(p == null && !containsPoint(cornerPoints, p)){
           
                 } else {
                   cornerPoints.add(new Integer[]{p.x, p.y});
@@ -24,7 +24,45 @@ public class WallManager {
         }
        
         return cornerPoints;
+    }*/
+
+    public ArrayList<Integer[]> listAllCornerPoints(ArrayList<Wall> walls) {
+        HashSet<Point> cornerPointsSet = new HashSet<>();
+       
+        for (int i = 0; i < walls.size(); i++) {
+            Wall currentWall = walls.get(i);
+            for (int j = i + 1; j < walls.size(); j++) {
+                Wall otherWall = walls.get(j);
+                Point p = Level.calculateWallCorner(currentWall, otherWall);
+                if (p != null) {
+                    cornerPointsSet.add(p);
+                }
+            }
+        }
+       
+        // Convert HashSet to ArrayList
+        ArrayList<Integer[]> cornerPoints = new ArrayList<>(cornerPointsSet.size());
+        for (Point p : cornerPointsSet) {
+            cornerPoints.add(new Integer[]{p.x, p.y});
+        }
+       
+        return cornerPoints;
     }
+
+
+    private boolean containsPoint(ArrayList<Integer[]> cornerPoints, Point p) {
+        if (p == null) {
+            return false;
+        }
+        for (Integer[] point : cornerPoints) {
+            if (point[0] == p.x && point[1] == p.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
    
     // Erzeugung von Waenden zwischen allen Eckpunkten
     public ArrayList<Wall> createWallsBetweenCornerPoints(ArrayList<Integer[]> cornerPoints) {
@@ -45,7 +83,7 @@ public class WallManager {
     }
    
     // loescht Waende, die einen anderen Eckpunkt auf ihrer Strecke haben
-    public void removeWallsWithInternalCornerPoints(ArrayList<Wall> walls, ArrayList<Integer[]> cornerPoints) {
+    /* public void removeWallsWithInternalCornerPoints(ArrayList<Wall> walls, ArrayList<Integer[]> cornerPoints) {
         walls.removeIf(wall -> {
             for (Integer[] point : cornerPoints) {
                 if (wall.hasInternalPoint(new int[]{point[0], point[1]})) {
@@ -53,6 +91,27 @@ public class WallManager {
                 }
             }
             return false;
+        });
+    } */
+
+    public void removeWallsWithInternalCornerPoints(ArrayList<Wall> walls, ArrayList<Integer[]> cornerPoints) {
+        walls.removeIf(wall -> {
+            boolean isInternal = false;
+            for (Integer[] point : cornerPoints) {
+                if (wall.hasInternalPoint(new int[]{point[0], point[1]})) {
+                    isInternal = true;
+                    break; // wenn Wand intern wird Schleife abgebrochen
+                }
+            }
+            // Debugging-Ausgabe
+            if (isInternal) {
+                System.out.println("Internal wall removed: " + wall); 
+                toString();
+                System.out.println("Internal wall removed: " + wall);
+        } else {
+            System.out.println("Wall with no internal points: " + wall);
+        }
+            return isInternal;
         });
     }
    
