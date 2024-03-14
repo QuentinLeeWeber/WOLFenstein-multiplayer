@@ -17,7 +17,7 @@ class Player extends Kreatur {
     }
     
     public void wurdeGetroffen() {
-         Game.getGame().leben -= 0.5;
+         Game.getGame().leben -= 20;
          if (Game.getGame().leben <= 0) {
              respawn();
          }
