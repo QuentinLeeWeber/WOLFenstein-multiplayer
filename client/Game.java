@@ -192,6 +192,17 @@ class Game extends JPanel{
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
+    /*System.out.println(mouseX + "  " +  mouseY);
+    lastClickX = mouseX;
+    lastClickY = mouseY;
+    UI.mouseClicked();
+    if (gameRunning) {
+      player.shoot();
+    }*/
+  }
+
+  public void mousePressed() {
+    //UI.mousePressed();
     System.out.println(mouseX + "  " +  mouseY);
     lastClickX = mouseX;
     lastClickY = mouseY;
@@ -199,10 +210,6 @@ class Game extends JPanel{
     if (gameRunning) {
       player.shoot();
     }
-  }
-
-  public void mousePressed() {
-    UI.mousePressed();
   }
 
   public void mouseReleased() {
