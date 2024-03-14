@@ -1,6 +1,7 @@
 import java.awt.*;
 import commands.Move;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 class Player extends Kreatur {
 
@@ -17,6 +18,14 @@ class Player extends Kreatur {
     
     public void wurdeGetroffen() {
          Game.getGame().leben -= 0.5;
+         if (Game.getGame().leben <= 0) {
+             respawn();
+         }
+    }
+
+    private void respawn() {
+        Game.getGame().leben = 100;
+        moveTo(ThreadLocalRandom.current().nextInt(0, Game.windowWidth + 1), ThreadLocalRandom.current().nextInt(0, Game.windowHeight + 1));
     }
 
     public void draw2D(Graphics g) {
@@ -32,7 +41,9 @@ class Player extends Kreatur {
 
     public void shoot(){
         Game.getGame().schiessen = !Game.getGame().schiessen;
-        for (Graphikobjekt gr : new ArrayList<Graphikobjekt>(level.graphikobjekte)){
+        ArrayList<Graphikobjekt> grs = new ArrayList<>(level.graphikobjekte);
+        grs.addAll(Game.getGame().remotePlayers.values());
+        for (Graphikobjekt gr : grs){
             if (gr.getClass() == Enemy.class || gr.getClass() == RemotePlayer.class){
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
