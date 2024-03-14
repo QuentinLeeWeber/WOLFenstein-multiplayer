@@ -30,7 +30,7 @@ class Game extends JPanel{
   private static Game game;
   public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
-  public Level level = new Level1();
+  private Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   private boolean gamePaused = false;
@@ -39,9 +39,9 @@ class Game extends JPanel{
 
   public int leben = 100;
 
-  public boolean schiessen = false;
-
   private boolean wPressed = false;
+  private boolean qPressed = false;
+  private boolean ePressed = false;
   private boolean pPressed = false;
   private boolean sPressed = false;
   private boolean aPressed = false;
@@ -49,13 +49,14 @@ class Game extends JPanel{
   private boolean textInput = false;
   private boolean backspacePressed = false;
   private boolean WindowActive = false;
+  private boolean tabPressed = false;
 
   private BufferedImage cursorImg;
 
   public Player player = new Player(windowWidth/2, windowHeight/2, level);
-  
+
   public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
-  public Remote remote = new Remote(new Executor() {
+  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
     private int ownID = -1;
 
     @Override
@@ -83,7 +84,7 @@ class Game extends JPanel{
         }
       } else if (c.command instanceof Hit) {
         if (((Hit) c.command).id == ownID) {
-          player.wurdeGetroffen();
+          player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
       } else if (c.command instanceof Kill) {
         
@@ -103,7 +104,7 @@ class Game extends JPanel{
   public int lastClickX;
   public int lastClickY;
   
-  public static void main(String[] args) throws IOException, AWTException, InterruptedException { 
+  public static void main(String[] args) throws IOException, AWTException, InterruptedException {
     game = new Game();
     game.start();
   }
@@ -154,6 +155,25 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
+    
+    // start server connection
+    new Thread(() -> {
+      try {
+        remote.connect();
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
+    //remove before merge
+    RemotePlayer testPlayer = new RemotePlayer(10, 10, level, 0);
+    RemotePlayer testPlayer2 = new RemotePlayer(0, 0, level, 1);
+    testPlayer2.isKiller();
+    testPlayer.isKiller();
+    testPlayer.isKiller();
+    remotePlayers.put(0, testPlayer);
+    remotePlayers.put(1, testPlayer2);
 
     while (true) {
       lastTime = time;
@@ -185,7 +205,7 @@ class Game extends JPanel{
     for (Graphikobjekt gr : level.graphikobjekte) {
         if (Collision.GraphikobjektCollision(player, gr)) {
             if (gr.getClass() == Enemy.class) {
-              player.wurdeGetroffen();
+              player.wurdeGetroffen((Kreatur)gr);
             }
         }
       }
@@ -194,17 +214,6 @@ class Game extends JPanel{
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
-    /*System.out.println(mouseX + "  " +  mouseY);
-    lastClickX = mouseX;
-    lastClickY = mouseY;
-    UI.mouseClicked();
-    if (gameRunning) {
-      player.shoot();
-    }*/
-  }
-
-  public void mousePressed() {
-    //UI.mousePressed();
     System.out.println(mouseX + "  " +  mouseY);
     lastClickX = mouseX;
     lastClickY = mouseY;
@@ -214,6 +223,10 @@ class Game extends JPanel{
     }
   }
 
+  public void mousePressed() {
+    UI.mousePressed();
+  }
+
   public void mouseReleased() {
     UI.mouseReleased();
   }
@@ -221,28 +234,39 @@ class Game extends JPanel{
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
     final float sqrt2 = 1.41f;
-    if (wPressed && gameRunning) {
+    if (wPressed) {
       float step = stepWidth;
       if (aPressed || dPressed) {
         step /= sqrt2;
       }
       player.move((int)step);
     }
-    if (sPressed && gameRunning) {
+    if (ePressed) {
+      
+    }
+    if (qPressed) {
+      gamePaused = !gamePaused;
+      if(gamePaused) {
+        startGame();
+      } else {
+        stopGame();
+      }
+    }
+    if (sPressed) {
       float step = stepWidth;
       if (aPressed || dPressed) {
         step /= sqrt2;
       }
       player.move((int)-step);
     }
-    if(aPressed && gameRunning){
+    if(aPressed){
       float step = stepWidth;
       if (wPressed || sPressed) {
         step /= sqrt2;
       }
       player.moveSideways((int)-step);
     }
-    if(dPressed && gameRunning){
+    if(dPressed){
       float step = stepWidth;
       if (wPressed || sPressed) {
         step /= sqrt2;
@@ -258,12 +282,17 @@ class Game extends JPanel{
     if (textInput && !gameRunning) {
       UI.textInput(typedChar);
     }
+    UI.displayLeaderboard = tabPressed;
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
   public void keyTyped(char c){
     if (c == 'w') {
       wPressed = true;
+    } else if (c == 'e') {
+      ePressed = true;
+    } else if (c == 'q') {
+      qPressed = true;
     } else if (c == 'p') {
       pPressed = true;
     } else if (c == 's') {
@@ -275,6 +304,10 @@ class Game extends JPanel{
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
+    else if (c == KeyEvent.VK_TAB) {
+      tabPressed = true;
+    }
+
     textInput = true;
     typedChar = c;
   }
@@ -283,6 +316,10 @@ class Game extends JPanel{
   public void keyReleased(char c){
     if (c == 'w') {
       wPressed = false;
+    } else if (c == 'e') {
+      ePressed = false;
+    } else if (c == 'q') {
+      qPressed = false;
     } else if (c == 'p') {
       pPressed = false;
     } else if (c == 's') {
@@ -293,6 +330,8 @@ class Game extends JPanel{
       dPressed = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
+    } else if (c == KeyEvent.VK_TAB) {
+      tabPressed = false;
     }
     textInput = false;
   }
@@ -303,16 +342,6 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
-    String ipAddress = UI.getUserInput();
-    new Thread(() -> {
-      try {
-        remote.connect(ipAddress);
-      } catch (Exception e) {
-        e.printStackTrace();
-        // TODO return err to user
-        //return;
-      }
-    }).start();
     gameRunning = true; 
     BufferedImage blankCursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
     Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(blankCursorImage, new Point(0, 0), "blank cursor");
