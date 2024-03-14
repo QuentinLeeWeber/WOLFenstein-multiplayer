@@ -1,7 +1,7 @@
 package commands;
 
 public class Parser {
-    private static final Command[] commands = new Command[]{new Users(), new Move(), new Turn(), new Register(), new Unregister(), new Hit()};
+    private static final Command[] commands = new Command[]{new Users(), new Move(), new Turn(), new Register(), new Unregister(), new Hit(), new Kill()};
     public static CommandWithSender parse(String raw) {
         String[] s = raw.split(" ", 3);
         for (Command c : commands) {
