@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 abstract class Level {
     public ArrayList<Wall> walls = new ArrayList<Wall>();
-    public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<Graphikobjekt>();
+    public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<>();
 
     public Level() {
         /*createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});

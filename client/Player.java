@@ -2,6 +2,7 @@ import java.awt.*;
 import commands.Move;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 class Player extends Kreatur {
 
@@ -38,7 +39,9 @@ class Player extends Kreatur {
 
     public void shoot(){
         Game.getGame().schiessen = !Game.getGame().schiessen;
-        for (Graphikobjekt gr : new ArrayList<Graphikobjekt>(level.graphikobjekte)){
+        ArrayList<Graphikobjekt> grs = new ArrayList<>(level.graphikobjekte);
+        grs.addAll(Game.getGame().remotePlayers.values());
+        for (Graphikobjekt gr : grs){
             if (gr.getClass() == Enemy.class || gr.getClass() == RemotePlayer.class){
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
