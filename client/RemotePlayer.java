@@ -1,4 +1,5 @@
 import commands.Hit;
+import commands.Kill;
 
 class RemotePlayer extends Kreatur {
     private final int id;
@@ -24,5 +25,10 @@ class RemotePlayer extends Kreatur {
     @Override
     public void wurdeGetroffen(Kreatur damager) {
         Game.getGame().remote.sendCommand(new Hit(id));
+    }
+
+    @Override
+    public void isKiller() {
+        Game.getGame().remote.sendCommand(new Kill(id));
     }
 }

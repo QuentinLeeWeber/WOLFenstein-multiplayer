@@ -87,7 +87,7 @@ class Game extends JPanel{
           player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
       } else if (c.command instanceof Kill) {
-        
+        remotePlayers.get(c.sender).killCount++;
       }
     }
 
@@ -166,14 +166,6 @@ class Game extends JPanel{
         //return;
       }
     }).start();
-    //remove before merge
-    RemotePlayer testPlayer = new RemotePlayer(10, 10, level, 0);
-    RemotePlayer testPlayer2 = new RemotePlayer(0, 0, level, 1);
-    testPlayer2.isKiller();
-    testPlayer.isKiller();
-    testPlayer.isKiller();
-    remotePlayers.put(0, testPlayer);
-    remotePlayers.put(1, testPlayer2);
 
     while (true) {
       lastTime = time;
