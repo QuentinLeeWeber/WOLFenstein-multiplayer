@@ -42,8 +42,15 @@ class UserInterface {
             frame2 = ImageIO.read(new File("resources/pistol_frame_2.png"));
             frame5 = ImageIO.read(new File("resources/Fadenkreuz.png"));
         } catch(Exception e){
-            System.out.println("failed to load UI-textures");
-            e.printStackTrace();
+            try {
+                frame1 = ImageIO.read(new File("client/resources/pistol_frame_1.png"));
+                frame2 = ImageIO.read(new File("client/resources/pistol_frame_2.png"));
+                frame5 = ImageIO.read(new File("client/resources/Fadenkreuz.png"));
+            }
+            catch (Exception e1) {
+                System.out.println("failed to load UI-textures");
+                e.printStackTrace();
+            }           
         }
     }
 

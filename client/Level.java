@@ -5,10 +5,10 @@ abstract class Level {
     public ArrayList<Graphikobjekt> graphikobjekte = new ArrayList<>();
 
     public Level() {
-        createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
+        /*createWall(new int[]{0, 0}, new int[]{Game.windowWidth, 0});
         createWall(new int[]{0, 0}, new int[]{0, Game.windowHeight});
         createWall(new int[]{Game.windowWidth, 0}, new int[]{Game.windowWidth, Game.windowHeight});
-        createWall(new int[]{0, Game.windowHeight}, new int[]{Game.windowWidth, Game.windowHeight});
+        createWall(new int[]{0, Game.windowHeight}, new int[]{Game.windowWidth, Game.windowHeight});*/
     }
 
     public void createWall(int[] a, int[] b) {

@@ -32,7 +32,7 @@ public class Collision {
 
     public static boolean KreaturWallCollision(Kreatur kreatur, int x, int y, Wall wall)
     {
-        double distance = distancePointToLineSegment(x + kreatur.size/2, y + kreatur.size/2, wall.a[0], wall.a[1], wall.b[0], wall.b[1]);
+        double distance = distancePointToLineSegment(x, y, wall.a[0], wall.a[1], wall.b[0], wall.b[1]);
         return distance < kreatur.hitBoxRadius;
     }
 
