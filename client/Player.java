@@ -1,14 +1,16 @@
 import java.awt.*;
 import commands.Move;
 import java.util.ArrayList;
+import java.util.Random;
 
 class Player extends Kreatur {
 
     public int shotWidth = 20;
 
-    public Player(int x, int y, Level level) {
-        super(x, y, level, "ignore");
-        size = 14;
+    public Player(Level level) {
+        super(0, 0, level, "ignore");
+        spawn();
+        size = 12;
         hitBoxRadius = size/2;
     }
 
@@ -17,6 +19,10 @@ class Player extends Kreatur {
     
     public void wurdeGetroffen() {
          Game.getGame().leben -= 0.5;
+         if (Game.getGame().leben <= 0) {
+            spawn();
+            Game.getGame().leben =  Game.getGame().maxLeben;
+         }
     }
 
     public void draw2D(Graphics g) {
@@ -37,5 +43,14 @@ class Player extends Kreatur {
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
         }
+    }
+
+    private void spawn() {
+        Random random = new Random();
+        int[][] spawnpoints = {{0,0}, {365, -475}, {1010, -240}, {725, -90}, {790, 300}, {230, 250}, {440, -250}, {700, -750}, {850, -750}};
+        int spawnId = random.nextInt(spawnpoints.length); 
+        
+        x = spawnpoints[spawnId][0];
+        y = spawnpoints[spawnId][1];
     }
 }

@@ -17,7 +17,7 @@ class Game extends JPanel{
   private final int fps = 30;
   private double frameTime;
 
-  public static final int stepWidth = 5;
+  public static final int stepWidth = 7;
   public static final float mouseSensitivity = 1;
   public static final int frameHeight = 600;
   public static final int frameWidth = 800;
@@ -37,7 +37,8 @@ class Game extends JPanel{
   private char typedChar;
   private Robot robot;
 
-  public int leben = 100;
+  final int maxLeben = 100;
+  public int leben = maxLeben;
 
   public boolean schiessen = false;
 
@@ -52,7 +53,7 @@ class Game extends JPanel{
 
   private BufferedImage cursorImg;
 
-  public Player player = new Player(windowWidth/2, windowHeight/2, level);
+  public Player player = new Player(level);
   
   public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
   public Remote remote = new Remote(new Executor() {
@@ -192,18 +193,11 @@ class Game extends JPanel{
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
-    /*System.out.println(mouseX + "  " +  mouseY);
-    lastClickX = mouseX;
-    lastClickY = mouseY;
-    UI.mouseClicked();
-    if (gameRunning) {
-      player.shoot();
-    }*/
+    
   }
 
   public void mousePressed() {
     //UI.mousePressed();
-    System.out.println(mouseX + "  " +  mouseY);
     lastClickX = mouseX;
     lastClickY = mouseY;
     UI.mouseClicked();
