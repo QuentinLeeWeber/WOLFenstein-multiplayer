@@ -17,7 +17,7 @@ class Game extends JPanel{
   private final int fps = 30;
   private double frameTime;
 
-  public static final int stepWidth = 5;
+  public static final int stepWidth = 7;
   public static final float mouseSensitivity = 1;
   public static final int frameHeight = 600;
   public static final int frameWidth = 800;
@@ -30,18 +30,19 @@ class Game extends JPanel{
   private static Game game;
   public BlenderRender renderer = new BlenderRender(true);
   private JFrame frame = new JFrame();
-  private Level level = new Level1();
+  public Level level = new Level1();
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   private boolean gamePaused = false;
   private char typedChar;
   private Robot robot;
 
-  public int leben = 100;
+  final int maxLeben = 100;
+  public int leben = maxLeben;
+
+  public boolean schiessen = false;
 
   private boolean wPressed = false;
-  private boolean qPressed = false;
-  private boolean ePressed = false;
   private boolean pPressed = false;
   private boolean sPressed = false;
   private boolean aPressed = false;
@@ -52,11 +53,11 @@ class Game extends JPanel{
   private boolean tabPressed = false;
 
   private BufferedImage cursorImg;
-
-  public Player player = new Player(windowWidth/2, windowHeight/2, level);
-
+  
+  public Player player = new Player(level);
+  
   public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
-  public Remote remote = new Remote("quentman.hopto.org", new Executor() {
+  public Remote remote = new Remote(new Executor() {
     private int ownID = -1;
 
     @Override
@@ -155,7 +156,7 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
-    
+   
     // start server connection
     new Thread(() -> {
       try {
@@ -206,17 +207,17 @@ class Game extends JPanel{
   
   //Wird immer dann aufgerufen wenn die linke Maustaste einmal gedr�ckt wird
   public void leftClick(){
-    System.out.println(mouseX + "  " +  mouseY);
+    
+  }
+
+  public void mousePressed() {
+    //UI.mousePressed();
     lastClickX = mouseX;
     lastClickY = mouseY;
     UI.mouseClicked();
     if (gameRunning) {
       player.shoot();
     }
-  }
-
-  public void mousePressed() {
-    UI.mousePressed();
   }
 
   public void mouseReleased() {
@@ -226,39 +227,28 @@ class Game extends JPanel{
   // Funktion wird immer dann aufgerufen, wenn gerade eine Taste gedr�ckt wird, diese wird dann als char �begeben
   public void handleKeys(){
     final float sqrt2 = 1.41f;
-    if (wPressed) {
+    if (wPressed && gameRunning) {
       float step = stepWidth;
       if (aPressed || dPressed) {
         step /= sqrt2;
       }
       player.move((int)step);
     }
-    if (ePressed) {
-      
-    }
-    if (qPressed) {
-      gamePaused = !gamePaused;
-      if(gamePaused) {
-        startGame();
-      } else {
-        stopGame();
-      }
-    }
-    if (sPressed) {
+    if (sPressed && gameRunning) {
       float step = stepWidth;
       if (aPressed || dPressed) {
         step /= sqrt2;
       }
       player.move((int)-step);
     }
-    if(aPressed){
+    if(aPressed && gameRunning){
       float step = stepWidth;
       if (wPressed || sPressed) {
         step /= sqrt2;
       }
       player.moveSideways((int)-step);
     }
-    if(dPressed){
+    if(dPressed && gameRunning){
       float step = stepWidth;
       if (wPressed || sPressed) {
         step /= sqrt2;
@@ -281,10 +271,6 @@ class Game extends JPanel{
   public void keyTyped(char c){
     if (c == 'w') {
       wPressed = true;
-    } else if (c == 'e') {
-      ePressed = true;
-    } else if (c == 'q') {
-      qPressed = true;
     } else if (c == 'p') {
       pPressed = true;
     } else if (c == 's') {
@@ -308,10 +294,6 @@ class Game extends JPanel{
   public void keyReleased(char c){
     if (c == 'w') {
       wPressed = false;
-    } else if (c == 'e') {
-      ePressed = false;
-    } else if (c == 'q') {
-      qPressed = false;
     } else if (c == 'p') {
       pPressed = false;
     } else if (c == 's') {
@@ -334,6 +316,16 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
+    String ipAddress = UI.getUserInput();
+    new Thread(() -> {
+      try {
+        remote.connect(ipAddress);
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
     gameRunning = true; 
     BufferedImage blankCursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
     Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(blankCursorImage, new Point(0, 0), "blank cursor");

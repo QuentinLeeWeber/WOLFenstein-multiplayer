@@ -9,25 +9,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Remote extends Thread {
+public class Remote {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
 
-    private final String ip;
     private final Executor executor;
 
-    public Remote(String ip, Executor executor) {
-        this.ip = ip;
+    public Remote(Executor executor) {
         this.executor = executor;
     }
 
-    public void connect() throws IOException {
+    public void connect(String ip) throws IOException {
         clientSocket = new Socket(ip, 6969);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-        start();
+        run();
     }
 
     public void sendCommand(Command c) {
@@ -47,8 +45,7 @@ public class Remote extends Thread {
         }
     }
 
-    @Override
-    public void run() {
+    private void run() {
         try {
             String line = in.readLine();
             while (line != null) {

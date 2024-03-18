@@ -12,7 +12,7 @@ class Enemy extends Kreatur {
     @Override
     public void moveHook(int x, int y) {}
   
-    public void wurdeGetroffen(Kreatur damager) {
-        System.out.println("Oof");
+    public void wurdeGetroffen() {
+        Game.getGame().level.graphikobjekte.remove(this);
     }
 }

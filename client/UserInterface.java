@@ -38,28 +38,26 @@ class UserInterface {
     private int ticks = 0;
     private Image frame1;
     private Image frame2;
-    private Image frame3;
-    private Image frame4;
+    private Image frame5;
 
     public boolean displayLeaderboard = false;
 
 
     public UserInterface(){
         try {
-            frame1 = ImageIO.read(new File("resources/EPFrame1.png"));
-            frame2 = ImageIO.read(new File("resources/EPFrame1.png"));
-            frame3 = ImageIO.read(new File("resources/EPFrame1.png"));
-            frame4 = ImageIO.read(new File("resources/EPFrame1.png"));
+            frame1 = ImageIO.read(new File("resources/pistol_frame_1.png"));
+            frame2 = ImageIO.read(new File("resources/pistol_frame_2.png"));
+            frame5 = ImageIO.read(new File("resources/Fadenkreuz.png"));
         } catch(Exception e){
             try {
-                frame1 = ImageIO.read(new File("client/resources/EPFrame1.png"));
-                frame2 = ImageIO.read(new File("client/resources/EPFrame1.png"));
-                frame3 = ImageIO.read(new File("client/resources/EPFrame1.png"));
-                frame4 = ImageIO.read(new File("client/resources/EPFrame1.png"));
+                frame1 = ImageIO.read(new File("client/resources/pistol_frame_1.png"));
+                frame2 = ImageIO.read(new File("client/resources/pistol_frame_2.png"));
+                frame5 = ImageIO.read(new File("client/resources/Fadenkreuz.png"));
             }
-            catch (IOException e1) {
+            catch (Exception e1) {
+                System.out.println("failed to load UI-textures");
                 e.printStackTrace();
-            }
+            }           
         }
     }
 
@@ -107,7 +105,16 @@ class UserInterface {
                 g.setColor(new Color(215, 18, 18));
             }
             g.fillRect(gesundheitsBalkenX, gesundheitsBalkenY, (int) (gesundheitsBalkenWidth * ((float) (Game.getGame().leben)/100)), gesundheitsBalkenHeigth);
-            g.drawImage(frame1, 450, 370, null);
+            g.drawImage(frame5, 316, 216, null);
+            if(Game.getGame().schiessen){
+                g.drawImage(frame2, 450, 370, null);
+                //g.drawImage(frame3, 450, 370, null);
+                //g.drawImage(frame4, 450, 370, null);
+                Game.getGame().schiessen = !Game.getGame().schiessen;
+            }
+            else{
+                g.drawImage(frame1, 450, 370, null);
+            }
         }
 
         if (displayLeaderboard) {
