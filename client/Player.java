@@ -2,7 +2,6 @@ import java.awt.*;
 import commands.Move;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 class Player extends Kreatur {
 

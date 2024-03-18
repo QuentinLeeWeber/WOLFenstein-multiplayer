@@ -7,7 +7,7 @@ class Server {
     public static UserList ul = new UserList();
 
     public static void main(String[] args) {
-        int port = 6969; // port muss 6969 sein, aufgrund der port forwardings des dev-servers
+        int port = 6969; // port muss 6969 sein, aufgrund des port-forwardings, des dev-servers
 
         ServerSocket serverSocket;
 
