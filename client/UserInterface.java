@@ -1,6 +1,10 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.ArrayList;
 import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 
 class UserInterface {
     private int mouseX = 0;
@@ -35,6 +39,9 @@ class UserInterface {
     private Image frame1;
     private Image frame2;
     private Image frame5;
+
+    public boolean displayLeaderboard = false;
+
 
     public UserInterface(){
         try {
@@ -71,6 +78,7 @@ class UserInterface {
             g.setColor(new Color(66, 62, 62));
             g.drawRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
             g.fillRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight);
+            
             g.setColor(new Color(127, 127, 127));
             g.fillRect(inputBoxX + 5, inputBoxY + 5, inputBoxWidth - 10, inputBoxHeight - 10);
             g.setColor(new Color(0, 0, 0));
@@ -108,6 +116,30 @@ class UserInterface {
                 g.drawImage(frame1, 450, 370, null);
             }
         }
+
+        if (displayLeaderboard) {
+            ArrayList<Kreatur> remotePlayers = new ArrayList<Kreatur>(Game.getGame().remotePlayers.values());
+            remotePlayers.add(Game.getGame().player);
+            remotePlayers.sort(Comparator.reverseOrder());
+
+            g.setColor(new Color(0, 0, 0, 127));
+            g.fillRect(Game.windowWidth - 200, 0, 200, 20*remotePlayers.size() + 10);
+            g.setColor(Color.white);
+            g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+
+            int i = 0;
+            for (Kreatur player : remotePlayers) {
+                if (player == Game.getGame().player)
+                {
+                    g.setColor(Color.green);
+                }
+                g.drawString(player.name, Game.windowWidth - 190, 21 + 20*i);
+                g.setColor(Color.white);
+                g.drawString(String.valueOf(player.killCount), Game.windowWidth - 30, 21 + 20*i);
+                i++;
+            }
+        }
+
         ticks++;
     }
 

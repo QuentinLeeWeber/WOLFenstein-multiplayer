@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 
-abstract class Kreatur extends Graphikobjekt {
+abstract class Kreatur extends Graphikobjekt implements Comparable<Kreatur>{
     private int leben;
     public int angriffsstaerke;
 
     public float direction = 0;
 
     public Level level;
+    public int killCount = 0;
+    public String name = "deafult";
 
     public Kreatur(int x, int y, Level _level, String texture) {
         super(x, y, texture);
@@ -71,7 +73,15 @@ abstract class Kreatur extends Graphikobjekt {
         moveTo(x + dx, y + dy);
     }
 
-    public abstract void wurdeGetroffen();
+    public void isKiller() {
+        killCount++;
+    }
+
+    public int getKillCount(){
+        return killCount;
+    }
+
+    public abstract void wurdeGetroffen(Kreatur damager);
 
     public ArrayList<Wall> getCollidingWalls(int newX, int newY) {
         ArrayList<Wall> walls = new ArrayList<Wall>();
@@ -81,5 +91,18 @@ abstract class Kreatur extends Graphikobjekt {
             }
         }
         return walls;
+    }
+
+    @Override
+    public int compareTo(Kreatur other) {
+        if (this.killCount == other.killCount){
+            return 0;
+        }
+        else if (this.killCount > other.killCount){
+            return 1;
+        }
+        else {
+            return -1;
+        }
     }
 }

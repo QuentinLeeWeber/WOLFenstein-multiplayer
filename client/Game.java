@@ -50,9 +50,10 @@ class Game extends JPanel{
   private boolean textInput = false;
   private boolean backspacePressed = false;
   private boolean WindowActive = false;
+  private boolean tabPressed = false;
 
   private BufferedImage cursorImg;
-
+  
   public Player player = new Player(level);
   
   public HashMap<Integer, RemotePlayer> remotePlayers = new HashMap<>();
@@ -84,8 +85,10 @@ class Game extends JPanel{
         }
       } else if (c.command instanceof Hit) {
         if (((Hit) c.command).id == ownID) {
-          player.wurdeGetroffen();
+          player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
+      } else if (c.command instanceof Kill) {
+        remotePlayers.get(c.sender).killCount++;
       }
     }
 
@@ -102,7 +105,7 @@ class Game extends JPanel{
   public int lastClickX;
   public int lastClickY;
   
-  public static void main(String[] args) throws IOException, AWTException, InterruptedException { 
+  public static void main(String[] args) throws IOException, AWTException, InterruptedException {
     game = new Game();
     game.start();
   }
@@ -153,6 +156,17 @@ class Game extends JPanel{
       }
     });
     frame.toFront();
+   
+    // start server connection
+    new Thread(() -> {
+      try {
+        remote.connect();
+      } catch (Exception e) {
+        e.printStackTrace();
+        // TODO return err to user
+        //return;
+      }
+    }).start();
 
     while (true) {
       lastTime = time;
@@ -184,7 +198,7 @@ class Game extends JPanel{
     for (Graphikobjekt gr : level.graphikobjekte) {
         if (Collision.GraphikobjektCollision(player, gr)) {
             if (gr.getClass() == Enemy.class) {
-              player.wurdeGetroffen();
+              player.wurdeGetroffen((Kreatur)gr);
             }
         }
       }
@@ -250,6 +264,7 @@ class Game extends JPanel{
     if (textInput && !gameRunning) {
       UI.textInput(typedChar);
     }
+    UI.displayLeaderboard = tabPressed;
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
@@ -267,6 +282,10 @@ class Game extends JPanel{
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = true;
     }
+    else if (c == KeyEvent.VK_TAB) {
+      tabPressed = true;
+    }
+
     textInput = true;
     typedChar = c;
   }
@@ -285,6 +304,8 @@ class Game extends JPanel{
       dPressed = false;
     } else if (c == KeyEvent.VK_BACK_SPACE) {
       backspacePressed = false;
+    } else if (c == KeyEvent.VK_TAB) {
+      tabPressed = false;
     }
     textInput = false;
   }
