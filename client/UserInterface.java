@@ -133,7 +133,7 @@ class UserInterface {
                 {
                     g.setColor(Color.green);
                 }
-                g.drawString(player.name, Game.windowWidth - 190, 21 + 20*i);
+                g.drawString(player.getName(), Game.windowWidth - 190, 21 + 20*i);
                 g.setColor(Color.white);
                 g.drawString(String.valueOf(player.killCount), Game.windowWidth - 30, 21 + 20*i);
                 i++;

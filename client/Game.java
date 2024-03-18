@@ -89,6 +89,8 @@ class Game extends JPanel{
         }
       } else if (c.command instanceof Kill) {
         remotePlayers.get(c.sender).killCount++;
+      } else if (c.command instanceof Name) {
+        remotePlayers.get(c.sender).setName(((Name)c.command).name);
       }
     }
 
