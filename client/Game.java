@@ -34,7 +34,6 @@ class Game extends JPanel{
   private UserInterface UI = new UserInterface();
   private boolean gameRunning = false;
   private boolean gamePaused = false;
-  private char typedChar;
   private Robot robot;
 
   final int maxLeben = 100;
@@ -47,7 +46,7 @@ class Game extends JPanel{
   private boolean sPressed = false;
   private boolean aPressed = false;
   private boolean dPressed = false;
-  private boolean textInput = false;
+  private int textInput = 0;
   private boolean backspacePressed = false;
   private boolean WindowActive = false;
   private boolean tabPressed = false;
@@ -250,12 +249,13 @@ class Game extends JPanel{
       game.stopGame();
     }
     if (backspacePressed && !gameRunning) {
-      UI.deleteChar();
+      //UI.deleteChar();
     }
-    if (textInput && !gameRunning) {
-      UI.textInput(typedChar);
+    if (textInput == 0 && !gameRunning) {
+      //UI.textInput(typedChar);
     }
     UI.displayLeaderboard = tabPressed;
+    textInput++;
   }
   
   //Funktion wird dann aufgerufen, wenn eine neue Taste gedr�ckt wurde, diese wird dann als char �begeben
@@ -276,9 +276,7 @@ class Game extends JPanel{
     else if (c == KeyEvent.VK_TAB) {
       tabPressed = true;
     }
-
-    textInput = true;
-    typedChar = c;
+    textInput = 0;
   }
   
   //Funktion wird dann a aufgerufen wenn eine neue Taste losgelassen wurde, diese wird dann als char �begeben
@@ -298,7 +296,11 @@ class Game extends JPanel{
     } else if (c == KeyEvent.VK_TAB) {
       tabPressed = false;
     }
-    textInput = false;
+    //textInput = false;
+  }
+
+  public void keyPressed(char c){
+    UI.textInput(c);
   }
   
   public void mouseMoved() {
@@ -307,10 +309,10 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
-    String ipAddress = UI.getUserInput();
+    player.name = UI.getUserInput();
     new Thread(() -> {
       try {
-        remote.connect(ipAddress);
+        remote.connect("quentman.hopto.org");
       } catch (Exception e) {
         e.printStackTrace();
         // TODO return err to user

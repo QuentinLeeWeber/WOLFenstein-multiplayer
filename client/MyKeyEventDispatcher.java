@@ -12,6 +12,9 @@ public class MyKeyEventDispatcher implements KeyEventDispatcher {
         if (e.getID() == KeyEvent.KEY_TYPED) {
             Game.getGame().keyTyped(e.getKeyChar());
         }
+        if(e.getID() == KeyEvent.KEY_PRESSED) {
+            Game.getGame().keyPressed(e.getKeyChar());
+        }
         return false;
     }
 }
