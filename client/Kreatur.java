@@ -8,7 +8,7 @@ abstract class Kreatur extends Graphikobjekt implements Comparable<Kreatur>{
 
     public Level level;
     public int killCount = 0;
-    public String name = "deafult";
+    public String name = "Player";
 
     public Kreatur(int x, int y, Level _level, String texture) {
         super(x, y, texture);
