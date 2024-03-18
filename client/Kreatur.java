@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import commands.Name;
 
 abstract class Kreatur extends Graphikobjekt implements Comparable<Kreatur>{
     private int leben;
@@ -91,6 +92,18 @@ abstract class Kreatur extends Graphikobjekt implements Comparable<Kreatur>{
             }
         }
         return walls;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String setName(String _name) {
+        name = _name;
+        if (this instanceof Player || this instanceof RemotePlayer) {
+            Game.getGame().remote.sendCommand(new Name(name));
+        }
+        return name;
     }
 
     @Override

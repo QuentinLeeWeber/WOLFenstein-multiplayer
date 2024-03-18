@@ -10,7 +10,6 @@ class RemotePlayer extends Kreatur {
         this.id = id;
         size = 5;
         hitBoxRadius = size/2;
-        name = "Test";
     }
 
     @Override
