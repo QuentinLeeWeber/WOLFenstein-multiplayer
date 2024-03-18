@@ -46,6 +46,7 @@ class Player extends Kreatur {
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
         }
+        System.out.println(name);
     }
 
     private void spawn() {

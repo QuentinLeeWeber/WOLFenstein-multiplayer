@@ -219,7 +219,7 @@ class BlenderRender {
         try{
             skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
             Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
-            wallImage = ImageIO.read(new File("resources/wall_sandstone.png"));
+            wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
             preCalcWallTexture();
         }
         catch(IOException e){

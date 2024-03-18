@@ -2,15 +2,15 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.ArrayList;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
+import java.awt.event.KeyEvent;
+import java.util.Random;
 
 class UserInterface {
     private int mouseX = 0;
     private int mouseY = 0;
     private int bufferCapacity = 18;
-    private char[] input = new char[bufferCapacity];
+    private char[] input = new char[bufferCapacity]; //wir sind hier immernoch in java, nicht bei c
     private int charWidth = 18;
     private int inputBoxWidth = 30 + bufferCapacity * charWidth;
     private int inputBoxHeight = 80;
@@ -35,7 +35,6 @@ class UserInterface {
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
     private Color textColor = grey;
-    private int ticks = 0;
     private Image frame1;
     private Image frame2;
     private Image frame5;
@@ -77,15 +76,26 @@ class UserInterface {
             g.drawString("LOS", losButtonX + losButtonWidth / 2 - 18, losButtonY + losButtonHeight / 2 + 8);
             g.setColor(new Color(66, 62, 62));
             g.drawRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
-            g.fillRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight);
             
+            //input name box
+
+            g.setColor(new Color(66, 62, 62));
+            g.fillRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight);
             g.setColor(new Color(127, 127, 127));
             g.fillRect(inputBoxX + 5, inputBoxY + 5, inputBoxWidth - 10, inputBoxHeight - 10);
             g.setColor(new Color(0, 0, 0));
             g.fillRect(cursorX, cursorY, cursorWidth, cursorHeight);
+            if(bufferSize == 0){
+                g.setColor(new Color(150, 150, 150));
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
+                g.drawString("input name here:", inputBoxX + 16, cursorY + cursorHeight - 4);
+            }
             g.setColor(new Color(217, 105, 28));
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
             g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
+
+            // ---------------
+
         } else if(!Game.getGame().getRunning() && Game.getGame().getPaused()) {
             g.fillRect(0, 0, 800, 600);
             g.setColor(red);
@@ -139,26 +149,24 @@ class UserInterface {
                 i++;
             }
         }
-
-        ticks++;
     }
 
     public void textInput(char c) {
-        if (bufferSize == bufferCapacity || ticks % 2 == 0 || c < 32 || c > 126) {
-            return;
+        if(!Game.getGame().getRunning()){
+            if(c == KeyEvent.VK_BACK_SPACE){
+                if(bufferSize > 0){
+                    bufferSize--;
+                    input[bufferSize] = 0;
+                    cursorX -= charWidth;
+                }
+                return;
+            }
+            if(bufferSize < bufferCapacity){
+                input[bufferSize] = c;
+                bufferSize++;
+                cursorX += charWidth;
+            }
         }
-        input[bufferSize] = c;
-        bufferSize++;
-        cursorX += charWidth;
-    }
-
-    public void deleteChar() {
-        if (bufferSize == 0 || ticks % 2 == 0) {
-            return;
-        }
-        bufferSize--;
-        input[bufferSize] = 0;
-        cursorX -= charWidth;
     }
 
     public void mouseClicked() {
@@ -198,6 +206,29 @@ class UserInterface {
     }
 
     public String getUserInput() {
+        if(bufferSize == 0){
+            Random r = new Random();
+            int randomInt = r.nextInt(5);
+            switch (randomInt) {
+                case 0:
+                    return new String("xXZaza_DestroyerXx");
+
+                case 1: 
+                    return new String("David Brinkmann");
+
+                case 2: 
+                    return new String("Hr. Woick");
+
+                case 3: 
+                    return new String("melon musk");
+
+                case 4: 
+                    return new String("thomas");
+            
+                default:
+                    break;
+            }
+        }
         return new String(input);
     }
 }
