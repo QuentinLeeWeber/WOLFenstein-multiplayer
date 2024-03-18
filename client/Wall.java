@@ -3,19 +3,19 @@ import java.util.Random;
 import java.lang.Math;
 
 class Wall {
-    public int[] a = new int[2];
-    public int[] b = new int[2];
+    public float[] a = new float[2];
+    public float[] b = new float[2];
     public float[] physicA = new float[2];
     public float[] physicB = new float[2];
  
     //damit die wände abhänig von ihrer ausrichtung zur kamera eine andere Farbe haben können, für bessere sichtbarkeit
     public Color renderColor = new Color(0, 0, 0);
 
-    public Wall(int[] _a, int[] _b) {
+    public Wall(float[] _a, float[] _b) {
         a = _a;
         b = _b;
         if(a[0] == b[0]){
-            b[0] += 1;
+            b[0] += 0.1f;
         }
         if(a[0] <= b[0]){
             physicA[0] = a[0];

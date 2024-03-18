@@ -1,14 +1,14 @@
 public class Collision {
-    static double distancePointToLineSegment(int pointX, int pointY, int lineStartX, int lineStartY, int lineEndX, int lineEndY){
+    static double distancePointToLineSegment(float pointX, float pointY, float lineStartX, float lineStartY, float lineEndX, float lineEndY){
 
-        int dx = lineEndX - lineStartX;
-        int dy = lineEndY - lineStartY;
+        float dx = lineEndX - lineStartX;
+        float dy = lineEndY - lineStartY;
 
         double wallLenght = Math.sqrt(dx*dx + dy*dy);
 
-        int startPointdx =  pointX - lineStartX;
-        int startPointdy =  pointY - lineStartY;
-        int dot1 = dx * startPointdx + dy * startPointdy;
+        float startPointdx =  pointX - lineStartX;
+        float startPointdy =  pointY - lineStartY;
+        float dot1 = dx * startPointdx + dy * startPointdy;
         double startPointDist = Math.sqrt(startPointdx*startPointdx + startPointdy*startPointdy);
         if (dot1/(wallLenght*startPointDist) < 0) { //wahr, wenn der Winkel größer als 90 Grad ist
             dx = lineStartX - pointX;
@@ -16,9 +16,9 @@ public class Collision {
             return Math.sqrt(dx*dx + dy*dy);
         }
 
-        int endPointdx =  pointX - lineEndX;
-        int endPointdy =  pointY - lineEndY;
-        int dot2 = -dx * endPointdx - dy * endPointdy;
+        float endPointdx =  pointX - lineEndX;
+        float endPointdy =  pointY - lineEndY;
+        float dot2 = -dx * endPointdx - dy * endPointdy;
         double endPointDist = Math.sqrt(endPointdx*endPointdx + endPointdy*endPointdy);
         if (dot2/(wallLenght*endPointDist) < 0) { //wahr, wenn der Winkel größer als 90 Grad ist
             dx = lineEndX - pointX;
@@ -26,11 +26,11 @@ public class Collision {
             return Math.sqrt(dx*dx + dy*dy);
         }
 
-        int zaehler = Math.abs(dx * (lineStartY - pointY) - (lineStartX - pointX) * dy);
+        float zaehler = Math.abs(dx * (lineStartY - pointY) - (lineStartX - pointX) * dy);
         return zaehler/wallLenght;
     }
 
-    public static boolean KreaturWallCollision(Kreatur kreatur, int x, int y, Wall wall)
+    public static boolean KreaturWallCollision(Kreatur kreatur, float x, float y, Wall wall)
     {
         double distance = distancePointToLineSegment(x, y, wall.a[0], wall.a[1], wall.b[0], wall.b[1]);
         return distance < kreatur.hitBoxRadius;
@@ -38,9 +38,9 @@ public class Collision {
 
     public static void ShotCollision(Kreatur kreatur, Player player, Level level)
     {
-        int maxShotDistance = Game.getGame().getWidth();
-        int shotEndX = player.x-(int) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance);
-        int shotEndY = player.y-(int) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance);
+        float maxShotDistance = Game.getGame().getWidth();
+        float shotEndX = player.x-(float) (Math.sin(Math.toRadians(-player.direction))*maxShotDistance);
+        float shotEndY = player.y-(float) (Math.cos(Math.toRadians(-player.direction))*maxShotDistance);
         
         for (Wall wall : level.walls) {
             if (checkLineSegmentCollision(kreatur.x, kreatur.y, player.x, player.y, wall.a[0], wall.a[1], wall.b[0], wall.b[1])) {
@@ -54,7 +54,7 @@ public class Collision {
         }
     }
 
-    private static boolean checkLineSegmentCollision(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+    private static boolean checkLineSegmentCollision(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
         float slope1 = getSlope(x1, y1, x2, y2);
         float slope2 = getSlope(x3, y3, x4, y4);
 
@@ -78,20 +78,20 @@ public class Collision {
     }
 
     public static boolean GraphikobjektCollision(Graphikobjekt a, Graphikobjekt b) {
-        int dx = a.x - b.x;
-        int dy = a.y - b.y;
+        float dx = a.x - b.x;
+        float dy = a.y - b.y;
         double dist = Math.sqrt(dx*dx + dy*dy);
         return dist < a.hitBoxRadius + b.hitBoxRadius;
     }
 
-    private static float getSlope(int x1, int y1, int x2, int y2){
+    private static float getSlope(float x1, float y1, float x2, float y2){
         if (x1 == x2) {
             return Float.MAX_VALUE;
         }
         return (y2 - y1)/(x2-x1);
     }
 
-    private static float getOffset(int x1, int y1, float slope) {
+    private static float getOffset(float x1, float y1, float slope) {
         return y1 - x1*slope;
     }
 }

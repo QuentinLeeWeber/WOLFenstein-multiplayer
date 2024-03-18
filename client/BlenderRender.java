@@ -15,13 +15,12 @@ class BlenderRender {
     public Player player;
 
     private boolean renderIn3d;
-    public static final boolean debug = false;
-    private final int viewDistance = 10000;
+    public static final boolean debug = true;
+    private final int viewDistance = 1000;
     public static final int resolution = 800;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
-    private boolean renderBoundingBoxes = false;
     private float wallDarkness = 1.6f;
 
     private Color floorColor;
@@ -97,6 +96,7 @@ class BlenderRender {
                     mL = (wall.a[1] - wall.b[1]) / (wall.a[0] - wall.b[0]); 
                 } catch (Exception e){ 
                     mL = 1999999999;
+                    System.err.println("yseett");
                 }
                 try {
                     mR = (float) (Math.sin(dir) / Math.cos(dir));
@@ -220,7 +220,7 @@ class BlenderRender {
         try{
             skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
             Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
-            wallImage = ImageIO.read(new File("resources/wall_sandstone.png"));
+            wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
             preCalcWallTexture();
         }
         catch(IOException e){
