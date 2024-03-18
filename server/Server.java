@@ -43,6 +43,7 @@ class Server {
     }
 
     public static void notify(String cmd, int from) {
+        System.out.println(cmd);
         applyToUsers(cmd, from);
         for (EchoThread t : clients) {
             // skip sender
