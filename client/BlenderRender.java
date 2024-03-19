@@ -195,7 +195,7 @@ class BlenderRender {
                 drawX = (int) (400 + (Math.toDegrees(angle) / (fov / 2) * 400));
             }
 
-            pixels.add(new SpritePixel(drawX, distancePlayerObject, Sprite1));
+            pixels.add(new SpritePixel(drawX, distancePlayerObject, Sprite1, gr.name));
 
             if(debug){
                 g.setColor(new Color(0, 255, 255));
@@ -219,20 +219,19 @@ class BlenderRender {
         try{
             skybox = ImageIO.read(new File("resources/skybox_blue_sky_3.png"));
             Sprite1 = ImageIO.read(new File("resources/sprite_3.png"));
-            wallImage = ImageIO.read(new File("resources/wall_sandstone_lowRes.png"));
+            wallImage = ImageIO.read(new File("resources/wall_stone_highRes.png"));
             preCalcWallTexture();
         }
         catch(IOException e){
             try{
                 skybox = ImageIO.read(new File("client/resources/skybox_blue_sky_3.png"));
                 Sprite1 = ImageIO.read(new File("client/resources/sprite_3.png"));
-                wallImage = ImageIO.read(new File("client/resources/wall_sandstone_lowRes.png"));
+                wallImage = ImageIO.read(new File("client/resources/wall_stone_highRes.png"));
                 preCalcWallTexture();
             }
             catch (IOException e2) {
                 System.err.println("failed to load textures");
                 loadSuccess = false;
-                e.printStackTrace();
             }
         }
         if(loadSuccess){

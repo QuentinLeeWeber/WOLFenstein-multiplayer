@@ -1,5 +1,6 @@
 import java.awt.*;
 import commands.Move;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,11 +19,11 @@ class Player extends Kreatur {
     }
    
     public void wurdeGetroffen(Kreatur damager) {
-         Game.getGame().leben -= 0.5;
+         Game.getGame().leben -= 2.5;
          if (Game.getGame().leben <= 0) {
             damager.isKiller();
             spawn();
-            Game.getGame().leben =  Game.getGame().maxLeben;
+            Game.getGame().leben = Game.getGame().maxLeben;
          }
     }
 
@@ -46,12 +47,11 @@ class Player extends Kreatur {
                 Collision.ShotCollision((Kreatur) gr, this, level);
             }
         }
-        System.out.println(name);
     }
 
-    private void spawn() {
+    public void spawn() {
         Random random = new Random();
-        int[][] spawnpoints = {{0,0}, {365, -475}, {1010, -240}, {725, -90}, {790, 300}, {230, 250}, {440, -250}, {700, -750}, {850, -750}};
+        int[][] spawnpoints = {{792,182}, {858, -17}, {1031, -444}, {894, -816}, {279, -376}, {-88, -81}, {482, 293}};
         int spawnId = random.nextInt(spawnpoints.length); 
         
         x = spawnpoints[spawnId][0];

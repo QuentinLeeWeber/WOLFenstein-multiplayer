@@ -65,5 +65,4 @@ class Server {
     private static int nextID = 1;
 
     private static final ArrayList<EchoThread> clients = new ArrayList<>();
-
 }

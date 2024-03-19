@@ -4,7 +4,6 @@ import commands.Kill;
 class RemotePlayer extends Kreatur {
     private final int id;
 
-
     public RemotePlayer(Integer x, Integer y, Level level, int id) {
         super(x, y, level, "resources/cursor.png");
         this.id = id;

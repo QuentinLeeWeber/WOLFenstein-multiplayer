@@ -3,8 +3,11 @@ import java.awt.image.BufferedImage;
 
 public class SpritePixel extends Pixel{
 
-    public SpritePixel(int _x, float _distance, BufferedImage _texture){
+    String nameTag = "shaa";
+
+    public SpritePixel(int _x, float _distance, BufferedImage _texture, String _nameTag){
         super(_x, _distance, _texture);
+        nameTag = _nameTag;
     }
 
     @Override
@@ -19,7 +22,10 @@ public class SpritePixel extends Pixel{
             g.setColor(new Color(255, 0, 0));
             g.drawOval(x, 300, 10, 10);
         }
-
-        
+        g.setFont(new Font("DialogInput", Font.PLAIN, (int) (0.14f * (float) textureHeight)));
+        g.setColor(Color.gray);
+        g.drawString(nameTag, (int) (x - 0.7f * textureHeight * ((float) nameTag.length() / 18.0f)+ 2), (int) (300.0f - 0.3f * textureHeight) + 2);
+        g.setColor(Color.green);
+        g.drawString(nameTag, (int) (x - 0.7f * textureHeight * ((float) nameTag.length() / 18.0f)), (int) (300.0f - 0.3f * textureHeight));
     }
 }

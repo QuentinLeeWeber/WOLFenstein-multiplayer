@@ -3,6 +3,7 @@ abstract class Graphikobjekt {
     public int x;
     public int y;
     public String texture;
+    public String name = "shaa";
 
     public int hitBoxRadius;
 
@@ -15,6 +16,8 @@ abstract class Graphikobjekt {
         x = _x;
         y = _y;
     }
+
+    //i know die getter und setter sind ein joke
 
     public int getX() {
         return x;

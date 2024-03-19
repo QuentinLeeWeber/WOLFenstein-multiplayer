@@ -2,7 +2,6 @@ package connect;
 
 import commands.Command;
 import commands.Parser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

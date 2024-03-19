@@ -118,8 +118,6 @@ class UserInterface {
             g.drawImage(frame5, 316, 216, null);
             if(Game.getGame().schiessen){
                 g.drawImage(frame2, 450, 370, null);
-                //g.drawImage(frame3, 450, 370, null);
-                //g.drawImage(frame4, 450, 370, null);
                 Game.getGame().schiessen = !Game.getGame().schiessen;
             }
             else{
@@ -133,7 +131,7 @@ class UserInterface {
             remotePlayers.sort(Comparator.reverseOrder());
 
             g.setColor(new Color(0, 0, 0, 127));
-            g.fillRect(Game.windowWidth - 200, 0, 200, 20*remotePlayers.size() + 10);
+            g.fillRect(Game.windowWidth - 250, 0, 250, 20*remotePlayers.size() + 10);
             g.setColor(Color.white);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 
@@ -143,7 +141,7 @@ class UserInterface {
                 {
                     g.setColor(Color.green);
                 }
-                g.drawString(player.getName(), Game.windowWidth - 190, 21 + 20*i);
+                g.drawString(player.getName(), Game.windowWidth - 240, 21 + 20*i);
                 g.setColor(Color.white);
                 g.drawString(String.valueOf(player.killCount), Game.windowWidth - 30, 21 + 20*i);
                 i++;
@@ -159,6 +157,9 @@ class UserInterface {
                     input[bufferSize] = 0;
                     cursorX -= charWidth;
                 }
+                return;
+            }
+            if(c == KeyEvent.VK_SPACE){
                 return;
             }
             if(bufferSize < bufferCapacity){
@@ -214,13 +215,13 @@ class UserInterface {
                     return new String("xXZaza_DestroyerXx");
 
                 case 1: 
-                    return new String("David Brinkmann");
+                    return new String("David_Brinkmann");
 
                 case 2: 
-                    return new String("Hr. Woick");
+                    return new String("Hr_Woick");
 
                 case 3: 
-                    return new String("melon musk");
+                    return new String("melon_musk");
 
                 case 4: 
                     return new String("thomas");

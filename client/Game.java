@@ -25,7 +25,6 @@ class Game extends JPanel{
   public static final int windowHeight = 600;
   public static final int windowWidth = 800;
 
-  
 
   private static Game game;
   public BlenderRender renderer = new BlenderRender(true);
@@ -263,7 +262,7 @@ class Game extends JPanel{
     if (c == 'w') {
       wPressed = true;
     } else if (c == 'p') {
-      pPressed = true;
+      //pPressed = true;
     } else if (c == 's') {
       sPressed = true;
     } else if (c == 'a'){
@@ -309,20 +308,19 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
-    player.name = UI.getUserInput();
+    player.setName(UI.getUserInput());
     new Thread(() -> {
       try {
         remote.connect("quentman.hopto.org");
       } catch (Exception e) {
         e.printStackTrace();
-        // TODO return err to user
-        //return;
       }
     }).start();
     gameRunning = true; 
     BufferedImage blankCursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
     Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(blankCursorImage, new Point(0, 0), "blank cursor");
     frame.getContentPane().setCursor(blankCursor);
+    player.spawn();
   }
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
@@ -336,10 +334,18 @@ class Game extends JPanel{
     return player;
   }
   
+
+  int frameCounter = 0;
   //Diese Funktion wird jeden Frame aufgrufen, Graphics g ist der Canvas des Fensters des Spieles
   //Beispielhafte Funktionen von Graphics sind: g.drawLine(x1, y2, x2, y2); // g.drawImage(image, x, y, null);
   @Override
   protected void paintComponent(Graphics g){
+    frameCounter++;
+    if((frameCounter % 30) == 0){
+      frameCounter = 0;
+      Game.getGame().remote.sendCommand(new Name(player.name));
+    }
+    
     handleMouse();
     handleKeys();
     if(gameRunning){
