@@ -86,7 +86,11 @@ class Game extends JPanel{
           player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
       } else if (c.command instanceof Kill) {
-        remotePlayers.get(c.sender).killCount++;
+        if (((Kill) c.command).id == ownID) {
+          player.killCount++;
+        } else {
+          remotePlayers.get(((Kill) c.command).id).killCount++;
+        }
       } else if (c.command instanceof Name) {
         remotePlayers.get(c.sender).setName(((Name)c.command).name);
       }
