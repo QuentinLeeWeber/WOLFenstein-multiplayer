@@ -17,7 +17,7 @@ class BlenderRender {
     private boolean renderIn3d;
     public static final boolean debug = false;
     private final int viewDistance = 10000;
-    public static final int resolution = 800;
+    public static final int resolution = 400;
     public static final int fov = 60;
     private final float wallHeight = 8;
     public static final int spriteHeight = 20000;
