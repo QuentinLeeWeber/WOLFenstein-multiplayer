@@ -43,7 +43,6 @@ class Server {
     }
 
     public static void notify(String cmd, int from) {
-        System.out.println(cmd + "from: " + from);
         applyToUsers(cmd, from);
         for (EchoThread t : clients) {
             // skip sender
@@ -66,5 +65,4 @@ class Server {
     private static int nextID = 1;
 
     private static final ArrayList<EchoThread> clients = new ArrayList<>();
-
 }

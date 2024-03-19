@@ -13,7 +13,8 @@ public class Name extends Command {
 
     @Override
     public Command parseCmd(String raw) {
-        return new Hit(Integer.parseInt(raw.trim()));
+        //return new Name(Integer.parseInt(raw.trim()));
+        return new Name(raw);
     }
 
     @Override
