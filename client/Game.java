@@ -308,10 +308,10 @@ class Game extends JPanel{
   
   //Funktion ist daf�r vorgesehen, dass das UI einfluss auf das Spiel nehmen kann
   public void startGame(){
-    player.setName(UI.getUserInput());
+    player.setName(UI.getName());
     new Thread(() -> {
       try {
-        remote.connect("quentman.hopto.org");
+        remote.connect(UI.getUserInput());
       } catch (Exception e) {
         e.printStackTrace();
       }

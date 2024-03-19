@@ -9,18 +9,30 @@ import java.util.Random;
 class UserInterface {
     private int mouseX = 0;
     private int mouseY = 0;
-    private int bufferCapacity = 18;
-    private char[] input = new char[bufferCapacity]; //wir sind hier immernoch in java, nicht bei c
     private int charWidth = 18;
+
+    private boolean nameBoxSelected = true;
+
+    private int bufferSize = 0;
+    private int bufferCapacity = 18;
+    private char[] input = {'q', 'u', 'e', 'n', 't', 'm', 'a', 'n', '.', 'h', 'o', 'p', 't', 'o', '.', 'o', 'r', 'g'};
     private int inputBoxWidth = 30 + bufferCapacity * charWidth;
     private int inputBoxHeight = 80;
     private int inputBoxX = 800/2 - inputBoxWidth/2;
-    private int inputBoxY = 285;
+    private int inputBoxY = 400;
+
+    private int nameLength = 0;
+    private int nameMax = 10;
+    private char[] name = {'S', 'p', 'i', 'e', 'l', 'e', 'r', ' ', '1', '!'};
+    private int nameBoxWidth = 30 + nameMax * charWidth;
+    private int nameBoxHeight = 80;
+    private int nameBoxX = 800/2 - nameBoxWidth/2;
+    private int nameBoxY = 300;
+
     private int cursorWidth = 2;
     private int cursorHeight = 25;
-    private int cursorX = inputBoxX + 16;
-    private int cursorY = inputBoxY + inputBoxHeight / 2 - cursorHeight / 2;
-    private int bufferSize = 0;
+    private int cursorX = nameBoxX + 16;
+    private int cursorY = nameBoxY + nameBoxHeight / 2 - cursorHeight / 2;
     private int losButtonWidth = 150;
     private int losButtonHeight = 60;
     private int losButtonX = Game.windowWidth / 2 - losButtonWidth / 2;
@@ -35,12 +47,12 @@ class UserInterface {
     private Color grey = new Color(66, 62, 62);
     private Color buttonColor = red;
     private Color textColor = grey;
+    private int ticks = 0;
     private Image frame1;
     private Image frame2;
     private Image frame5;
 
     public boolean displayLeaderboard = false;
-
 
     public UserInterface(){
         try {
@@ -48,15 +60,8 @@ class UserInterface {
             frame2 = ImageIO.read(new File("resources/pistol_frame_2.png"));
             frame5 = ImageIO.read(new File("resources/Fadenkreuz.png"));
         } catch(Exception e){
-            try {
-                frame1 = ImageIO.read(new File("client/resources/pistol_frame_1.png"));
-                frame2 = ImageIO.read(new File("client/resources/pistol_frame_2.png"));
-                frame5 = ImageIO.read(new File("client/resources/Fadenkreuz.png"));
-            }
-            catch (Exception e1) {
-                System.out.println("failed to load UI-textures");
-                e.printStackTrace();
-            }           
+            System.out.println("failed to load UI-textures");
+            e.printStackTrace();
         }
     }
 
@@ -76,26 +81,28 @@ class UserInterface {
             g.drawString("LOS", losButtonX + losButtonWidth / 2 - 18, losButtonY + losButtonHeight / 2 + 8);
             g.setColor(new Color(66, 62, 62));
             g.drawRect(losButtonX, losButtonY, losButtonWidth, losButtonHeight);
-            
-            //input name box
-
-            g.setColor(new Color(66, 62, 62));
             g.fillRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight);
             g.setColor(new Color(127, 127, 127));
             g.fillRect(inputBoxX + 5, inputBoxY + 5, inputBoxWidth - 10, inputBoxHeight - 10);
+            g.setColor(new Color(66, 62, 62));
+            g.fillRect(nameBoxX, nameBoxY, nameBoxWidth, nameBoxHeight);
+            g.setColor(new Color(127, 127, 127));
+            g.fillRect(nameBoxX + 5, nameBoxY + 5, nameBoxWidth - 10, nameBoxHeight - 10);
             g.setColor(new Color(0, 0, 0));
             g.fillRect(cursorX, cursorY, cursorWidth, cursorHeight);
-            if(bufferSize == 0){
-                g.setColor(new Color(150, 150, 150));
-                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
-                g.drawString("input name here:", inputBoxX + 16, cursorY + cursorHeight - 4);
-            }
-            g.setColor(new Color(217, 105, 28));
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
-            g.drawString(new String(input), inputBoxX + 16, cursorY + cursorHeight - 4);
-
-            // ---------------
-
+            if (bufferSize == 0 && input.length > 0) {
+                g.setColor(new Color(66, 62, 62));
+            } else {
+                g.setColor(new Color(217, 105, 28));
+            }
+            g.drawString(new String(input), inputBoxX + 16, inputBoxY + inputBoxHeight/2 + 6);
+            if (nameLength == 0 && name.length > 0) {
+                g.setColor(new Color(66, 62, 62));
+            } else {
+                g.setColor(new Color(217, 105, 28));
+            }
+            g.drawString(new String(name), nameBoxX + 16, nameBoxY + nameBoxHeight/2 + 8);
         } else if(!Game.getGame().getRunning() && Game.getGame().getPaused()) {
             g.fillRect(0, 0, 800, 600);
             g.setColor(red);
@@ -118,13 +125,14 @@ class UserInterface {
             g.drawImage(frame5, 316, 216, null);
             if(Game.getGame().schiessen){
                 g.drawImage(frame2, 450, 370, null);
+                //g.drawImage(frame3, 450, 370, null);
+                //g.drawImage(frame4, 450, 370, null);
                 Game.getGame().schiessen = !Game.getGame().schiessen;
             }
             else{
                 g.drawImage(frame1, 450, 370, null);
             }
         }
-
         if (displayLeaderboard) {
             ArrayList<Kreatur> remotePlayers = new ArrayList<Kreatur>(Game.getGame().remotePlayers.values());
             remotePlayers.add(Game.getGame().player);
@@ -147,26 +155,60 @@ class UserInterface {
                 i++;
             }
         }
+        ticks++;
+    }
+
+    public void clear(char[] array) {
+        for(int i = 0; i < array.length; i++) {
+            array[i] = 0;
+        }
     }
 
     public void textInput(char c) {
-        if(!Game.getGame().getRunning()){
-            if(c == KeyEvent.VK_BACK_SPACE){
-                if(bufferSize > 0){
-                    bufferSize--;
-                    input[bufferSize] = 0;
-                    cursorX -= charWidth;
-                }
+        if(nameBoxSelected) {
+            if (nameLength == 0 && name.length > 0 && c != KeyEvent.VK_TAB) {
+                clear(name);
+            }
+            if (nameLength == nameMax || ticks % 2 == 0 || c < 32 || c > 126) {
                 return;
             }
-            if(c == KeyEvent.VK_SPACE){
+            name[nameLength] = c;
+            nameLength++;
+            cursorX += charWidth;
+        } else {
+            if (bufferSize == 0 && input.length > 0 && c != KeyEvent.VK_TAB) {
+                clear(input);
+            }
+            if (bufferSize == bufferCapacity || ticks % 2 == 0 || c < 32 || c > 126) {
                 return;
             }
-            if(bufferSize < bufferCapacity){
-                input[bufferSize] = c;
-                bufferSize++;
-                cursorX += charWidth;
+            input[bufferSize] = c;
+            bufferSize++;
+            cursorX += charWidth;
+        }
+    }
+
+    public void deleteChar() {
+        if(nameBoxSelected) {
+            if (nameLength == 0 && name.length > 0) {
+                clear(name);
             }
+            if (nameLength == 0 || ticks % 2 == 0) {
+                return;
+            }
+            nameLength--;
+            name[nameLength] = 0;
+            cursorX -= charWidth;
+        } else {
+            if (bufferSize == 0 && input.length > 0) {
+                clear(input);
+            }
+            if (bufferSize == 0 || ticks % 2 == 0) {
+                return;
+            }
+            bufferSize--;
+            input[bufferSize] = 0;
+            cursorX -= charWidth;
         }
     }
 
@@ -175,6 +217,16 @@ class UserInterface {
         if (mouseX >= losButtonX && mouseX <= losButtonX + losButtonWidth && mouseY >= losButtonY
                 && mouseY <= losButtonY + losButtonHeight && !game.getRunning()) {
             game.startGame();
+        } else if(mouseX >= nameBoxX && mouseX <= nameBoxX + nameBoxWidth && mouseY >= nameBoxY
+                && mouseY <= nameBoxY + nameBoxHeight && !game.getRunning()) {
+            nameBoxSelected = true;
+            cursorX = nameBoxX + 16 + nameLength * charWidth;
+            cursorY = nameBoxY + nameBoxHeight / 2 - cursorHeight / 2;
+        } else if(mouseX >= inputBoxX && mouseX <= inputBoxX + inputBoxWidth && mouseY >= inputBoxY
+                && mouseY <= inputBoxY + inputBoxHeight && !game.getRunning()) {
+            nameBoxSelected = false;
+            cursorX = inputBoxX + 16 + bufferSize * charWidth;
+            cursorY = inputBoxY + inputBoxHeight / 2 - cursorHeight / 2;
         }
     }
 
@@ -206,30 +258,11 @@ class UserInterface {
         }
     }
 
+    public String getName() {
+        return new String(name);
+    }
+
     public String getUserInput() {
-        if(bufferSize == 0){
-            Random r = new Random();
-            int randomInt = r.nextInt(5);
-            switch (randomInt) {
-                case 0:
-                    return new String("xXZaza_DestroyerXx");
-
-                case 1: 
-                    return new String("David_Brinkmann");
-
-                case 2: 
-                    return new String("Hr_Woick");
-
-                case 3: 
-                    return new String("melon_musk");
-
-                case 4: 
-                    return new String("thomas");
-            
-                default:
-                    break;
-            }
-        }
         return new String(input);
     }
 }
