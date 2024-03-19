@@ -86,11 +86,7 @@ class Game extends JPanel{
           player.wurdeGetroffen(remotePlayers.get(c.sender));
         }
       } else if (c.command instanceof Kill) {
-        if (((Kill) c.command).id == ownID) {
-          player.killCount++;
-        } else {
-          remotePlayers.get(((Kill) c.command).id).killCount++;
-        }
+        remotePlayers.get(c.sender).killCount++;
       } else if (c.command instanceof Name) {
         remotePlayers.get(c.sender).setName(((Name)c.command).name);
       }
@@ -252,7 +248,7 @@ class Game extends JPanel{
       game.stopGame();
     }
     if (backspacePressed && !gameRunning) {
-      //UI.deleteChar();
+      UI.deleteChar();
     }
     if (textInput == 0 && !gameRunning) {
       //UI.textInput(typedChar);
