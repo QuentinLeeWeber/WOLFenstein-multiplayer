@@ -23,7 +23,7 @@ public class Remote {
         try{
             clientSocket = new Socket(ip, 6969);
         } catch(Exception e){
-            clientSocket = new Socket("quentman.hopto.org", 6969);
+            clientSocket = new Socket("quentmann.mywire.org", 6969);
             System.out.println("using default ip : quentman.hopto.org, because server is unreachable");
         }
         out = new PrintWriter(clientSocket.getOutputStream(), true);
